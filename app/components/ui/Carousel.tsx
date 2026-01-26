@@ -1,0 +1,221 @@
+"use client";
+
+import { useRef, useEffect } from "react";
+import Image from "next/image";
+import gsap from "gsap";
+
+export interface CarouselCard {
+  type: "text" | "image";
+  title: string;
+  subtitle?: string;
+  description?: string;
+  marketInfo?: string; // For "Across UAE, UK & US markets" type info
+  image?: any; // Image source
+  backgroundColor?: string;
+  textColor?: string;
+}
+
+interface CarouselProps {
+  cards: CarouselCard[];
+  speed?: number; // Animation duration in seconds
+  pauseOnHover?: boolean;
+  className?: string;
+  cardClassName?: string;
+}
+
+export default function Carousel({
+  cards,
+  speed = 60,
+  pauseOnHover = true,
+  className = "",
+  cardClassName = "",
+}: CarouselProps) {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const carouselTrackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!carouselTrackRef.current || !carouselRef.current) return;
+
+    const track = carouselTrackRef.current;
+    const carouselContainer = carouselRef.current;
+    const cardElements = Array.from(track.children) as HTMLElement[];
+
+    if (cardElements.length === 0) return;
+
+    // Calculate width of one set of cards (half of total since we duplicated)
+    const firstSetCards = cardElements.slice(0, cards.length);
+    const cardWidth = firstSetCards[0]?.offsetWidth || 436;
+    const gap = 24; // gap-6 = 24px
+    const cardTotalWidth = cardWidth + gap;
+    const setWidth = cardTotalWidth * cards.length;
+
+    // Create infinite scroll animation with seamless loop
+    const animation = gsap.to(track, {
+      x: -setWidth * 2,
+      duration: speed,
+      ease: "none",
+      repeat: -1,
+      modifiers: {
+        x: (x) => {
+          const num = parseFloat(x);
+          // Wrap seamlessly when passing first set - no pause or jump
+          if (num <= -setWidth) {
+            return (num + setWidth) + "px";
+          }
+          return x;
+        }
+      },
+    });
+
+    // Pause carousel on hover
+    let handleCarouselEnter: (() => void) | null = null;
+    let handleCarouselLeave: (() => void) | null = null;
+
+    if (pauseOnHover) {
+      handleCarouselEnter = () => {
+        if (animation) animation.pause();
+      };
+
+      handleCarouselLeave = () => {
+        if (animation) animation.resume();
+      };
+
+      carouselContainer.addEventListener("mouseenter", handleCarouselEnter);
+      carouselContainer.addEventListener("mouseleave", handleCarouselLeave);
+    }
+
+    // Add hover scale effect to all cards
+    const handlers: Array<{ element: HTMLElement; enter: () => void; leave: () => void }> = [];
+
+    cardElements.forEach((card) => {
+      const cardElement = card as HTMLElement;
+
+      const handleEnter = () => {
+        gsap.to(cardElement, {
+          scale: 1.05,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      };
+
+      const handleLeave = () => {
+        gsap.to(cardElement, {
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      };
+
+      cardElement.addEventListener("mouseenter", handleEnter);
+      cardElement.addEventListener("mouseleave", handleLeave);
+
+      handlers.push({ element: cardElement, enter: handleEnter, leave: handleLeave });
+    });
+
+    return () => {
+      if (animation) animation.kill();
+      if (pauseOnHover && handleCarouselEnter && handleCarouselLeave) {
+        carouselContainer.removeEventListener("mouseenter", handleCarouselEnter);
+        carouselContainer.removeEventListener("mouseleave", handleCarouselLeave);
+      }
+      handlers.forEach(({ element, enter, leave }) => {
+        element.removeEventListener("mouseenter", enter);
+        element.removeEventListener("mouseleave", leave);
+      });
+    };
+  }, [cards, speed, pauseOnHover]);
+
+  const renderCard = (card: CarouselCard, index: number, keyPrefix: string) => {
+    if (card.type === "image" && card.image) {
+      return (
+        <div
+          key={`${keyPrefix}-${index}`}
+          className={`flex-shrink-0 rounded-[10px] cursor-pointer will-change-transform ${cardClassName}`}
+        >
+          <div className="relative h-[299px] md:h-[499px] w-[236px] md:w-[436px] flex flex-col justify-between border border-[#BFBFBF] rounded-[10px] overflow-hidden">
+            <Image
+              src={card.image}
+              alt={card.title}
+              fill
+              className="object-cover"
+              unoptimized
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/10 to-black/80" />
+            {/* Top text section */}
+            <div className="relative z-10 p-6 text-white">
+              <h3 className="text-[20px] md:text-[30px] font-bold text-white">{card.title}</h3>
+              {card.subtitle && (
+                <p className="text-[20px] md:text-[30px] text-white">{card.subtitle}</p>
+              )}
+            </div>
+            {/* Bottom text section */}
+            {card.description && (
+              <div className="relative z-10 p-6 text-white">
+                <p className="text-[14px] md:text-[22px] text-white/70">{card.description}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Text card
+    const bgColor = card.backgroundColor || "bg-zinc-900";
+    const customTextColor = card.textColor;
+    const isWhiteBg = bgColor === "bg-white" || bgColor === "white";
+    const isLightBg = bgColor === "bg-zinc-200" || bgColor === "bg-gray-200" || bgColor === "bg-zinc-100" || bgColor === "bg-gray-100" || bgColor === "bg-[#E3E3E3]";
+    const isDarkBg = bgColor === "bg-zinc-900" || bgColor === "bg-zinc-800" || bgColor === "bg-black";
+    
+    // Use custom textColor if provided, otherwise determine from background
+    const titleColor = customTextColor || (isWhiteBg || isLightBg ? "text-black" : isDarkBg ? "text-white" : "text-white");
+    const descColor = customTextColor ? (customTextColor === "text-black" ? "text-black/70" : "text-white/70") : (isWhiteBg || isLightBg ? "text-black/70" : isDarkBg ? "text-white/70" : "text-white/70");
+
+    return (
+      <div
+        key={`${keyPrefix}-${index}`}
+        className={`flex-shrink-0 rounded-[10px] cursor-pointer will-change-transform ${cardClassName}`}
+      >
+        <div className={`h-[221px] md:h-[321px] w-[236px] md:w-[436px] p-8 flex flex-col justify-between border border-[#BFBFBF] rounded-[10px] ${bgColor}`}>
+          <div>
+            <h3 className={`text-[20px] md:text-[30px] font-bold mb-1 ${titleColor}`}>
+              {card.title}
+            </h3>
+            {card.subtitle && (
+              <p className={`text-[20px] md:text-[30px] mb-2 ${titleColor}`}>
+                {card.subtitle}
+              </p>
+            )}
+          </div>
+          <div>
+            {card.description && (
+              <p className={`text-[16px] md:text-[22px] ${descColor}`}>
+                {card.description}
+              </p>
+            )}
+            {card.marketInfo && (
+              <p className={`text-[16px] md:text-[22px] ${descColor}`}>
+                {card.marketInfo}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div ref={carouselRef} className={`relative ${className}`}>
+      <div
+        ref={carouselTrackRef}
+        className="flex gap-6 will-change-transform"
+        style={{ width: "fit-content" }}
+      >
+        {/* First set of cards */}
+        {cards.map((card, index) => renderCard(card, index, "first"))}
+        {/* Duplicate set for seamless loop */}
+        {cards.map((card, index) => renderCard(card, index, "second"))}
+      </div>
+    </div>
+  );
+}
+

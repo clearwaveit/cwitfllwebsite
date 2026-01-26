@@ -1,0 +1,122 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
+interface Testimonial {
+  text: string;
+  rating: number; // Number of stars (1-5)
+}
+
+export default function ClientTestimonials() {
+  const testimonials: Testimonial[] = [
+    {
+      text: "The website delivered by Digital Gravity worked wonders for our business. Thanks to them, we were able to showcase our portfolio to a wider audience. We will be looking forward to another collaboration in the future. Highly recommended.",
+      rating: 4,
+    },
+    {
+      text: "Outstanding work! The team at Digital Gravity transformed our online presence completely. Their attention to detail and creative approach exceeded our expectations. The website is not just beautiful but also highly functional.",
+      rating: 5,
+    },
+    {
+      text: "Professional, efficient, and creative. Digital Gravity delivered exactly what we needed and more. The website has significantly improved our customer engagement and business growth. Truly impressed with their expertise.",
+      rating: 5,
+    },
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  // Auto-slide functionality
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, testimonials.length]);
+
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index);
+    setIsAutoPlaying(false);
+    // Resume auto-play after 10 seconds
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <svg
+        key={i}
+        className={`w-5 h-5 md:w-6 md:h-6 ${
+          i < rating ? 'text-[#FFD700]' : 'text-[#4a4a4a]'
+        }`}
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+      </svg>
+    ));
+  };
+
+  return (
+    <section className="w-full mx-auto relative py-20 px-4 md:px-8 bg-black">
+      <div className="max-w-[1494px] mx-auto global-section-padding">
+        {/* Heading with purple dot */}
+        <div className="flex items-center justify-center gap-3 mb-8 md:mb-12">
+          <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#9333ea]"></div>
+          <h2 className="text-[12px] md:text-[20px] lg:text-[40px] font-light text-white text-center">
+            What Our Client Say
+          </h2>
+        </div>
+
+        {/* Testimonial Slider */}
+        <div className="relative">
+          {/* Testimonial Content */}
+          <div className="overflow-hidden">
+            <div
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
+              {testimonials.map((testimonial, index) => (
+                <div
+                  key={index}
+                  className="w-full flex-shrink-0 px-4"
+                >
+                  <div className="max-w-4xl mx-auto">
+                    {/* Stars */}
+                    <div className="flex justify-center gap-1 mb-6 md:mb-8">
+                      {renderStars(testimonial.rating)}
+                    </div>
+
+                    {/* Testimonial Text */}
+                    <p className="text-white text-[16px] md:text-[20px] lg:text-[30px] font-light leading-normal text-center">
+                      {testimonial.text}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Navigation Dots */}
+          <div className="flex justify-center gap-2 mt-8 md:mt-12">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
+                  index === currentIndex
+                    ? 'bg-[#9333ea] w-8 md:w-10'
+                    : 'bg-[#4a4a4a] hover:bg-[#6a6a6a]'
+                }`}
+                aria-label={`Go to testimonial ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+

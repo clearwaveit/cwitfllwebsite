@@ -1,0 +1,73 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+interface TextSectionProps {
+  paragraphs: (string | React.ReactNode)[];
+  className?: string;
+  firstParagraphClassName?: string;
+}
+
+export default function TextSection({
+  paragraphs,
+  className = "",
+  firstParagraphClassName,
+}: TextSectionProps) {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const paragraphRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 85%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      // Animate each paragraph with stagger effect
+      paragraphRefs.current.forEach((el, index) => {
+        if (el) {
+          gsap.set(el, { opacity: 0, y: 40 });
+          tl.to(el, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power3.out",
+          }, index === 0 ? 0 : "<0.15");
+        }
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [paragraphs]);
+
+  return (
+    <div ref={sectionRef} className={`flex justify-center w-full ${className}`}>
+      <div className="w-full">
+        {paragraphs.map((paragraph, index) => (
+          <p
+            key={index}
+            ref={(el) => { paragraphRefs.current[index] = el; }}
+            className={`text-white ${index === 0
+                ? firstParagraphClassName || "text-[20px] md:text-[38px] font-[400] leading-tight"
+                : "text-[14px] md:text-[20px] text-start font-light leading-relaxed mt-6 md:mt-8"
+              }`}
+          >
+            {paragraph}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
