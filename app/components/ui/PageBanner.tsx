@@ -13,12 +13,14 @@ interface PageBannerProps {
   title: string | ReactNode;
   className?: string;
   minHeight?: string;
+  maxWidth?: string;
 }
 
 export default function PageBanner({
   title,
   className = "",
   minHeight = "300px",
+  maxWidth,
 }: PageBannerProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -59,10 +61,10 @@ export default function PageBanner({
       }}
     >
       <div className=" px-4 sm:px-6 lg:px-8 w-full global-section-padding">
-        <div className="max-w-[1570px] mx-auto">
+        <div className={`${maxWidth} mx-auto page-banner-content-container`}>
           <h1
             ref={headingRef}
-            className="text-[40px] md:text-[96px] font-[700] text-white leading-[44px] md:leading-[80px]"
+            className="text-[40px] md:text-[96px] font-[700] text-white leading-[44px] md:leading-[80px] page-banner-title"
           >
             {title}
           </h1>

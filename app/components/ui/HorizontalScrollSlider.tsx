@@ -24,18 +24,22 @@ interface HorizontalScrollSliderProps {
   cards: SliderCard[];
   className?: string;
   cardClassName?: string;
+  onCardClick?: (card: SliderCard, index: number) => void;
 }
 
 export default function HorizontalScrollSlider({
   cards,
   className = "",
   cardClassName = "",
+  onCardClick,
 }: HorizontalScrollSliderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [dragStartPos, setDragStartPos] = useState({ x: 0, y: 0 });
+  const hasDraggedRef = useRef(false);
 
   // Horizontal scroll animation on page scroll
   useEffect(() => {
@@ -79,7 +83,9 @@ export default function HorizontalScrollSlider({
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current) return;
     setIsDragging(true);
+    hasDraggedRef.current = false;
     setStartX(e.pageX - sliderRef.current.offsetLeft);
+    setDragStartPos({ x: e.pageX, y: e.pageY });
 
     // Get the current x position from GSAP
     const currentX = gsap.getProperty(sliderRef.current, "x") as number;
@@ -89,6 +95,15 @@ export default function HorizontalScrollSlider({
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !sliderRef.current) return;
     e.preventDefault();
+
+    const dragDistance = Math.sqrt(
+      Math.pow(e.pageX - dragStartPos.x, 2) + Math.pow(e.pageY - dragStartPos.y, 2)
+    );
+    
+    // If moved more than 5px, consider it a drag
+    if (dragDistance > 5) {
+      hasDraggedRef.current = true;
+    }
 
     const x = e.pageX - sliderRef.current.offsetLeft;
     const walk = (x - startX) * 2; // Multiply for faster drag
@@ -109,7 +124,23 @@ export default function HorizontalScrollSlider({
   };
 
   const handleMouseUp = () => {
+    const wasDragging = hasDraggedRef.current;
     setIsDragging(false);
+    // Reset after a short delay to allow click handler to check
+    setTimeout(() => {
+      hasDraggedRef.current = false;
+    }, 100);
+    return wasDragging;
+  };
+
+  // Handle card click
+  const handleCardClick = (e: React.MouseEvent, index: number) => {
+    // Only trigger if it wasn't a drag
+    if (!hasDraggedRef.current && onCardClick) {
+      e.stopPropagation();
+      e.preventDefault();
+      onCardClick(cards[index], index);
+    }
   };
 
   const handleMouseLeave = () => {
@@ -120,7 +151,9 @@ export default function HorizontalScrollSlider({
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!sliderRef.current) return;
     setIsDragging(true);
+    hasDraggedRef.current = false;
     setStartX(e.touches[0].pageX - sliderRef.current.offsetLeft);
+    setDragStartPos({ x: e.touches[0].pageX, y: e.touches[0].pageY });
 
     const currentX = gsap.getProperty(sliderRef.current, "x") as number;
     setScrollLeft(currentX);
@@ -128,6 +161,16 @@ export default function HorizontalScrollSlider({
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging || !sliderRef.current) return;
+
+    const dragDistance = Math.sqrt(
+      Math.pow(e.touches[0].pageX - dragStartPos.x, 2) + 
+      Math.pow(e.touches[0].pageY - dragStartPos.y, 2)
+    );
+    
+    // If moved more than 5px, consider it a drag
+    if (dragDistance > 5) {
+      hasDraggedRef.current = true;
+    }
 
     const x = e.touches[0].pageX - sliderRef.current.offsetLeft;
     const walk = (x - startX) * 2;
@@ -147,6 +190,20 @@ export default function HorizontalScrollSlider({
 
   const handleTouchEnd = () => {
     setIsDragging(false);
+    // Reset after a short delay to allow tap handler to check
+    setTimeout(() => {
+      hasDraggedRef.current = false;
+    }, 100);
+  };
+
+  // Handle card tap
+  const handleCardTap = (e: React.TouchEvent, index: number) => {
+    // Only trigger if it wasn't a drag
+    if (!hasDraggedRef.current && onCardClick) {
+      e.stopPropagation();
+      e.preventDefault();
+      onCardClick(cards[index], index);
+    }
   };
 
   const renderCard = (card: SliderCard, index: number) => {
@@ -154,6 +211,9 @@ export default function HorizontalScrollSlider({
       return (
         <div
           key={index}
+          data-card-index={index}
+          onClick={(e) => handleCardClick(e, index)}
+          onTouchEnd={(e) => handleCardTap(e, index)}
           className={`flex-shrink-0 rounded-[10px] cursor-pointer will-change-transform ${cardClassName}`}
         >
           <div className="relative h-[299px] md:h-[499px] w-[236px] md:w-[436px] flex flex-col justify-between border border-[#BFBFBF] rounded-[10px] overflow-hidden">
@@ -196,6 +256,9 @@ export default function HorizontalScrollSlider({
     return (
       <div
         key={index}
+        data-card-index={index}
+        onClick={(e) => handleCardClick(e, index)}
+        onTouchEnd={(e) => handleCardTap(e, index)}
         className={`flex-shrink-0 rounded-[10px] cursor-pointer will-change-transform ${cardClassName}`}
       >
         <div className={`h-[221px] md:h-[321px] w-[236px] md:w-[436px] p-8 flex flex-col justify-between border border-[#BFBFBF] rounded-[10px] ${bgColor}`}>

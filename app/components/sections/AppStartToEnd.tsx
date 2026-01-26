@@ -207,7 +207,9 @@ export default function AppStartToEnd({
     >
       {/* Background Image with gradient */}
       {backgroundImage && (
-        <BeforeImage image={backgroundImage} alt={backgroundImageAlt} />
+        <div className="app-start-to-end-background-image">
+          <BeforeImage image={backgroundImage} alt={backgroundImageAlt} />
+        </div>
       )}
 
       {/* Video - Behind everything */}
@@ -215,7 +217,7 @@ export default function AppStartToEnd({
         ref={videoContainerRef}
         className={`absolute ${videoTopOffset || ""} ${videoPosition === "left" ? `left-0 ${videoRightOffset || "pl-4 md:pl-8"}` : `${videoRightOffset || "right-0 pr-4 md:pr-8"}`} inset-0 z-10 flex items-center ${videoPosition === "left" ? "justify-start" : "justify-end"}`}
       >
-        <div className={`relative w-full ${videoMaxWidth} h-[400px] md:h-[600px]`}>
+        <div className={`relative w-full ${videoMaxWidth} h-[400px] md:h-[600px] app-start-to-end-video-container`}>
           <video
             ref={videoRef}
             src={finalVideoSrc}
@@ -228,7 +230,7 @@ export default function AppStartToEnd({
         </div>
       </div>
 
-      <div className="relative z-30 container mx-auto px-2 sm:px-4 lg:px-6 h-full min-h-screen">
+      <div className="relative z-30 container mx-auto h-full min-h-screen app-start-to-end-content-container">
         <div className={`flex flex-col ${hasCards ? "md:flex-col" : "md:flex-row"} ${contentMaxWidth} ${hasCards ? "items-start" : "items-center"} justify-center h-full min-h-screen py-20 md:py-0`}>
           {/* Top Section - Content and Video Layout */}
           <div className={`flex flex-col ${hasCards ? "" : "md:flex-row"} w-full ${hasCards ? "items-start" : "items-center"} justify-between ${hasCards ? "mb-12 md:mb-16" : ""}`}>
@@ -242,7 +244,7 @@ export default function AppStartToEnd({
               {title && (
                 <h1
                   ref={headingRef}
-                  className="text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white leading-tight"
+                  className="text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white leading-tight app-start-to-end-title"
                 >
                   {title}
                 </h1>
@@ -252,7 +254,7 @@ export default function AppStartToEnd({
               {description && (
                 <div
                   ref={descriptionRef}
-                  className="text-[14px] sm:text-[16px] md:text-[20px] text-white leading-relaxed max-w-full"
+                  className="text-[14px] sm:text-[16px] md:text-[20px] text-white leading-relaxed max-w-full app-start-to-end-description"
                 >
                   {description}
                 </div>
@@ -287,8 +289,8 @@ export default function AppStartToEnd({
                   const textColor = card.textColor || "text-white";
                   const borderColor = card.borderColor || "border-transparent";
                   const hoverBorderColor = card.hoverBorderColor || "hover:border-[#555555]";
-                  const cardTitleClassName = card.titleClassName || `${textColor} text-[18px] md:text-[24px] lg:text-[30px] font-bold mb-3 md:mb-20`;
-                  const cardDescriptionClassName = card.descriptionClassName || `${textColor} text-[14px] md:text-[16px] lg:text-[20px]`;
+                  const cardTitleClassName = card.titleClassName || `${textColor} text-[18px] md:text-[24px] lg:text-[30px] font-bold mb-3 md:mb-20 app-start-to-end-card-title`;
+                  const cardDescriptionClassName = card.descriptionClassName || `${textColor} text-[14px] md:text-[16px] lg:text-[20px] app-start-to-end-card-description`;
                   const cardContainerClassName = card.className || "";
 
                   return (

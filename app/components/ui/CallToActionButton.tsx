@@ -1,3 +1,5 @@
+"use client";
+
 // import Link from "next/link";
 
 interface CallToActionButtonProps {
@@ -37,7 +39,7 @@ export default function CallToActionButton({
 
   const content = (
     <>
-      <span className="relative z-10">{children}</span>
+      <span className="relative z-10 text-white font-[500]">{children}</span>
       <span 
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         // style={{
@@ -71,8 +73,51 @@ export default function CallToActionButton({
     // Check current pathname
     const currentPath = window.location.pathname;
     
-    // If on mobile-app page, scroll to project-contact-form
-    if (currentPath === '/mobile-app' || currentPath.startsWith('/mobile-app/'), currentPath === '/web-app' || currentPath.startsWith('/web-app/'), currentPath === '/logo-app' || currentPath.startsWith('/logo-app/')) {
+    // If on mobile-app, web-app, or logo-app pages, scroll to project-contact-form
+    if (
+      currentPath === '/mobile-app' || 
+      currentPath.startsWith('/mobile-app/') ||
+      currentPath === '/web-app' || 
+      currentPath.startsWith('/web-app/') ||
+      currentPath === '/logo-app' || 
+      currentPath.startsWith('/logo-app/') ||
+      currentPath === '/seo-app' ||
+      currentPath.startsWith('/seo-app/') ||
+      currentPath === '/security-app' ||
+      currentPath.startsWith('/security-app/') ||
+      currentPath === '/ecommerce-app' ||
+      currentPath.startsWith('/ecommerce-app/') ||
+      currentPath === '/marketing-app' ||
+      currentPath.startsWith('/marketing-app/') ||
+      currentPath === '/salesforce' ||
+      currentPath.startsWith('/salesforce/') ||
+      currentPath === '/wp-vip' ||
+      currentPath.startsWith('/wp-vip/') ||
+      currentPath === '/next-js' ||
+      currentPath.startsWith('/next-js/') ||
+      currentPath === '/flutter-app' ||
+      currentPath.startsWith('/flutter-app/') ||
+      currentPath === '/flutter-app-1' ||
+      currentPath.startsWith('/flutter-app-1/') ||
+      currentPath === '/flutter-app-2' ||
+      currentPath.startsWith('/flutter-app-2/') ||
+      currentPath === '/flutter-app-3' ||
+      currentPath.startsWith('/flutter-app-3/') ||
+      currentPath === '/flutter-app-4' ||
+      currentPath.startsWith('/flutter-app-4/') ||
+      currentPath === '/flutter-app-5' ||
+      currentPath.startsWith('/flutter-app-5/') ||
+      currentPath === '/flutter-app-6' ||
+      currentPath.startsWith('/flutter-app-6/') ||
+      currentPath === '/flutter-app-7' ||
+      currentPath.startsWith('/flutter-app-7/') ||
+      currentPath === '/flutter-app-8' ||
+      currentPath.startsWith('/flutter-app-8/') ||
+      currentPath === '/flutter-app-9' ||
+      currentPath.startsWith('/flutter-app-9/') ||
+      currentPath === '/ui-ux-app' ||
+      currentPath.startsWith('/ui-ux-app/')
+    ) {
       const projectContactForm = document.getElementById('project-contact-form');
       if (projectContactForm) {
         projectContactForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -83,7 +128,7 @@ export default function CallToActionButton({
     // If on home page or other pages, try to find contact-form-section
     const contactSection = document.getElementById('contact-form-section');
     if (contactSection) {
-      // Section exists on current page, scroll to it
+      // Section exists on current page, scroll to it smoothly
       contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
       // Section doesn't exist on current page, navigate to home page contact section

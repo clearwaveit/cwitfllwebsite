@@ -173,7 +173,7 @@ export default function BusinessFeaturesSection({
       ref={sectionRef}
       className={`relative min-h-screen bg-black py-20 md:py-32 overflow-hidden ${className}`}
     >
-      <div className={`container mx-auto px-4 sm:px-6 lg:px-8 h-full min-h-screen ${containerClassName}`}>
+      <div className={`container mx-auto h-full min-h-screen business-features-content-container ${containerClassName}`}>
         <div className="flex flex-col md:flex-row items-center justify-between h-full min-h-screen gap-8 md:gap-12">
           {/* Left Side - Content */}
           <div
@@ -182,7 +182,7 @@ export default function BusinessFeaturesSection({
             {/* Title */}
             <h2
               ref={titleRef}
-              className={`text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white leading-tight ${titleClassName}`}
+              className={`text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white leading-tight business-features-title ${titleClassName}`}
             >
               {title}
             </h2>
@@ -193,10 +193,10 @@ export default function BusinessFeaturesSection({
                 {features.map((feature, index) => {
                   const featureHeadingClassName =
                     feature.headingClassName ||
-                    "text-[20px] sm:text-[24px] md:text-[28px] lg:text-[36px] font-bold text-white mb-3 md:mb-4";
+                    "text-[20px] sm:text-[24px] md:text-[28px] lg:text-[36px] font-bold text-white mb-3 md:mb-4 business-features-heading";
                   const featureDescriptionClassName =
                     feature.descriptionClassName ||
-                    "text-[14px] sm:text-[16px] md:text-[22px] text-white leading-relaxed";
+                    "text-[14px] sm:text-[16px] md:text-[22px] text-white leading-relaxed business-features-description";
                   const featureContainerClassName = feature.className || "";
 
                   return (

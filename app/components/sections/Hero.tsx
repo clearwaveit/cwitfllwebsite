@@ -119,7 +119,7 @@ export default function Hero() {
     <section
       id="home"
       ref={heroRef}
-      className="relative flex items-center justify-center h-[300px] md:h-[1080px] overflow-hidden w-full"
+      className="relative flex items-center justify-center h-[300px] md:min-h-screen overflow-hidden w-full"
     >
       {/* Hero Background Video */}
       <div className="absolute inset-0 z-0 w-full h-full">
@@ -131,6 +131,18 @@ export default function Hero() {
           playsInline
           className="w-full h-full object-cover"
         />
+      </div>
+
+      {/* Sticky Bar at Bottom */}
+      <div 
+        className="absolute bottom-4 md:bottom-6 z-20 w-full py-3 px-4 md:py-4 md:px-6"
+        style={{ backgroundColor: '#2dfdc3' }}
+      >
+        <div className="container mx-auto">
+          <p className="text-black text-sm md:text-base font-medium text-center">
+            Creating exceptional digital experiences with cutting-edge technology
+          </p>
+        </div>
       </div>
       
       {/* Content Overlay */}
