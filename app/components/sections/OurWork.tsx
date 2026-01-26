@@ -240,7 +240,7 @@ export default function OurWork({
           {/* Single container for both title and cards that moves together */}
           <div
             ref={cardsContainerRef}
-            className={`flex h-[910px] items-center will-change-transform ${
+            className={`flex h-[910px] items-center will-change-transform our-work-container ${
               isDragging ? "cursor-grabbing" : "cursor-grab"
             }`}
             onMouseDown={handleMouseDown}
@@ -252,12 +252,12 @@ export default function OurWork({
             onTouchEnd={handleTouchEnd}
           >
             {/* Left Side - Title and CTA */}
-            <div className="flex-shrink-0 w-[280px] lg:w-[400px] xl:w-[520px] flex flex-col justify-center items-start pl-8 lg:pl-16 xl:pl-20 pr-6 lg:pr-10 py-12">
-              <h2 className="text-white mb-12 lg:mb-16 xl:mb-20">
-                <span className="block text-[70px] lg:text-[90px] xl:text-[120px] font-[300] leading-[0.85] tracking-tight">
+            <div className="flex-shrink-0 w-[280px] lg:w-[400px] xl:w-[520px] flex flex-col justify-center items-start pl-8 lg:pl-16 xl:pl-20 pr-6 lg:pr-10 py-12 our-work-title-container">
+              <h2 className="text-white mb-12 lg:mb-16 xl:mb-20 our-work-title">
+                <span className="block text-[70px] lg:text-[90px] xl:text-[120px] font-[300] leading-[0.85] tracking-tight our-work-title-text">
                   OUR
                 </span>
-                <span className="block text-[70px] lg:text-[90px] xl:text-[120px] font-[300] leading-[0.85] tracking-tight">
+                <span className="block text-[70px] lg:text-[90px] xl:text-[120px] font-[300] leading-[0.85] tracking-tight our-work-title-text">
                   WORK
                 </span>
               </h2>
@@ -269,11 +269,11 @@ export default function OurWork({
             </div>
 
             {/* Cards */}
-            <div className="flex items-center gap-4 lg:gap-2 pr-8 lg:pr-16 xl:pr-20">
+            <div className="flex items-center gap-4 lg:gap-2 pr-8 lg:pr-16 xl:pr-20 our-work-cards-container">
               {workItems.map((item, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 w-[380px] lg:w-[480px] xl:w-[604px] h-auto bg-black border border-[#C1C1C1] overflow-hidden flex flex-col"
+                  className="flex-shrink-0 w-[380px] lg:w-[480px] xl:w-[604px] h-auto bg-black border border-[#C1C1C1] overflow-hidden flex flex-col our-work-card"
                 >
                   {/* Category Tags - Top */}
                   {item.category && (
@@ -291,20 +291,20 @@ export default function OurWork({
 
                   {/* Title */}
                   <div className="px-5 lg:px-8 pb-2 lg:pb-3">
-                    <h3 className="text-white text-[28px] lg:text-[34px] xl:text-[41px] font-[400] leading-[1.2]">
+                    <h3 className="text-white text-[28px] lg:text-[34px] xl:text-[41px] font-[400] leading-[1.2] our-work-item-title">
                       {item.title}
                     </h3>
                   </div>
 
                   {/* Description */}
                   <div className="max-w-[460px] px-5 lg:px-8 pb-4 lg:pb-16">
-                    <p className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[1.5] font-[300]">
+                    <p className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[1.5] font-[300] our-work-item-description">
                       {item.description}
                     </p>
                   </div>
 
                   {/* Image - Bottom */}
-                  <div className="relative w-full h-[220px] lg:h-[280px] xl:h-[342px] overflow-hidden">
+                  <div className="relative w-full h-[220px] lg:h-[280px] xl:h-[342px] overflow-hidden our-work-item-image">
                     <Image
                       src={item.image}
                       alt={item.title}

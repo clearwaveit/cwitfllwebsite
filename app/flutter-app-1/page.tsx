@@ -129,7 +129,8 @@ export default function FlutterAppPage1() {
         showOverlay={false}
         gradientOverlay={false}
         stats={heroStats}
-      />
+        // maxWidth="max-w-[1570px]"
+        />
 
       <SplitContentSection
         title={title}
@@ -140,15 +141,17 @@ export default function FlutterAppPage1() {
         layout="content-left"
         imageMaxWidth="max-w-full"
         imageClassName="md:max-w-full"
-      />
+        />
       <AppWhyOpt
         title={title_3}
         services={whyOptServices}
-      />
+        // contentMaxWidth="w-[1104px] max-w-[1570px]"
+        />
       <HeroBanner
         badge="FEBRURY 8, 2024"
         title="Augmented and Virtual Reality In Healthcare: Transforming Practice And Training"
         titleClassName="text-[60px]"
+        // maxWidth="w-[1080px] max-w-[1494px]"
         description="The landscape of medical education and healthcare delivery is rapidly evolving, with augmented reality (AR) and virtual reality (VR) emerging as transformative technologies. Let's delve into the multifaceted applications and future prospects of AR and VR in the medical field."
         buttonText="READ POST"
         titleMaxWidth="max-w-[970px]"
@@ -176,6 +179,7 @@ export default function FlutterAppPage1() {
         videoTopOffset="-top-100"
         videoRightOffset="right-0 md:-left-70"
         videoPosition="left"
+        // contentMaxWidth="w-[1104px] max-w-[1570px]"
       />
       <Accordion />
       <ProjectContactForm />

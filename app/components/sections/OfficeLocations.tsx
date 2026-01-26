@@ -83,27 +83,27 @@ export default function OfficeLocations({ className = "" }: OfficeLocationsProps
               ref={(el) => { cardRefs.current[index] = el; }}
               className="px-10 md:px-20 lg:ps-10"
             >
-              <h3 className="text-[24px] md:text-[41px] font-[400] mb-6">
+              <h3 className="text-[24px] md:text-[41px] office-location-heading font-[400] mb-6">
                 {office.city}
               </h3>
               <div>
                 {office.address.map((line, lineIndex) => (
                   <p
                     key={lineIndex}
-                    className="text-[14px] md:text-[26px] text-white"
+                    className="text-[14px] md:text-[26px] office-location-text text-white"
                   >
                     {line}
                   </p>
                 ))}
                 <a
                   href={`mailto:${office.email}`}
-                  className="block text-[14px] md:text-[26px] text-white/90 hover:text-[#0DFCC1] transition-colors"
+                  className="block text-[14px] md:text-[26px] office-location-text text-white/90 hover:text-[#0DFCC1] transition-colors"
                 >
                   {office.email}
                 </a>
                 <a
                   href={`tel:${office.phone.replace(/\s/g, "")}`}
-                  className="block text-[14px] md:text-[26px] text-white/90 hover:text-[#0DFCC1] transition-colors"
+                  className="block text-[14px] md:text-[26px] office-location-text text-white/90 hover:text-[#0DFCC1] transition-colors"
                 >
                   {office.phone}
                 </a>

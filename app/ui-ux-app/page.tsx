@@ -145,7 +145,7 @@ export default function UiUXAppPage() {
         features={businessFeatures}
         buttonText="CONTACT US"
         videoSrc="/videos/animated_clip_4.mp4"
-        videoElementClassName="object-cover object-center_top"
+        videoElementClassName="object-cover object-center_top rounded-[20px] md:rounded-[30px]"
         containerClassName="max-w-[1634px] mx-auto"
       />
       <IndustriesSection

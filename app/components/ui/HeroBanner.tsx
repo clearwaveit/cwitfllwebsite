@@ -53,6 +53,7 @@ interface HeroBannerProps {
   height?: string; // Fixed height option
   // Content alignment
   contentAlign?: "left" | "right"; // Align content to left or right side
+  maxWidth?: string;
 }
 
 export default function HeroBanner({
@@ -80,6 +81,7 @@ export default function HeroBanner({
   minHeight = "100vh",
   height,
   contentAlign = "left",
+  maxWidth = "",
 }: HeroBannerProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const badgeRef = useRef<HTMLSpanElement>(null);
@@ -87,6 +89,19 @@ export default function HeroBanner({
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const numberRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+
+  // Extract numeric value and suffix from stat number
+  const getNumberValue = (numberStr: string) => {
+    const match = numberStr.match(/(\d+)(.*)/);
+    if (match) {
+      return {
+        value: parseInt(match[1], 10),
+        suffix: match[2] || "",
+      };
+    }
+    return { value: 0, suffix: "" };
+  };
 
   useGSAP(
     () => {
@@ -187,9 +202,52 @@ export default function HeroBanner({
           "-=0.4"
         );
       }
+
+      // Animate number counting
+      if (stats && stats.length > 0) {
+        const counterAnimations = numberRefs.current.map((numberEl, index) => {
+          if (!numberEl) return null;
+
+          const stat = stats[index];
+          const { value: targetValue, suffix } = getNumberValue(stat.value);
+
+          // Set initial value to 0
+          numberEl.textContent = `0${suffix}`;
+
+          // Create counter animation object
+          const counterObj = { value: 0 };
+          
+          return gsap.to(counterObj, {
+            value: targetValue,
+            duration: 2,
+            ease: "power2.out",
+            onUpdate: function () {
+              if (numberEl) {
+                const currentValue = Math.floor(counterObj.value);
+                numberEl.textContent = `${currentValue}${suffix}`;
+              }
+            },
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          });
+        });
+
+        // Cleanup function
+        return () => {
+          counterAnimations.forEach((anim) => {
+            if (anim && anim.scrollTrigger) {
+              anim.scrollTrigger.kill();
+              anim.kill();
+            }
+          });
+        };
+      }
     },
     sectionRef,
-    []
+    [stats]
   );
 
   return (
@@ -230,7 +288,7 @@ export default function HeroBanner({
 
       {/* Content Container - Takes full height with flex layout */}
       <div
-        className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full"
+        className={`${maxWidth} relative z-10 mx-auto flex flex-col h-full hero-banner-content-container`}
         style={{
           minHeight: height ? undefined : minHeight,
           height: height ? "100%" : undefined
@@ -252,7 +310,7 @@ export default function HeroBanner({
           {title && (
             <h1
               ref={headingRef}
-              className={`${titleMaxWidth} font-[700] text-white leading-tight mb-6 md:mb-8 ${titleClassName || "text-[32px] sm:text-[40px] md:text-[50px] lg:text-[60px]"}`}
+              className={`${titleMaxWidth} font-[700] text-white leading-tight mb-6 md:mb-8 hero-banner-title ${titleClassName || "text-[32px] sm:text-[40px] md:text-[50px] lg:text-[80px]"}`}
             >
               {title}
             </h1>
@@ -262,7 +320,7 @@ export default function HeroBanner({
           {description && (
             <p
               ref={descriptionRef}
-              className={`${descriptionMaxWidth} text-[14px] sm:text-[16px] md:text-[20px] font-[500] text-white/90 leading-relaxed max-w-[600px] ${descriptionClassName}`}
+              className={`${descriptionMaxWidth} text-[14px] sm:text-[16px] md:text-[20px] font-[500] text-white/90 leading-relaxed max-w-[600px] hero-banner-description ${descriptionClassName}`}
             >
               {description}
             </p>
@@ -287,12 +345,15 @@ export default function HeroBanner({
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <p
-                  className={`text-[12px] sm:text-[14px] md:text-[20px] font-[500] text-white/70 mb-2 ${stat.labelClassName || ""}`}
+                  className={`text-[12px] sm:text-[14px] md:text-[20px] font-[500] text-white/70 mb-2 hero-banner-stat-label ${stat.labelClassName || ""}`}
                 >
                   {stat.label}
                 </p>
                 <p
-                  className={`text-[36px] sm:text-[48px] md:text-[60px] lg:text-[80px] font-[500] text-white leading-none ${stat.valueClassName || ""}`}
+                  ref={(el) => {
+                    numberRefs.current[index] = el;
+                  }}
+                  className={`text-[36px] sm:text-[48px] md:text-[60px] lg:text-[80px] font-[500] text-white leading-none hero-banner-stat-value ${stat.valueClassName || ""}`}
                 >
                   {stat.value}
                 </p>

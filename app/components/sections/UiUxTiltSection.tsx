@@ -117,7 +117,7 @@ export default function UiUxTiltSection({
 
       {/* Center Image */}
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-        <div className="relative w-full max-w-[600px] h-[4500px] md:max-w-[800px] md:h-[600px] lg:max-w-[700px] lg:h-[650px]">
+        <div className="relative w-full max-w-[600px] h-[4500px] md:max-w-[800px] md:h-[600px] lg:max-w-[700px] lg:h-[650px] ui-ux-tilt-image-container">
           <Image
             src={uiUxTilteImg}
             alt="UI/UX"
@@ -128,19 +128,19 @@ export default function UiUxTiltSection({
         </div>
       </div>
 
-      <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 h-full min-h-screen flex items-center">
+      <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 h-full min-h-screen flex items-center ui-ux-tilt-content-container">
         <div className="w-full flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
           {/* Left Side - UI List */}
           <div className="w-full md:w-1/4 flex flex-col justify-center">
             <div ref={uiListRef} className="space-y-6">
-              <h2 className="text-[48px] md:text-[64px] lg:text-[80px] font-[700] text-white leading-tight">
+              <h2 className="text-[48px] md:text-[64px] lg:text-[80px] font-[700] text-white leading-tight ui-ux-heading">
                 UI
               </h2>
               <ul className="space-y-3 md:space-y-4">
                 {uiItems.map((item, index) => (
                   <li
                     key={index}
-                    className="text-white text-[16px] md:text-[18px] lg:text-[20px] font-[400] leading-relaxed"
+                    className="text-white text-[16px] md:text-[18px] lg:text-[20px] font-[400] leading-relaxed ui-ux-item"
                   >
                     {item}
                   </li>
@@ -152,14 +152,14 @@ export default function UiUxTiltSection({
           {/* Right Side - UX List */}
           <div className="w-full md:w-1/4 flex flex-col justify-center md:items-end">
             <div ref={uxListRef} className="space-y-6 md:text-right">
-              <h2 className="text-[48px] md:text-[64px] lg:text-[80px] font-[700] text-white leading-tight">
+              <h2 className="text-[48px] md:text-[64px] lg:text-[80px] font-[700] text-white leading-tight ui-ux-heading">
                 UX
               </h2>
               <ul className="space-y-3 md:space-y-4">
                 {uxItems.map((item, index) => (
                   <li
                     key={index}
-                    className="text-white text-[16px] md:text-[18px] lg:text-[20px] font-[400] leading-relaxed"
+                    className="text-white text-[16px] md:text-[18px] lg:text-[20px] font-[400] leading-relaxed ui-ux-item"
                   >
                     {item}
                   </li>

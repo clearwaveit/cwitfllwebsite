@@ -651,6 +651,7 @@ body {
     width: 1000px !important;
     height: 462px !important;
   }
+
   .text-section-padding {
     padding: 20px !important;
   }
@@ -865,14 +866,12 @@ body {
   color: var(--shiny-cta-fg);
   background:
     linear-gradient(var(--shiny-cta-bg), var(--shiny-cta-bg)) padding-box,
-    conic-gradient(
-      from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+    conic-gradient(from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
       transparent,
       var(--shiny-cta-highlight) var(--gradient-percent),
       var(--gradient-shine) calc(var(--gradient-percent) * 2),
       var(--shiny-cta-highlight) calc(var(--gradient-percent) * 3),
-      transparent calc(var(--gradient-percent) * 4)
-    ) border-box;
+      transparent calc(var(--gradient-percent) * 4)) border-box;
 
   border: 1px solid transparent;
   box-shadow: inset 0 0 0 1px var(--shiny-cta-bg-subtle);
@@ -888,14 +887,12 @@ body {
   inset: -20px;
   pointer-events: none;
 
-  background: conic-gradient(
-    from var(--gradient-angle),
-    transparent,
-    transparent 30%,
-    rgba(117, 142, 248, 0.6) 50%,
-    transparent 70%,
-    transparent
-  );
+  background: conic-gradient(from var(--gradient-angle),
+      transparent,
+      transparent 30%,
+      rgba(117, 142, 248, 0.6) 50%,
+      transparent 70%,
+      transparent);
 
   filter: blur(15px);
   opacity: 0.8;
@@ -931,5 +928,702 @@ body {
 @keyframes shimmer {
   to {
     rotate: 360deg;
+  }
+}
+
+/* HeroBanner Responsive Max-Width Styles */
+
+/* 1280px screen - appropriate max-width for smaller screens */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .hero-banner-content-container {
+    width: 100% !important;
+    max-width: 950px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .app-why-opt-content-container {
+    width: 100% !important;
+    max-width: 950px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .page-banner-content-container {
+    width: 100% !important;
+    max-width: 950px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .business-features-content-container {
+    width: 100% !important;
+    max-width: 950px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .app-start-to-end-content-container {
+    width: 100% !important;
+    max-width: 950px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .accordion-content-container {
+    width: 100% !important;
+    max-width: 1100px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .project-contact-form-content-container {
+    width: 100% !important;
+    max-width: 850px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .blogs-section-content-container {
+    width: 100% !important;
+    max-width: 1100px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .industries-section-content-container {
+    width: 100% !important;
+    max-width: 950px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .technologies-heading-container {
+    width: 100% !important;
+    max-width: 950px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .ui-ux-tilt-content-container {
+    width: 100% !important;
+    max-width: 950px !important;
+    /* padding-left: 80px !important;
+    padding-right: 80px !important; */
+  }
+
+  .ui-ux-tilt-image-container {
+    max-width: 550px !important;
+    max-height: 550px !important;
+  }
+
+  .page-banner-title {
+    font-size: 72px !important;
+    line-height: 64px !important;
+  }
+
+  .business-features-title {
+    font-size: 48px !important;
+    line-height: 1.2 !important;
+  }
+
+  .business-features-heading {
+    font-size: 28px !important;
+  }
+
+  .business-features-description {
+    font-size: 18px !important;
+  }
+
+  .app-why-opt-title {
+    font-size: 48px !important;
+    line-height: 1.2 !important;
+  }
+
+  .app-why-opt-service-heading {
+    font-size: 24px !important;
+  }
+
+  .app-why-opt-service-description {
+    font-size: 18px !important;
+  }
+
+  .app-start-to-end-title {
+    font-size: 48px !important;
+    line-height: 1.2 !important;
+  }
+
+  .app-start-to-end-description {
+    font-size: 18px !important;
+  }
+
+  .app-start-to-end-video-container {
+    max-width: 700px !important;
+    height: 500px !important;
+  }
+
+  .app-start-to-end-background-image {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .app-start-to-end-card-title {
+    font-size: 24px !important;
+  }
+
+  .app-start-to-end-card-description {
+    font-size: 18px !important;
+  }
+
+  .hero-banner-title {
+    font-size: 48px !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero-banner-description {
+    font-size: 18px !important;
+  }
+
+  .hero-banner-stat-label {
+    font-size: 18px !important;
+  }
+
+  .hero-banner-stat-value {
+    font-size: 48px !important;
+  }
+
+  .split-content-title {
+    font-size: 48px !important;
+    line-height: 1.2 !important;
+  }
+
+  .split-content-description {
+    font-size: 18px !important;
+  }
+
+  .split-content-image-container {
+    height: 600px !important;
+  }
+
+  .blogs-cards-grid {
+    gap: 20px !important;
+  }
+
+  .blogs-card {
+    width: 100% !important;
+    max-width: 300px !important;
+  }
+
+  .blogs-card-content {
+    width: 100% !important;
+    max-width: 300px !important;
+  }
+}
+
+/* 1440px screen - w-[1104px] max-w-[1570px] */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .hero-banner-content-container {
+    width: 1104px !important;
+    max-width: 1570px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .app-why-opt-content-container {
+    width: 1104px !important;
+    max-width: 1570px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .page-banner-content-container {
+    width: 1104px !important;
+    max-width: 1570px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .business-features-content-container {
+    width: 1104px !important;
+    max-width: 1570px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .app-start-to-end-content-container {
+    width: 1104px !important;
+    max-width: 1570px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .accordion-content-container {
+    max-width: 1370px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .project-contact-form-content-container {
+    width: 1104px !important;
+    max-width: 1370px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .blogs-section-content-container {
+    max-width: 1370px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .industries-section-content-container {
+    width: 1104px !important;
+    max-width: 1570px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .technologies-heading-container {
+    width: 1104px !important;
+    max-width: 1570px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .ui-ux-tilt-content-container {
+    width: 1104px !important;
+    max-width: 1570px !important;
+    /* padding-left: 100px !important;
+    padding-right: 100px !important; */
+  }
+
+  .ui-ux-tilt-image-container {
+    max-width: 650px !important;
+    max-height: 600px !important;
+  }
+
+  .page-banner-title {
+    font-size: 84px !important;
+    line-height: 72px !important;
+  }
+
+  .business-features-title {
+    font-size: 54px !important;
+    line-height: 1.2 !important;
+  }
+
+  .business-features-heading {
+    font-size: 32px !important;
+  }
+
+  .business-features-description {
+    font-size: 20px !important;
+  }
+
+  .app-why-opt-title {
+    font-size: 54px !important;
+    line-height: 1.2 !important;
+  }
+
+  .app-why-opt-service-heading {
+    font-size: 27px !important;
+  }
+
+  .app-why-opt-service-description {
+    font-size: 19px !important;
+  }
+
+  .app-start-to-end-title {
+    font-size: 54px !important;
+    line-height: 1.2 !important;
+  }
+
+  .app-start-to-end-description {
+    font-size: 19px !important;
+  }
+
+  .app-start-to-end-video-container {
+    max-width: 800px !important;
+    height: 550px !important;
+  }
+
+  .app-start-to-end-background-image {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .app-start-to-end-card-title {
+    font-size: 27px !important;
+  }
+
+  .app-start-to-end-card-description {
+    font-size: 19px !important;
+  }
+
+  .hero-banner-title {
+    font-size: 60px !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero-banner-description {
+    font-size: 19px !important;
+  }
+
+  .hero-banner-stat-label {
+    font-size: 19px !important;
+  }
+
+  .hero-banner-stat-value {
+    font-size: 60px !important;
+  }
+
+  .split-content-title {
+    font-size: 54px !important;
+    line-height: 1.2 !important;
+  }
+
+  .split-content-description {
+    font-size: 19px !important;
+  }
+
+  .split-content-image-container {
+    height: 700px !important;
+  }
+
+  .blogs-cards-grid {
+    gap: 24px !important;
+  }
+
+  .blogs-card {
+    width: 100% !important;
+    max-width: 380px !important;
+  }
+
+  .blogs-card-content {
+    width: 100% !important;
+    max-width: 380px !important;
+  }
+}
+
+/* 1920px screen - max-w-[1570px] */
+@media (min-width: 1905px) {
+  .hero-banner-content-container {
+    max-width: 1570px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .app-why-opt-content-container {
+    max-width: 1570px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .page-banner-content-container {
+    max-width: 1570px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .business-features-content-container {
+    max-width: 1570px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .app-start-to-end-content-container {
+    max-width: 1570px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .accordion-content-container {
+    max-width: 1570px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .project-contact-form-content-container {
+    max-width: 1470px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .blogs-section-content-container {
+    max-width: 1370px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .industries-section-content-container {
+    max-width: 1570px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .technologies-heading-container {
+    max-width: 1570px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .ui-ux-tilt-content-container {
+    max-width: 1570px !important;
+    /* padding-left: 120px !important;
+    padding-right: 120px !important; */
+  }
+
+  .ui-ux-tilt-image-container {
+    max-width: 700px !important;
+    max-height: 650px !important;
+  }
+
+  .ui-ux-tilt-image-container {
+    max-width: 700px !important;
+    max-height: 650px !important;
+  }
+
+  .page-banner-title {
+    font-size: 96px !important;
+    line-height: 80px !important;
+  }
+
+  .business-features-title {
+    font-size: 60px !important;
+    line-height: 1.2 !important;
+  }
+
+  .business-features-heading {
+    font-size: 36px !important;
+  }
+
+  .business-features-description {
+    font-size: 22px !important;
+  }
+
+  .app-why-opt-title {
+    font-size: 60px !important;
+    line-height: 1.2 !important;
+  }
+
+  .app-why-opt-service-heading {
+    font-size: 30px !important;
+  }
+
+  .app-why-opt-service-description {
+    font-size: 20.5px !important;
+  }
+
+  .app-start-to-end-title {
+    font-size: 60px !important;
+    line-height: 1.2 !important;
+  }
+
+  .app-start-to-end-description {
+    font-size: 20px !important;
+  }
+
+  .app-start-to-end-video-container {
+    max-width: 900px !important;
+    height: 600px !important;
+  }
+
+  .app-start-to-end-background-image {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .app-start-to-end-card-title {
+    font-size: 30px !important;
+  }
+
+  .app-start-to-end-card-description {
+    font-size: 20px !important;
+  }
+
+  .hero-banner-title {
+    font-size: 80px !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero-banner-description {
+    font-size: 20px !important;
+  }
+
+  .hero-banner-stat-label {
+    font-size: 20px !important;
+  }
+
+  .hero-banner-stat-value {
+    font-size: 80px !important;
+  }
+
+  .split-content-title {
+    font-size: 60px !important;
+    line-height: 1.2 !important;
+  }
+
+  .split-content-description {
+    font-size: 20px !important;
+  }
+
+  .split-content-image-container {
+    height: 800px !important;
+  }
+
+  .blogs-cards-grid {
+    gap: 32px !important;
+  }
+
+  .blogs-card {
+    width: 453.34px !important;
+  }
+
+  .blogs-card-content {
+    width: 453.34px !important;
+  }
+
+  .our-work-card {
+    width: 604px !important;
+  }
+}
+
+/* OurWork Section Cards Responsive Styles */
+
+/* 1280px screen - smaller card width */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .our-work-card {
+    width: 400px !important;
+  }
+}
+
+/* 1440px screen - medium card width */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .our-work-card {
+    width: 480px !important;
+  }
+}
+
+/* 1905px screen - actual/default sizes */
+@media (min-width: 1905px) {
+  .our-work-card {
+    width: 604px !important;
+  }
+  .our-work-container {
+    height: 910px !important;
+  }
+  .our-work-title-text {
+    font-size: 120px !important;
+  }
+  .our-work-item-title {
+    font-size: 41px !important;
+  }
+  .our-work-item-description {
+    font-size: 22px !important;
+  }
+  .our-work-item-image {
+    height: 342px !important;
+  }
+}
+
+/* OurWork Section Height, Title, Item Titles, Description and Image Responsive Styles */
+
+/* 1280px screen - smaller sizes */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .our-work-container {
+    height: 750px !important;
+  }
+  .our-work-title-text {
+    font-size: 80px !important;
+  }
+  .our-work-item-title {
+    font-size: 30px !important;
+  }
+  .our-work-item-description {
+    font-size: 16px !important;
+  }
+  .our-work-item-image {
+    height: 240px !important;
+  }
+}
+
+/* 1440px screen - medium sizes */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .our-work-container {
+    height: 820px !important;
+  }
+  .our-work-title-text {
+    font-size: 100px !important;
+  }
+  .our-work-item-title {
+    font-size: 36px !important;
+  }
+  .our-work-item-description {
+    font-size: 19px !important;
+  }
+  .our-work-item-image {
+    height: 300px !important;
+  }
+
+  .ui-ux-heading {
+    font-size: 80px !important;
+  }
+
+  .ui-ux-item {
+    font-size: 20px !important;
+  }
+}
+
+/* UiUxTiltSection UI/UX Heading and Items Responsive Styles */
+
+/* 1280px screen - smaller sizes */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .ui-ux-heading {
+    font-size: 60px !important;
+  }
+  .ui-ux-item {
+    font-size: 18px !important;
+  }
+}
+
+/* 1440px screen - medium sizes */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .ui-ux-heading {
+    font-size: 70px !important;
+  }
+  .ui-ux-item {
+    font-size: 19px !important;
+  }
+}
+
+/* 1905px screen - actual/default sizes */
+@media (min-width: 1905px) {
+  .ui-ux-heading {
+    font-size: 80px !important;
+  }
+  .ui-ux-item {
+    font-size: 20px !important;
+  }
+}
+
+/* OfficeLocations Responsive Styles */
+
+/* 1280px screen - larger sizes */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .office-location-heading {
+    font-size: 22px !important;
+  }
+  .office-location-text {
+    font-size: 18px !important;
+  }
+}
+
+/* 1440px screen - larger sizes */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .office-location-heading {
+    font-size: 30px !important;
+  }
+  .office-location-text {
+    font-size: 20px !important;
   }
 }

@@ -135,12 +135,14 @@ export default function TechnologiesSection({
       {/* Mobile Layout - Vertical Stack */}
       <div className="flex flex-col md:hidden py-12 px-4">
         {/* Heading */}
-        <h2
-          ref={headingRef}
-          className="text-[32px] sm:text-[40px] font-bold text-white mb-8 leading-tight"
-        >
-          {title}
-        </h2>
+        <div className="technologies-heading-container">
+          <h2
+            ref={headingRef}
+            className="text-[32px] sm:text-[40px] font-bold text-white mb-8 leading-tight"
+          >
+            {title}
+          </h2>
+        </div>
 
         {/* Cards - Vertical scroll on mobile */}
         {technologies && technologies.length > 0 && (
@@ -196,7 +198,7 @@ export default function TechnologiesSection({
       {technologies && technologies.length > 0 && (
         <div className="hidden md:flex flex-col h-screen overflow-hidden">
           {/* Heading - Separate row, fixed position */}
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 technologies-heading-container">
             <h2
               ref={headingRef}
               className="text-[48px] lg:text-[56px] font-bold text-white leading-tight max-w-[700px]"

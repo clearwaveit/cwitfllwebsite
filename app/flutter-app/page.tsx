@@ -114,7 +114,7 @@ export default function FlutterAppPage() {
         features={businessFeatures}
         imageSrc={flutterAppImg}
         buttonText="CONTACT US"
-        containerClassName="max-w-[1634px] mx-auto"
+        // containerClassName="max-w-[1634px] mx-auto"
       />
       <AppWhyOpt
         title={title_3}

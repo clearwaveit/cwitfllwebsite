@@ -180,7 +180,7 @@ export default function SplitContentSection({
             {/* Heading */}
             <h1
               ref={headingRef}
-              className={`text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white leading-tight ${titleClassName}`}
+              className={`text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white leading-tight split-content-title ${titleClassName}`}
             >
               {title}
             </h1>
@@ -188,7 +188,7 @@ export default function SplitContentSection({
             {/* Description */}
             <div
               ref={descriptionRef}
-              className={`text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] max-w-[706px] text-white leading-relaxed ${descriptionClassName}`}
+              className={`text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] max-w-[706px] text-white leading-relaxed split-content-description ${descriptionClassName}`}
             >
               {description}
             </div>
@@ -209,7 +209,7 @@ export default function SplitContentSection({
               ref={imageRef}
               className={`w-full flex items-center justify-end ${imageClassName}`}
             >
-              <div className={`relative w-full h-[600px] md:h-[700px] lg:h-[800px] ${imageMaxWidth} overflow-hidden`}>
+              <div className={`relative w-full h-[600px] md:h-[700px] lg:h-[800px] ${imageMaxWidth} overflow-hidden split-content-image-container`}>
                 <Image
                   src={image}
                   alt={imageAlt}

@@ -58,7 +58,7 @@ export default function AppWhyOpt({
   backgroundOverlay = false,
   backgroundOverlayClassName = "",
   className = "",
-  contentMaxWidth = "max-w-full",
+  contentMaxWidth = "container",
 }: AppWhyOptProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
@@ -182,7 +182,7 @@ export default function AppWhyOpt({
           </div>
         </div>
       )}
-      <div className={`relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 ${videoPosition === "left" && "md:ps-72"}`}>
+      <div className={`relative z-20 ${contentMaxWidth} mx-auto app-why-opt-content-container ${videoPosition === "left" && "md:ps-0"}`}>
         {icon && (
           <Image
             src={icon}
@@ -196,14 +196,14 @@ export default function AppWhyOpt({
         {/* Heading */}
         <h2
           ref={headingRef}
-          className="text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white mb-8 md:mb-12 leading-tight max-w-[1300px]"
+          className="text-[22px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white mb-8 md:mb-12 leading-tight max-w-[1300px] app-why-opt-title"
         >
           {title}
         </h2>
 
         {/* Paragraphs */}
         {paragraphs && paragraphs.length > 0 && (
-          <div ref={paragraphsRef} className={`mb-12 md:mb-24 space-y-4 md:space-y-6 ${contentMaxWidth}`}>
+          <div ref={paragraphsRef} className={`mb-12 md:mb-24 space-y-4 md:space-y-6`}>
             {paragraphs.map((paragraph, index) => (
               <p
                 key={index}
@@ -232,10 +232,10 @@ export default function AppWhyOpt({
                   key={index}
                   className={`${bgColor} flex flex-col justify-between items-start gap-8 md:gap-30 border border-[#BFBFBF] rounded-[10px] py-6 md:pt-8 md:pb-12 px-6 md:px-6 hover:border-[#BFBFBF] transition-all duration-300`}
                 >
-                  <h3 className={`${textColor} text-[18px] md:text-[30px] font-[700] mb-3 md:mb-4`}>
+                  <h3 className={`${textColor} text-[18px] md:text-[30px] font-[700] mb-3 md:mb-4 app-why-opt-service-heading`}>
                     {service.title}
                   </h3>
-                  <p className={`${descColor} ${textColor} text-[14px] md:text-[20.5px] font-[350] leading-normal`}>
+                  <p className={`${descColor} ${textColor} text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20.5px] font-[350] leading-normal app-why-opt-service-description`}>
                     {service.description}
                   </p>
                 </div>
