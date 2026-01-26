@@ -135,12 +135,12 @@ export default function Hero() {
 
       {/* Sticky Bar at Bottom */}
       <div 
-        className="absolute bottom-4 md:bottom-6 z-20 w-full py-3 px-4 md:py-4 md:px-6"
+        className="absolute bottom-4 md:bottom-6 z-20 w-full py-3 px-4 md:py-1 md:px-6"
         style={{ backgroundColor: '#2dfdc3' }}
       >
         <div className="container mx-auto">
           <p className="text-black text-sm md:text-base font-medium text-center">
-            Creating exceptional digital experiences with cutting-edge technology
+            Creating Exceptional Digital Experiences With Cutting-Edge Technology
           </p>
         </div>
       </div>
