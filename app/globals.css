@@ -1,0 +1,935 @@
+@import "tailwindcss";
+
+/* Graphik Font Family */
+@font-face {
+  font-family: 'Graphik';
+  src: url('/fonts/Graphik-Light.woff2') format('woff2'),
+    url('/fonts/Graphik-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: light;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik';
+  src: url('/fonts/Graphik-Regular.woff2') format('woff2'),
+    url('/fonts/Graphik-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: regular;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik';
+  src: url('/fonts/Graphik-Medium.woff2') format('woff2'),
+    url('/fonts/Graphik-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: medium;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik';
+  src: url('/fonts/Graphik-Semibold.woff2') format('woff2'),
+    url('/fonts/Graphik-Semibold.woff') format('woff');
+  font-weight: 600;
+  font-style: semibold;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik';
+  src: url('/fonts/Graphik-Bold.woff2') format('woff2'),
+    url('/fonts/Graphik-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: bold;
+  font-display: swap;
+}
+
+:root {
+  --background: #000000;
+  --foreground: #ededed;
+  --font-graphik: 'Graphik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --shiny-cta-bg: #000000;
+  --shiny-cta-bg-subtle: #1a1818;
+  --shiny-cta-fg: #ffffff;
+  --shiny-cta-highlight: #ee66ad;
+  --shiny-cta-highlight-subtle: #758ef8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-graphik);
+  --font-mono: var(--font-graphik);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #000000;
+    --foreground: #ededed;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-graphik);
+}
+
+/* Apply Graphik font to all elements */
+* {
+  font-family: var(--font-graphik);
+}
+
+.font-graphik-light-weight-300 {
+  font-weight: 300 !important;
+}
+
+.vector-bg {
+  top: -250px;
+  max-width: 1364px;
+  min-height: 1562px;
+  object-fit: cover;
+}
+
+/* Footer Responsive Styles - Only affects screens below 1920px */
+/* Desktop (1920px+) remains unchanged */
+
+@media (max-width: 1919px) {
+
+  /* CTA Content - responsive positioning */
+  .footer-cta-content {
+    top: -200px !important;
+    /* min-height: 400px; */
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  /* Heading - responsive font size */
+  .footer-heading {
+    font-size: 32px !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Paragraph - responsive font size */
+  .footer-paragraph {
+    font-size: 14px !important;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Footer links section - responsive padding */
+  .footer-links-section {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  /* Footer links container - responsive padding */
+  .footer-links-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Footer links grid - responsive gap */
+  .footer-links-grid {
+    gap: 1.5rem !important;
+    width: 100%;
+    max-width: 1280px;
+  }
+
+  /* Footer links - responsive font size */
+  .footer-link {
+    font-size: 12px !important;
+  }
+
+  /* Footer text - responsive font size */
+  /* .footer-text {
+    font-size: 16px !important;
+  } */
+
+  /* Contact info - left align on mobile */
+  .footer-contact-info {
+    align-items: flex-start !important;
+  }
+
+  /* Copyright - left align on mobile */
+  .footer-copyright {
+    align-items: flex-start !important;
+  }
+
+  /* Phone icon - responsive size */
+  .footer-phone-icon {
+    width: 14px !important;
+    height: 14px !important;
+  }
+}
+
+/* Tablet adjustments (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1919px) {
+  .footer-heading {
+    font-size: 40px !important;
+  }
+
+  .footer-paragraph {
+    font-size: 16px !important;
+  }
+
+  .footer-link {
+    font-size: 18px !important;
+  }
+
+  .footer-vector-bg {
+    min-height: 1200px;
+  }
+
+  .footer-cta-content {
+    top: -120px !important;
+    min-height: 500px;
+  }
+
+  .footer-contact-info {
+    align-items: flex-end !important;
+  }
+
+  .footer-copyright {
+    align-items: flex-end !important;
+  }
+}
+
+/* Large tablet / Small desktop (1024px - 1919px) */
+@media (min-width: 1024px) and (max-width: 1919px) {
+  .footer-heading {
+    font-size: 60px !important;
+    line-height: 80px !important;
+  }
+
+  .footer-paragraph {
+    font-size: 18px !important;
+  }
+
+  .footer-link {
+    font-size: 22px !important;
+  }
+
+  /* .footer-text {
+    font-size: 22px !important;
+  } */
+
+  .footer-vector-bg {
+    min-height: 1800px;
+  }
+
+  .footer-cta-content {
+    top: -140px !important;
+    min-height: 550px;
+  }
+}
+
+
+/* Studios Section Video Responsive Styles - Only affects screens below 1920px */
+@media (max-width: 1919px) {
+
+  /* Video 0 (Digital Experience Studio) */
+  .video-studio-0 {
+    left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 200px !important;
+    top: -170px !important;
+  }
+
+  /* Video 1 (Application Development Studio) */
+  .video-studio-1 {
+    left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 200px !important;
+    top: -170px !important;
+  }
+
+  /* Video 2 (Growth & Branding Studio) */
+  .video-studio-2 {
+    left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 200px !important;
+    top: -170px !important;
+  }
+}
+
+/* Tablet adjustments (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1919px) {
+  .video-studio-0 {
+    min-height: 300px !important;
+  }
+
+  .video-studio-1 {
+    min-height: 300px !important;
+  }
+
+  .video-studio-2 {
+    min-height: 300px !important;
+  }
+}
+
+/* Contact Form Responsive Styles - Base styles for all screens */
+.contact-form-container {
+  position: absolute !important;
+  z-index: 30 !important;
+  width: 742px !important;
+  max-width: 742px !important;
+}
+
+.mask-studio-image {
+  width: 1364px !important;
+  height: 1562px !important;
+}
+
+.content-studio-0 {
+  padding-left: 0px !important;
+  padding-top: 30px !important;
+}
+
+.content-studio-1 {
+  padding-left: 130px !important;
+  padding-top: 30px !important;
+}
+
+.text-section-padding {
+  padding-left: 160px !important;
+}
+
+/* retina display */
+
+/* 14-inch MacBook Pro (1512 x 982) - Default positioning */
+@media (min-width: 1500px) and (max-width: 1519px) {
+  .contact-form-container {
+    top: 414px !important;
+    right: 168px !important;
+    width: 742px !important;
+    max-width: 450px !important;
+  }
+
+  .blogs-section {
+    width: 370.34px !important;
+    height: 380px !important;
+  }
+
+  .blogs-section-image {
+    width: 370.34px !important;
+  }
+
+  .mask-studio-image {
+    width: 1000px !important;
+    height: 1200px !important;
+  }
+
+  .content-studio-0 {
+    padding-left: 0px !important;
+    padding-top: 30px !important;
+  }
+
+  .content-studio-1 {
+    padding-left: 230px !important;
+    padding-top: 30px !important;
+  }
+
+  .video-studio-0 {
+    left: 0 !important;
+    width: 500px !important;
+    height: 300px !important;
+    min-height: 300px !important;
+  }
+
+  .video-studio-1 {
+    left: 746px !important;
+    width: 350px !important;
+    height: 350px !important;
+    min-height: 350px !important;
+  }
+
+  .video-studio-2 {
+    right: 540px !important;
+    width: 320px !important;
+    height: 320px !important;
+    min-height: 320px !important;
+  }
+
+  .education-section {
+    padding: 120px !important;
+  }
+
+  .education-section h2 {
+    font-size: 40px !important;
+  }
+
+  .whatwedeliver-section {
+    padding: 160px 160px 0 !important;
+  }
+
+  .deliverable-item {
+    max-width: 250px !important;
+    min-height: 150px !important;
+  }
+
+  .deliverable-item p {
+    font-size: 16px !important;
+  }
+
+  .global-section-padding {
+    padding: 0 160px !important;
+  }
+
+  .digital-experience-banner-video {
+    width: 760px !important;
+  }
+
+  .stay-section {
+    top: -280px !important;
+    padding: 0 160px !important;
+  }
+
+  .whatsapp-button {
+    right: 70px !important;
+  }
+}
+
+/* 13-inch MacBook M4 (1280 x 1440) - Exact resolution */
+@media (min-width: 1280px) and (max-width: 1440px) {
+  .blogs-section {
+    width: 350.34px !important;
+    height: 380px !important;
+  }
+
+  .blogs-section-image {
+    width: 350.34px !important;
+  }
+
+  .mask-studio-image {
+    width: 1000px !important;
+    height: 1200px !important;
+  }
+
+  .content-studio-0 {
+    padding-left: 0px !important;
+    padding-top: 30px !important;
+  }
+
+  .content-studio-1 {
+    padding-left: 230px !important;
+    padding-top: 30px !important;
+  }
+
+  .video-studio-0 {
+    left: 180px !important;
+    top: -150px !important;
+    width: 500px !important;
+    height: 300px !important;
+    min-height: 300px !important;
+  }
+
+
+  .video-studio-1 {
+    left: 746px !important;
+    width: 350px !important;
+    height: 350px !important;
+    min-height: 350px !important;
+  }
+
+  .video-studio-2 {
+    right: 540px !important;
+    width: 320px !important;
+    height: 320px !important;
+    min-height: 320px !important;
+  }
+
+  .education-section {
+    padding: 120px !important;
+  }
+
+  .education-section h2 {
+    font-size: 40px !important;
+  }
+
+  .whatwedeliver-section {
+    padding: 160px 160px 0 !important;
+  }
+
+  .deliverable-item {
+    max-width: 250px !important;
+    min-height: 150px !important;
+  }
+
+  .deliverable-item p {
+    font-size: 18px !important;
+  }
+
+  .global-section-padding {
+    padding: 0 100px !important;
+  }
+
+  .digital-experience-banner-video {
+    width: 760px !important;
+  }
+
+  .stay-section {
+    top: -280px !important;
+    padding: 0 160px !important;
+  }
+
+  .whatsapp-button {
+    right: 70px !important;
+  }
+
+  .contact-form-container {
+    top: 36% !important;
+    right: 10.5% !important;
+    width: 742px !important;
+    max-width: 432px !important;
+  }
+
+  .global-section-padding-footer {
+    padding: 40px 60px !important;
+  }
+
+  .text-section-padding {
+    padding: 100px !important;
+  }
+}
+
+/* 14-inch MacBook M4 (1440 x 1519) - Exact resolution */
+@media (min-width: 1440px) and (max-width: 1520px) {
+  .video-studio-0 {
+    left: 20px !important;
+    top: -150px !important;
+    width: 500px !important;
+    height: 300px !important;
+    min-height: 300px !important;
+  }
+
+  .blogs-section {
+    width: 370.34px !important;
+    height: 380px !important;
+  }
+
+  .blogs-section-image {
+    width: 370.34px !important;
+  }
+
+  .mask-studio-image {
+    width: 1000px !important;
+    height: 1200px !important;
+  }
+
+  .content-studio-0 {
+    padding-left: 0px !important;
+    padding-top: 30px !important;
+  }
+
+  .content-studio-1 {
+    padding-left: 230px !important;
+    padding-top: 30px !important;
+  }
+
+  .video-studio-1 {
+    left: 800px !important;
+    top: -20px !important;
+    width: 350px !important;
+    height: 350px !important;
+    min-height: 350px !important;
+  }
+
+  .video-studio-2 {
+    right: 540px !important;
+    width: 320px !important;
+    height: 320px !important;
+    min-height: 320px !important;
+  }
+
+  .education-section {
+    padding: 120px !important;
+  }
+
+  .education-section h2 {
+    font-size: 40px !important;
+  }
+
+  .whatwedeliver-section {
+    padding: 160px 160px 0 !important;
+  }
+
+  .deliverable-item {
+    max-width: 250px !important;
+    min-height: 150px !important;
+  }
+
+  .deliverable-item p {
+    font-size: 18px !important;
+  }
+
+  .global-section-padding {
+    padding: 0 160px !important;
+  }
+
+  .digital-experience-banner-video {
+    width: 760px !important;
+  }
+
+  .stay-section {
+    top: -280px !important;
+    padding: 0 160px !important;
+  }
+
+  .whatsapp-button {
+    right: 70px !important;
+  }
+
+  .contact-form-container {
+    top: 36% !important;
+    right: 10.5% !important;
+    width: 742px !important;
+    max-width: 432px !important;
+  }
+}
+
+/* 13-inch MacBook Air M4 (2560 x 1664) - Exact resolution */
+@media (min-width: 2560px) and (max-width: 2569px) {
+  .contact-form-container {
+    top: 42% !important;
+    right: 10.5% !important;
+    width: 742px !important;
+    max-width: 742px !important;
+  }
+}
+
+/* 15-inch MacBook Air M4 (2880 x 1864) - Exact resolution */
+@media (min-width: 2880px) and (max-width: 2889px) {
+  .contact-form-container {
+    top: 42% !important;
+    right: 9.3% !important;
+    width: 742px !important;
+    max-width: 742px !important;
+  }
+
+}
+
+/* 16-inch MacBook Pro (1728 x 1117 scaled) */
+@media (min-width: 1728px) and (max-width: 1737px) {
+  .contact-form-container {
+    top: 37% !important;
+    right: 15.5% !important;
+    width: 742px !important;
+    max-width: 742px !important;
+  }
+}
+
+/* 16-inch MacBook Pro native resolution (3456 x 2234) */
+@media (min-width: 3456px) and (max-width: 3465px) {
+  .contact-form-container {
+    top: 37% !important;
+    right: 7.8% !important;
+    width: 742px !important;
+    max-width: 742px !important;
+  }
+}
+
+/* Tablet adjustments (768px - 1023px) */
+@media (max-width: 768px) {
+  .contact-form-container {
+    max-width: 450px !important;
+  }
+
+  .mask-studio-image {
+    width: 1000px !important;
+    height: 462px !important;
+  }
+  .text-section-padding {
+    padding: 20px !important;
+  }
+}
+
+/* For screens between 1520px and 1719px (between 14" and 16" MacBook Pro) */
+@media (min-width: 1520px) and (max-width: 1719px) {
+  .contact-form-container {
+    top: 414px !important;
+    right: 168px !important;
+    width: 742px !important;
+    max-width: 450px !important;
+  }
+
+  .blogs-section {
+    width: 370.34px !important;
+    height: 380px !important;
+  }
+
+  .blogs-section-image {
+    width: 370.34px !important;
+  }
+
+  .mask-studio-image {
+    width: 1000px !important;
+    height: 1200px !important;
+  }
+
+  .content-studio-0 {
+    padding-left: 0px !important;
+    padding-top: 30px !important;
+  }
+
+  .content-studio-1 {
+    padding-left: 230px !important;
+    padding-top: 30px !important;
+  }
+
+  /* .content-studio-2 {
+    padding-left: 430px !important;
+  } */
+  .video-studio-0 {
+    left: 0 !important;
+    width: 500px !important;
+    height: 300px !important;
+    min-height: 300px !important;
+  }
+
+  .video-studio-1 {
+    left: 746px !important;
+    width: 350px !important;
+    height: 350px !important;
+    min-height: 350px !important;
+  }
+
+  .video-studio-2 {
+    right: -90px !important;
+    width: 320px !important;
+    height: 320px !important;
+    min-height: 320px !important;
+  }
+
+  .education-section {
+    padding: 120px !important;
+  }
+
+  .education-section h2 {
+    font-size: 40px !important;
+  }
+
+  .whatwedeliver-section {
+    padding: 160px 160px 0 !important;
+  }
+
+  .deliverable-item {
+    max-width: 250px !important;
+    min-height: 150px !important;
+  }
+
+  .deliverable-item p {
+    font-size: 18px !important;
+  }
+
+  .global-section-padding {
+    padding: 0 160px !important;
+  }
+
+  .digital-experience-banner-video {
+    width: 760px !important;
+  }
+
+  .stay-section {
+    top: -280px !important;
+    padding: 0 160px !important;
+  }
+
+  .whatsapp-button {
+    right: 70px !important;
+  }
+}
+
+/* For screens between 1740px and 2559px (between 16" MacBook Pro and 13" Air) */
+@media (min-width: 1740px) and (max-width: 2559px) {
+  .contact-form-container {
+    /* top: 40% !important; */
+    top: 20% !important;
+    right: 11% !important;
+    width: 742px !important;
+    max-width: 742px !important;
+  }
+}
+
+/* For screens between 2570px and 2879px (between 13" and 15" Air) */
+@media (min-width: 2570px) and (max-width: 2879px) {
+  .contact-form-container {
+    top: 42% !important;
+    right: 10% !important;
+    width: 742px !important;
+    max-width: 742px !important;
+  }
+}
+
+/* For screens above 2890px (larger than 15" Air) */
+@media (min-width: 2890px) {
+  .contact-form-container {
+    top: 42% !important;
+    right: 9% !important;
+    width: 742px !important;
+    max-width: 742px !important;
+  }
+}
+
+.sidebar-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar-scrollbar:hover {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.sidebar-scrollbar:hover::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+  background: #f1f5f9;
+  border: 2px solid #cbd5e1;
+}
+
+.sidebar-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+}
+
+.overflow-y-auto-2 {
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.overflow-y-auto-2::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* styles/shiny-cta.css */
+
+/* REQUIRED for animation */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --gradient-angle-offset {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --gradient-percent {
+  syntax: "<percentage>";
+  initial-value: 5%;
+  inherits: false;
+}
+
+@property --gradient-shine {
+  syntax: "<color>";
+  initial-value: white;
+  inherits: false;
+}
+
+/* SHINY VARIANT */
+.shiny-cta {
+  --animation: gradient-angle linear infinite;
+  --duration: 3s;
+  --shadow-size: 2px;
+
+  --gradient-angle: 180deg;
+  --gradient-angle-offset: 0deg;
+
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+
+  color: var(--shiny-cta-fg);
+  background:
+    linear-gradient(var(--shiny-cta-bg), var(--shiny-cta-bg)) padding-box,
+    conic-gradient(
+      from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+      transparent,
+      var(--shiny-cta-highlight) var(--gradient-percent),
+      var(--gradient-shine) calc(var(--gradient-percent) * 2),
+      var(--shiny-cta-highlight) calc(var(--gradient-percent) * 3),
+      transparent calc(var(--gradient-percent) * 4)
+    ) border-box;
+
+  border: 1px solid transparent;
+  box-shadow: inset 0 0 0 1px var(--shiny-cta-bg-subtle);
+
+  transition: 800ms cubic-bezier(0.25, 1, 0.5, 1);
+  transition-property: --gradient-angle-offset, --gradient-percent, --gradient-shine;
+}
+
+/* Inner shimmer */
+.shiny-cta::after {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  pointer-events: none;
+
+  background: conic-gradient(
+    from var(--gradient-angle),
+    transparent,
+    transparent 30%,
+    rgba(117, 142, 248, 0.6) 50%,
+    transparent 70%,
+    transparent
+  );
+
+  filter: blur(15px);
+  opacity: 0.8;
+}
+
+/* Animate */
+.shiny-cta,
+.shiny-cta::after {
+  animation:
+    var(--animation) var(--duration),
+    shimmer calc(var(--duration) / 0.4) reverse paused;
+  animation-composition: add;
+}
+
+/* Hover / focus */
+.shiny-cta:is(:hover, :focus-visible) {
+  --gradient-percent: 20%;
+  --gradient-shine: var(--shiny-cta-highlight-subtle);
+}
+
+/* .shiny-cta:is(:hover, :focus-visible),
+.shiny-cta:is(:hover, :focus-visible)::after {
+  animation-play-state: running;
+} */
+
+/* Keyframes */
+@keyframes gradient-angle {
+  to {
+    --gradient-angle: 360deg;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    rotate: 360deg;
+  }
+}
