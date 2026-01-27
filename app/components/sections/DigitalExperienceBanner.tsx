@@ -352,11 +352,11 @@ export default function DigitalExperienceBanner({
 
       {/* Content - Positioned within the green curved section */}
       <div ref={contentRef} className="relative z-20 h-full flex items-center pointer-events-none">
-        <div ref={contentWrapperRef} className="max-w-[1400px] h-full h-[724px] md:min-h-[700px] flex flex-col md:flex-row items-center justify-center ps-3 pe-3 md:ps-30">
+        <div ref={contentWrapperRef} className="max-w-[1400px] w-full h-full h-[724px] flex flex-col md:flex-row items-center justify-start ps-3 pe-3 md:ps-30">
           <div className="ps-0 lg:ps-8 pt-30 lg:pt-70 pointer-events-auto w-full md:w-auto">
             <h1
               ref={headingRef}
-              className="text-[40px] md:text-[80px] font-[500] text-white leading-[44px] md:leading-[80px] mb-6"
+              className="text-[40px] md:text-[80px] font-[500] text-white leading-[44px] md:leading-[80px] mb-6 contact-form-heading"
             >
               {title}
             </h1>
