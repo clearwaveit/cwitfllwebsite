@@ -81,7 +81,7 @@ export default function OfficeLocations({ className = "" }: OfficeLocationsProps
             <div
               key={index}
               ref={(el) => { cardRefs.current[index] = el; }}
-              className="px-10 md:px-20 lg:ps-10"
+              className="padding-office-location-card"
             >
               <h3 className="text-[24px] md:text-[41px] office-location-heading font-[400] mb-6">
                 {office.city}

@@ -200,7 +200,7 @@ export default function Studios() {
                 className="absolute top-1/2 left-0 right-0 -translate-y-1/2 w-full"
                 style={{ willChange: 'opacity' }}
               >
-                <div className={`flex flex-col items-start max-w-[1400px] ps-3 pe-3 md:ps-30 ${index === 1 ? "mx-auto" : index === 2 ? "ml-auto" : ""}`}>
+                <div className={`flex flex-col items-start max-w-[1400px] ps-3 pe-3 md:ps-30 md:mt-[-140px] ${index === 1 ? "mx-auto" : index === 2 ? "ml-auto" : ""}`}>
                   {/* Background Video */}
                   <video
                     src={studio.video}
@@ -210,8 +210,8 @@ export default function Studios() {
                     playsInline
                     className={`absolute inset-0 object-cover mx-auto video-responsive-studios video-studio-${index}`}
                     style={{
-                      left: index === 0 ? "-450px" : index === 1 ? "882px" : index === 2 ? "-150px" : "100px",
-                      top: index === 0 ? "-230px" : index === 1 ? "-88px" : index === 2 ? "0" : "0",
+                      left: index === 0 ? "-350px" : index === 1 ? "882px" : index === 2 ? "-150px" : "100px",
+                      top: index === 0 ? "-330px" : index === 1 ? "-88px" : index === 2 ? "0" : "0",
                       width: index === 0 ? "720px" : index === 1 ? "461px" : index === 2 ? "420px" : "420px",
                       height: index === 0 ? "405px" : index === 1 ? "461px" : index === 2 ? "420px" : "420px",
                       zIndex: -1000,
@@ -223,7 +223,7 @@ export default function Studios() {
 
                   {/* Content */}
                   <div className={`content-wrapper relative z-20 w-full content-studio-${index === 0 ? "ps-0 lg:ps-8 lg:pt-0" : index === 1 ? "ps-0 lg:ps-50 lg:pt-0" : index === 2 ? "ps-0 lg:ps-115" : "ps-0"}`}>
-                    <h2 className="text-[30px] md:text-[80px] font-[400] text-white leading-[32px] md:leading-[80px] mb-6">
+                    <h2 className={`text-[30px] md:text-[80px] font-[700] text-white leading-[32px] md:leading-[80px] mb-6 ${index === 0 ? 'studio-heading-0' : index === 1 ? 'studio-heading-1' : 'studio-heading-2'}`}>
                       {index === 0 ? (
                         <>
                           Digital<br />
@@ -245,7 +245,7 @@ export default function Studios() {
                     <p className="text-[16px] md:text-[20px] text-white mb-4 max-w-[730px] leading-relaxed">
                       {studio.description}
                     </p>
-                    <div className="flex flex-col pb-10 md:pb-10">
+                    <div className="flex flex-col pb-10 md:pb-6">
                       <ul className="flex gap-12 list-style-none">
                         <li className="text-[12px] md:text-[30px]">UI / UX Design</li>
                         <li className="text-[12px] md:text-[30px]">Webite Development</li>
