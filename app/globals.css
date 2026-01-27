@@ -702,12 +702,14 @@ body {
     height: 300px !important;
     min-height: 300px !important;
   }
+
   .video-studio-1 {
     left: 0 !important;
     width: 350px !important;
     height: 450px !important;
     min-height: 350px !important;
   }
+
   .video-studio-2 {
     right: 40px !important;
     width: 320px !important;
@@ -1937,6 +1939,14 @@ body {
   .padding-office-location-card {
     padding: 0 22px !important;
   }
+
+  .contact-form-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    position: absolute !important;
+    top: 300px !important;
+    padding: 0 100px !important;
+  }
 }
 
 /* Studios Responsive Styles */
@@ -1991,6 +2001,18 @@ body {
 
   .content-studio-2 {
     padding-left: 190px !important;
+  }
+
+  .contact-form-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    position: absolute !important;
+    top: 450px !important;
+    padding: 0 100px !important;
+  }
+
+  .global-section-padding {
+    padding: 0 100px !important;
   }
 }
 
