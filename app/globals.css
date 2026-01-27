@@ -1365,7 +1365,7 @@ body {
 }
 
 /* 1920px screen - max-w-[1570px] */
-@media (min-width: 1920px) {
+@media (min-width: 1920px) and (max-width: 2559px) {
   .hero-banner-content-container {
     max-width: 1570px !important;
     /* padding-left: 120px !important;
