@@ -41,6 +41,9 @@ export default function OurWork({
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [selectedItem, setSelectedItem] = useState<WorkItem | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const modalContentRef = useRef<HTMLDivElement>(null);
 
   // Horizontal scroll animation on page scroll - only for new design
   useEffect(() => {
@@ -155,6 +158,31 @@ export default function OurWork({
     setIsDragging(false);
   };
 
+  // Handle escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedItem) {
+        setSelectedItem(null);
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [selectedItem]);
+
+  // Animate modal
+  useEffect(() => {
+    if (selectedItem && modalRef.current && modalContentRef.current) {
+      gsap.fromTo(modalRef.current, 
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3 }
+      );
+      gsap.fromTo(modalContentRef.current,
+        { scale: 0.8, opacity: 0, y: 50 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }
+      );
+    }
+  }, [selectedItem]);
+
   // NEW DESIGN - Horizontal Scrolling
   if (useNewDesign) {
     return (
@@ -181,7 +209,8 @@ export default function OurWork({
             {workItems.map((item, index) => (
               <div
                 key={index}
-                className="w-full bg-black border border-[#C1C1C1] overflow-hidden flex flex-col"
+                onClick={() => setSelectedItem(item)}
+                className="w-full bg-black border border-[#C1C1C1] overflow-hidden flex flex-col cursor-pointer"
               >
                 {/* Category Tags */}
                 {item.category && (
@@ -240,7 +269,7 @@ export default function OurWork({
           {/* Single container for both title and cards that moves together */}
           <div
             ref={cardsContainerRef}
-            className={`flex h-[910px] items-center will-change-transform our-work-container ${
+            className={`flex h-[910px] items-center will-change-transform our-work-container our-work-responsive-container ${
               isDragging ? "cursor-grabbing" : "cursor-grab"
             }`}
             onMouseDown={handleMouseDown}
@@ -254,10 +283,10 @@ export default function OurWork({
             {/* Left Side - Title and CTA */}
             <div className="flex-shrink-0 w-[280px] lg:w-[400px] xl:w-[520px] flex flex-col justify-center items-start pl-8 lg:pl-16 xl:pl-20 pr-6 lg:pr-10 py-12 our-work-title-container">
               <h2 className="text-white mb-12 lg:mb-16 xl:mb-20 our-work-title">
-                <span className="block text-[70px] lg:text-[90px] xl:text-[120px] font-[300] leading-[0.85] tracking-tight our-work-title-text">
+                <span className="block text-[70px] lg:text-[90px] xl:text-[128px] font-[700] leading-[0.85] tracking-tight our-work-title-text">
                   OUR
                 </span>
-                <span className="block text-[70px] lg:text-[90px] xl:text-[120px] font-[300] leading-[0.85] tracking-tight our-work-title-text">
+                <span className="block text-[70px] lg:text-[90px] xl:text-[128px] font-[700] leading-[0.85] tracking-tight our-work-title-text">
                   WORK
                 </span>
               </h2>
@@ -273,7 +302,8 @@ export default function OurWork({
               {workItems.map((item, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 w-[380px] lg:w-[480px] xl:w-[604px] h-auto bg-black border border-[#C1C1C1] overflow-hidden flex flex-col our-work-card"
+                  onClick={() => setSelectedItem(item)}
+                  className="flex-shrink-0 w-[380px] lg:w-[480px] xl:w-[604px] h-auto bg-black border border-[#C1C1C1] overflow-hidden flex flex-col our-work-card our-work-responsive-card cursor-pointer"
                 >
                   {/* Category Tags - Top */}
                   {item.category && (
@@ -298,7 +328,7 @@ export default function OurWork({
 
                   {/* Description */}
                   <div className="max-w-[460px] px-5 lg:px-8 pb-4 lg:pb-16">
-                    <p className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[1.5] font-[300] our-work-item-description">
+                    <p className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[1.5] font-[400] our-work-item-description">
                       {item.description}
                     </p>
                   </div>
@@ -318,6 +348,69 @@ export default function OurWork({
             </div>
           </div>
         </div>
+
+        {/* Modal/Popup */}
+        {selectedItem && (
+          <div 
+            ref={modalRef}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            onClick={() => setSelectedItem(null)}
+          >
+            <div 
+              ref={modalContentRef}
+              className="relative bg-zinc-900 rounded-lg max-w-4xl w-full mx-4 p-8 md:p-12 border border-[#BFBFBF] max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedItem(null)}
+                className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors text-2xl font-bold z-10"
+              >
+                ×
+              </button>
+
+              {/* Modal Content */}
+              <div className="space-y-6">
+                {/* Image */}
+                <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
+                  <Image
+                    src={selectedItem.image}
+                    alt={selectedItem.title}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+                
+                <div>
+                  {/* Category */}
+                  {selectedItem.category && (
+                    <div className="mb-4">
+                      {selectedItem.category.split('\n').map((cat, idx) => (
+                        <span
+                          key={idx}
+                          className="text-white text-sm md:text-base uppercase tracking-[0.1em] font-[400] block"
+                        >
+                          {cat}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Title */}
+                  <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                    {selectedItem.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-lg md:text-xl text-white leading-relaxed">
+                    {selectedItem.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
     );
   }

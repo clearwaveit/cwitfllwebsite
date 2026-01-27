@@ -356,7 +356,7 @@ export default function DigitalExperienceBanner({
           <div className="ps-0 lg:ps-8 pt-30 lg:pt-70 pointer-events-auto w-full md:w-auto">
             <h1
               ref={headingRef}
-              className="text-[40px] md:text-[80px] font-light text-white leading-[44px] md:leading-[80px] mb-6"
+              className="text-[40px] md:text-[80px] font-[500] text-white leading-[44px] md:leading-[80px] mb-6"
             >
               {title}
             </h1>

@@ -28,7 +28,7 @@ export default function CallToActionButton({
     ? "w-[140px] md:w-[180px] h-[36px] md:h-[45px] rounded-full px-4 py-2 md:text-[13px] text-[11px]"
     : "w-[180px] md:w-[221px] h-[36px] md:h-[51px] rounded-full px-6 py-2 md:text-[15px] text-[11px]";
 
-  const baseClasses = `${sizeClasses} font-graphik-light-weight-300 text-white transition-all duration-300 relative items-center justify-center z-50`;
+  const baseClasses = `${sizeClasses} font-graphik-light-weight-300 text-white hover:cursor-pointer transition-all duration-300 relative items-center justify-center z-50`;
 
   const variantClasses =
      variant === "outline"
