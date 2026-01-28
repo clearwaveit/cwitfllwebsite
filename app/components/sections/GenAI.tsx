@@ -155,19 +155,14 @@ export default function GenAI() {
               muted
               playsInline
               preload="auto"
-              className="absolute inset-0 object-cover z-0 mx-auto video-responsive-gen-ai w-[900px] h-[400px] md:min-h-[900px]"
-              style={{
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
+              className="absolute inset-0 object-cover z-0 w-full h-full video-responsive-gen-ai"
             />
 
             {/* Content */}
             <div className="relative z-20 w-full flex flex-col items-center text-center gap-14 pt-100 lg:pt-200">
               <h2
                 ref={headingRef}
-                className="text-[20px] md:text-[60px] font-[400] text-white leading-tight md:leading-[60px]"
+                className="text-[20px] md:text-[60px] font-[400] text-white leading-tight md:leading-[60px] gen-ai-heading"
               >
                 Redefining Businesses<br />
                 with AI-as-a-Service
