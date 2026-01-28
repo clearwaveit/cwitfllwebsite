@@ -174,7 +174,7 @@ export default function Accordion() {
   return (
     <section className="relative min-h-screen bg-black py-24 overflow-hidden">
       <div className="relative z-10 mx-auto px-3 md:px-0 lg:px-0 global-section-padding accordion-content-container">
-        <h2 className="text-[30px] md:text-[50px] font-[500] text-white leading-[60px] md:leading-[80px] mb-10">
+        <h2 className="text-[30px] md:text-[50px] font-[500] text-white leading-[60px] md:leading-[80px] mb-10 accordion-heading">
           FAQ's
         </h2>
 
@@ -192,7 +192,7 @@ export default function Accordion() {
                   onClick={() => toggleItem(item.id)}
                   className={`w-full flex items-center justify-between px-6 py-5 text-left border border-[#4E4E4E] transition-colors duration-300 ${isOpen ? 'rounded-t-[10px] rounded-b-none' : 'rounded-[10px]'}`}
                 >
-                  <h3 className={`text-[14px] md:text-[20px] pr-8 ${isOpen ? 'text-white font-bold' : 'text-white font-medium'}`}>
+                  <h3 className={`text-[14px] md:text-[20px] pr-8 accordion-title ${isOpen ? 'text-white font-bold' : 'text-white font-medium'}`}>
                     {item.title}
                   </h3>
 
@@ -252,7 +252,7 @@ export default function Accordion() {
                   style={item.id === 1 ? { display: 'block', height: 'auto', opacity: 1 } : { display: 'none', height: '0px', opacity: 0 }}
                 >
                   <div className={`p-6 ${isOpen ? 'rounded-b-[10px]' : 'bg-black'}`}>
-                    <p className="text-[12px] md:text-[16px] text-white leading-relaxed">
+                    <p className="text-[12px] md:text-[16px] text-white leading-relaxed accordion-content">
                       {item.content}
                     </p>
                   </div>

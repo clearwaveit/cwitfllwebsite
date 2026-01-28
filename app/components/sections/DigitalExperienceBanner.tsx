@@ -363,7 +363,7 @@ export default function DigitalExperienceBanner({
             {description && (
               <p
                 ref={textRef}
-                className="text-[16px] md:text-[30px] font-light text-white leading-relaxed"
+                className="text-[16px] md:text-[30px] font-light text-white leading-relaxed contact-form-description"
               >
                 {description}
               </p>

@@ -29,7 +29,7 @@ export default function TextSection({
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 85%",
+          start: "top 70%",
           toggleActions: "play none none reverse",
         },
       });
@@ -37,13 +37,15 @@ export default function TextSection({
       // Animate each paragraph with stagger effect
       paragraphRefs.current.forEach((el, index) => {
         if (el) {
-          gsap.set(el, { opacity: 0, y: 40 });
+          gsap.set(el, { opacity: 0, y: 50 });
           tl.to(el, {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 1,
             ease: "power3.out",
-          }, index === 0 ? 0 : "<0.15");
+            force3D: true,
+            delay: index === 0 ? 0.15 : 0, // Minor delay for first paragraph
+          }, index === 0 ? 0.15 : "<0.2");
         }
       });
     }, sectionRef);
@@ -59,7 +61,7 @@ export default function TextSection({
             key={index}
             ref={(el) => { paragraphRefs.current[index] = el; }}
             className={`text-white ${index === 0
-                ? firstParagraphClassName || "text-[20px] md:text-[38px] font-[400] leading-tight"
+                ? firstParagraphClassName || "text-[20px] md:text-[38px] font-[500] leading-tight paragraph-text"
                 : "text-[14px] md:text-[20px] text-start font-light leading-relaxed mt-6 md:mt-8"
               }`}
           >

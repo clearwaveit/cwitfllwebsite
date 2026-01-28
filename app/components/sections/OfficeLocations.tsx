@@ -74,14 +74,14 @@ export default function OfficeLocations({ className = "" }: OfficeLocationsProps
   }, []);
 
   return (
-    <section ref={sectionRef} className={`bg-black text-white pb-16 md:pb-24 ${className}`}>
-      <div className="max-w-[1294px] mx-auto global-section-padding">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+    <section ref={sectionRef} className={`bg-black text-white py-16 md:py-24 ${className}`}>
+      <div className="max-w-[1294px] mx-auto global-section-padding office-locations-container">
+        <div className="office-locations-grid">
           {offices.map((office, index) => (
             <div
               key={index}
               ref={(el) => { cardRefs.current[index] = el; }}
-              className="padding-office-location-card"
+              className="padding-office-location-card office-location-card"
             >
               <h3 className="text-[24px] md:text-[41px] office-location-heading font-[400] mb-6">
                 {office.city}

@@ -25,8 +25,8 @@ export default function CallToActionButton({
   disabled = false,
 }: CallToActionButtonProps) {
   const sizeClasses = size === "small"
-    ? "w-[140px] md:w-[180px] h-[36px] md:h-[45px] rounded-full px-4 py-2 md:text-[13px] text-[11px]"
-    : "w-[180px] md:w-[221px] h-[36px] md:h-[51px] rounded-full px-6 py-2 md:text-[15px] text-[11px]";
+    ? "w-[140px] md:w-[180px] h-[36px] md:h-[45px] rounded-full px-4 py-2 md:text-[13px] text-[11px] cta-button-small"
+    : "w-[180px] md:w-[221px] h-[36px] md:h-[51px] rounded-full px-6 py-2 md:text-[15px] text-[11px] cta-button";
 
   const baseClasses = `${sizeClasses} font-graphik-light-weight-300 text-white hover:cursor-pointer transition-all duration-300 relative items-center justify-center z-50`;
 
@@ -39,7 +39,7 @@ export default function CallToActionButton({
 
   const content = (
     <>
-      <span className="relative z-10 text-white font-[500]">{children}</span>
+      <span className="relative z-10 text-white font-[500] cta-button-text">{children}</span>
       <span 
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         // style={{

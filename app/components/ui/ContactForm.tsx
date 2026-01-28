@@ -173,7 +173,7 @@ export default function ContactForm({ className = "" }: ContactFormProps) {
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className={`flex flex-col gap-5 md:gap-6 ${className}`}
+      className={`grid grid-cols-1 gap-5 md:gap-6 lg:grid-cols-2 xl:grid-cols-1 ${className}`}
     >
       {/* Name Input */}
       <div>
@@ -235,7 +235,7 @@ export default function ContactForm({ className = "" }: ContactFormProps) {
       </div>
 
       {/* Message Textarea */}
-      <div>
+      <div className="lg:col-span-2 xl:col-span-1">
         <textarea
           ref={(el) => { inputRefs.current[4] = el; }}
           name="message"
@@ -283,7 +283,7 @@ export default function ContactForm({ className = "" }: ContactFormProps) {
       {/* Status Message */}
       {submitStatus.type && (
         <div
-          className={`px-4 py-3 rounded-lg text-sm ${
+          className={`px-4 py-3 rounded-lg text-sm lg:col-span-2 xl:col-span-1 ${
             submitStatus.type === "success"
               ? "bg-[#00d4aa]/20 text-[#00d4aa] border border-[#00d4aa]/30"
               : "bg-red-500/20 text-red-400 border border-red-500/30"
@@ -294,7 +294,7 @@ export default function ContactForm({ className = "" }: ContactFormProps) {
       )}
 
       {/* Submit Button */}
-      <div ref={(el) => { inputRefs.current[5] = el; }} className="mt-2 md:mt-4">
+      <div ref={(el) => { inputRefs.current[5] = el; }} className="mt-2 md:mt-4 lg:col-span-2 xl:col-span-1">
         <CallToActionButton type="submit" variant="shiny" disabled={isSubmitting}>
           {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
         </CallToActionButton>

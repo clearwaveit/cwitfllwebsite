@@ -22,45 +22,62 @@ export default function GenAI() {
 
     if (!section || !video) return;
 
+    // iOS-specific setup
+    video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('playsinline', 'true');
+    
+    // Ensure video is visible on iOS
+    video.style.display = 'block';
+    video.style.visibility = 'visible';
+    video.style.opacity = '1';
+
     // Pause video initially - we'll control it with scroll
     video.pause();
-
-    // Target time for smooth interpolation
-    let targetTime = 0;
-    let currentTime = 0;
-    let rafId: number;
-
-    // Smooth interpolation function
-    const smoothUpdate = () => {
-      // Lerp (linear interpolation) for smooth transition
-      const ease = 0.1; // Lower = smoother but slower, Higher = faster but less smooth
-      currentTime += (targetTime - currentTime) * ease;
-
-      // Only update if difference is significant
-      if (Math.abs(targetTime - currentTime) > 0.01) {
-        video.currentTime = currentTime;
-      }
-
-      rafId = requestAnimationFrame(smoothUpdate);
-    };
+    video.currentTime = 0;
 
     // Wait for video metadata to load to get duration
     const setupScrollSync = () => {
       const videoDuration = video.duration;
       if (!videoDuration || isNaN(videoDuration)) return;
 
-      // Start smooth update loop
-      rafId = requestAnimationFrame(smoothUpdate);
+      // Calculate section height for scroll distance
+      const sectionHeight = section.offsetHeight;
+      const viewportHeight = window.innerHeight;
+      // Use section height for scroll distance
+      const scrollDistance = sectionHeight + viewportHeight;
 
       // Create ScrollTrigger to sync video with scroll
       const trigger = ScrollTrigger.create({
         trigger: section,
-        start: "top 80%", // Start when section enters viewport
-        end: "bottom 20%", // End when section leaves viewport
-        scrub: 1.5, // Smooth scrubbing with 1.5 second delay
+        start: "top center", // Start when section reaches center
+        end: `+=${scrollDistance}px`, // End after scrolling through section
+        scrub: true, // Direct scrubbing - video plays exactly as scroll progresses
         onUpdate: (self) => {
-          // Set target time based on scroll progress (0 to 1)
-          targetTime = self.progress * videoDuration;
+          // Set video time based on scroll progress (0 to 1)
+          const progress = self.progress;
+          const targetTime = progress * videoDuration;
+          
+          // Update video time directly for precise scrubbing
+          if (Math.abs(video.currentTime - targetTime) > 0.1) {
+            video.currentTime = targetTime;
+          }
+        },
+        onEnter: () => {
+          // When section enters center, ensure video is at start
+          video.currentTime = 0;
+        },
+        onLeave: () => {
+          // When leaving, pause at current position
+          video.pause();
+        },
+        onEnterBack: () => {
+          // When scrolling back, resume from current position
+          // Video will continue from where it was
+        },
+        onLeaveBack: () => {
+          // When scrolling back past start, reset to beginning
+          video.currentTime = 0;
+          video.pause();
         },
       });
 
@@ -81,8 +98,29 @@ export default function GenAI() {
 
     return () => {
       if (trigger) trigger.kill();
-      if (rafId) cancelAnimationFrame(rafId);
     };
+  }, []);
+
+  // iOS video loading fix
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Force video to load on iOS
+    const loadVideo = () => {
+      video.load();
+      // Ensure video is visible
+      video.style.display = 'block';
+      video.style.visibility = 'visible';
+    };
+
+    // Try to load immediately
+    loadVideo();
+
+    // Also try after a short delay for iOS
+    const timeout = setTimeout(loadVideo, 100);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   // GSAP scroll animations
@@ -140,19 +178,29 @@ export default function GenAI() {
       <div className="relative z-10 container-fluid mx-auto">
         <div className="space-y-32 md:space-y-20 h-full">
           {/* Main Content Div */}
-          <div className="relative flex flex-col items-center max-w-[1494px] mx-auto h-full h-[400px] md:min-h-[800px] justify-center overflow-hidden">
+          <div className="relative flex flex-col items-center max-w-[1494px] mx-auto h-full min-h-[400px] md:min-h-[800px] justify-center overflow-hidden">
             {/* Background Video */}
             <video
               ref={videoRef}
               src="/videos/animated_gen_ai_clip_2.mp4"
               muted
               playsInline
+              autoPlay
+              loop
               preload="auto"
-              className="absolute inset-0 object-cover z-0 mx-auto video-responsive-gen-ai w-[900px] h-[400px] md:min-h-[900px]"
+              className="absolute inset-0 object-cover z-0 w-full h-full video-responsive-gen-ai"
               style={{
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                display: 'block',
+              }}
+              onLoadedMetadata={(e) => {
+                // Ensure video is ready on iOS
+                const video = e.currentTarget;
+                if (video) {
+                  video.setAttribute('webkit-playsinline', 'true');
+                }
               }}
             />
 
@@ -160,7 +208,7 @@ export default function GenAI() {
             <div className="relative z-20 w-full flex flex-col items-center text-center gap-14 pt-100 lg:pt-200">
               <h2
                 ref={headingRef}
-                className="text-[20px] md:text-[60px] font-[400] text-white leading-tight md:leading-[60px]"
+                className="text-[20px] md:text-[60px] font-[400] text-white leading-tight md:leading-[60px] gen-ai-heading"
               >
                 Redefining Businesses<br />
                 with AI-as-a-Service

@@ -62,7 +62,7 @@ export default function Home() {
         <TextSection
           paragraphs={[
             "ClearWave, one of the best agencies in Dubai, we design and develop websites, e-commerce platforms, and digital experiences in Dubai that are crafted to captivate, built to perform, and ready to grow."]}
-          className="relative z-10 max-w-[1200px] mx-auto md:my-50 my-20 md:px-0 px-4 global-section-padding"
+          className="relative z-10 container mx-auto md:my-50 my-20 md:px-0 px-4 global-section-padding"
         />
       </div>
       <Studios />
