@@ -22,6 +22,15 @@ export default function GenAI() {
 
     if (!section || !video) return;
 
+    // iOS-specific setup
+    video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('playsinline', 'true');
+    
+    // Ensure video is visible on iOS
+    video.style.display = 'block';
+    video.style.visibility = 'visible';
+    video.style.opacity = '1';
+
     // Pause video initially - we'll control it with scroll
     video.pause();
     video.currentTime = 0;
@@ -92,6 +101,28 @@ export default function GenAI() {
     };
   }, []);
 
+  // iOS video loading fix
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Force video to load on iOS
+    const loadVideo = () => {
+      video.load();
+      // Ensure video is visible
+      video.style.display = 'block';
+      video.style.visibility = 'visible';
+    };
+
+    // Try to load immediately
+    loadVideo();
+
+    // Also try after a short delay for iOS
+    const timeout = setTimeout(loadVideo, 100);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   // GSAP scroll animations
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -147,15 +178,30 @@ export default function GenAI() {
       <div className="relative z-10 container-fluid mx-auto">
         <div className="space-y-32 md:space-y-20 h-full">
           {/* Main Content Div */}
-          <div className="relative flex flex-col items-center max-w-[1494px] mx-auto h-full h-[400px] md:min-h-[800px] justify-center overflow-hidden">
+          <div className="relative flex flex-col items-center max-w-[1494px] mx-auto h-full min-h-[400px] md:min-h-[800px] justify-center overflow-hidden">
             {/* Background Video */}
             <video
               ref={videoRef}
               src="/videos/animated_gen_ai_clip_2.mp4"
               muted
               playsInline
+              autoPlay
+              loop
               preload="auto"
               className="absolute inset-0 object-cover z-0 w-full h-full video-responsive-gen-ai"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                display: 'block',
+              }}
+              onLoadedMetadata={(e) => {
+                // Ensure video is ready on iOS
+                const video = e.currentTarget;
+                if (video) {
+                  video.setAttribute('webkit-playsinline', 'true');
+                }
+              }}
             />
 
             {/* Content */}

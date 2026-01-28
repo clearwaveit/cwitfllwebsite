@@ -193,12 +193,12 @@ export default function OurWork({
         {/* Mobile Layout - Vertical Stack */}
         <div className="flex flex-col md:hidden py-12 px-4">
           {/* Title */}
-          <div className="mb-8">
-            <h2 className="text-white our-work-mobile-heading">
-              <span className="block text-[48px] sm:text-[60px] font-[700] leading-[0.85] tracking-tight">
-                OUR
+          <div className="mb-8 flex justify-center">
+            <h2 className="text-white our-work-mobile-heading text-center">
+              <span className="inline text-[48px] sm:text-[60px] font-[700] leading-[0.85] tracking-tight">
+                OUR{" "}
               </span>
-              <span className="block text-[48px] sm:text-[60px] font-[700] leading-[0.85] tracking-tight">
+              <span className="inline text-[48px] sm:text-[60px] font-[700] leading-[0.85] tracking-tight">
                 WORK
               </span>
             </h2>
