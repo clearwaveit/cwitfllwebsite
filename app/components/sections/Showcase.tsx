@@ -152,7 +152,7 @@ export default function Showcase() {
         {/* Text Section - Centered vertically */}
         <div className="flex items-center justify-center h-[20vh] md:min-h-[50vh]">
           <div ref={headlineRef} className="text-left space-y-6">
-            <h2 className="text-[#ffffff] text-[16px] sm:text-[20px] md:text-[34px] lg:text-[60px] leading-[30px] md:leading-[72px] font-[400] tracking-normal">
+            <h2 className="text-[#ffffff] text-[16px] sm:text-[26px] md:text-[34px] lg:text-[60px] leading-[30px] md:leading-[58px] lg:leading-[72px] font-[400] tracking-normal showcase-heading">
               Website Design Company in Dubai delivering
               <br />
               <span

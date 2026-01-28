@@ -222,7 +222,7 @@ export default function Studios() {
                   {/* <div className="absolute inset-0 bg-black/40 z-10" /> */}
 
                   {/* Content */}
-                  <div className={`content-wrapper relative z-20 w-full content-studio-${index === 0 ? "ps-0 lg:ps-8 lg:pt-0" : index === 1 ? "ps-0 lg:ps-50 content-studio-1" : index === 2 ? "ps-0 lg:ps-115 content-studio-2" : "ps-0"}`}>
+                  <div className={`content-wrapper relative z-20 w-full content-studio-${index === 0 ? "ps-0 lg:ps-8 lg:pt-0 content-studio-0" : index === 1 ? "ps-0 lg:ps-50 content-studio-1" : index === 2 ? "ps-0 lg:ps-115 content-studio-2" : "ps-0"}`}>
                     <h2 className={`text-[30px] md:text-[80px] font-[700] text-white leading-[32px] md:leading-[80px] mb-6 ${index === 0 ? 'studio-heading-0' : index === 1 ? 'studio-heading-1' : 'studio-heading-2'}`}>
                       {index === 0 ? (
                         <>
