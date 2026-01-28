@@ -29,7 +29,7 @@ export default function TextSection({
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 85%",
+          start: "top 75%",
           toggleActions: "play none none reverse",
         },
       });
@@ -37,13 +37,14 @@ export default function TextSection({
       // Animate each paragraph with stagger effect
       paragraphRefs.current.forEach((el, index) => {
         if (el) {
-          gsap.set(el, { opacity: 0, y: 40 });
+          gsap.set(el, { opacity: 0, y: 50 });
           tl.to(el, {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 1,
             ease: "power3.out",
-          }, index === 0 ? 0 : "<0.15");
+            force3D: true,
+          }, index === 0 ? 0 : "<0.2");
         }
       });
     }, sectionRef);
