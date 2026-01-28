@@ -83,9 +83,10 @@ export default function Showcase() {
           opacity: 1,
           duration: 1,
           ease: "power3.out",
+          delay: 0.25, // Minor delay
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 75%",
+            start: "top 70%",
             toggleActions: "play none none reverse",
           },
         }

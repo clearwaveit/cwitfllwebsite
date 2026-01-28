@@ -29,7 +29,7 @@ export default function TextSection({
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 75%",
+          start: "top 70%",
           toggleActions: "play none none reverse",
         },
       });
@@ -44,7 +44,8 @@ export default function TextSection({
             duration: 1,
             ease: "power3.out",
             force3D: true,
-          }, index === 0 ? 0 : "<0.2");
+            delay: index === 0 ? 0.15 : 0, // Minor delay for first paragraph
+          }, index === 0 ? 0.15 : "<0.2");
         }
       });
     }, sectionRef);

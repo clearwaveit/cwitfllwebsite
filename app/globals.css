@@ -2004,6 +2004,55 @@ body {
     line-height: 40px !important;
   }
 
+  .accordion-heading {
+    font-size: 35px !important;
+    line-height: 45px !important;
+  }
+
+  .accordion-title {
+    font-size: 16px !important;
+  }
+
+  .accordion-content {
+    font-size: 14px !important;
+  }
+
+  .our-work-mobile-heading span {
+    font-size: 48px !important;
+    line-height: 0.85 !important;
+  }
+
+  .our-work-desktop-heading .our-work-title-text {
+    font-size: 70px !important;
+  }
+
+  .our-work-description {
+    font-size: 15px !important;
+  }
+
+  .cta-button {
+    width: 200px !important;
+    height: 42px !important;
+  }
+
+  .cta-button-small {
+    width: 160px !important;
+    height: 38px !important;
+  }
+
+  .cta-button-text {
+    font-size: 13px !important;
+  }
+
+  .contact-form-heading {
+    font-size: 45px !important;
+    line-height: 50px !important;
+  }
+
+  .contact-form-description {
+    font-size: 18px !important;
+  }
+
   .contact-form-container {
     width: 100% !important;
     max-width: 100% !important;
@@ -2045,16 +2094,38 @@ body {
 /* Studios Responsive Styles */
 
 /* 1130px screen - content studio 2 responsive styles */
-@media (min-width: 1130px) and (max-width: 1229px) {
+@media (min-width: 1130px) and (max-width: 1279px) {
   .content-studio-2 {
     padding-left: 270px !important;
+  }
+  .office-location-heading {
+    font-size: 28px !important;
+  }
+
+  .office-location-text {
+    font-size: 14px !important;
+  }
+
+  .padding-office-location-card {
+    padding: 0 70px !important;
   }
 }
 
 /* 1025px screen - content studio 2 responsive styles */
-@media (min-width: 1025px) and (max-width: 1129px) {
+@media (min-width: 1024px) and (max-width: 1129px) {
   .content-studio-2 {
     padding-left: 220px !important;
+  }
+  .office-location-heading {
+    font-size: 28px !important;
+  }
+
+  .office-location-text {
+    font-size: 12px !important;
+  }
+
+  .padding-office-location-card {
+    padding: 0 60px !important;
   }
 }
 
@@ -2139,21 +2210,57 @@ body {
     padding: 0 100px !important;
   }
 
-  .office-location-heading {
-    font-size: 28px !important;
-  }
-
-  .office-location-text {
-    font-size: 16px !important;
-  }
-
-  .padding-office-location-card {
-    padding: 0 80px !important;
-  }
-
   .gen-ai-heading {
     font-size: 45px !important;
     line-height: 55px !important;
+  }
+
+  .accordion-heading {
+    font-size: 42px !important;
+    line-height: 52px !important;
+  }
+
+  .accordion-title {
+    font-size: 18px !important;
+  }
+
+  .accordion-content {
+    font-size: 15px !important;
+  }
+
+  .our-work-mobile-heading span {
+    font-size: 55px !important;
+  }
+
+  .our-work-desktop-heading .our-work-title-text {
+    font-size: 80px !important;
+  }
+
+  .our-work-description {
+    font-size: 17px !important;
+  }
+
+  .cta-button {
+    width: 215px !important;
+    height: 48px !important;
+  }
+
+  .cta-button-small {
+    width: 175px !important;
+    height: 42px !important;
+  }
+
+  .cta-button-text {
+    font-size: 14px !important;
+  }
+
+  .contact-form-heading {
+    font-size: 60px !important;
+    line-height: 65px !important;
+  }
+
+  .contact-form-description {
+    font-size: 24px !important;
   }
 }
 
@@ -2183,6 +2290,54 @@ body {
     font-size: 55px !important;
     line-height: 65px !important;
   }
+
+  .accordion-heading {
+    font-size: 48px !important;
+    line-height: 58px !important;
+  }
+
+  .accordion-title {
+    font-size: 19px !important;
+  }
+
+  .accordion-content {
+    font-size: 15px !important;
+  }
+
+  .our-work-mobile-heading span {
+    font-size: 60px !important;
+  }
+
+  .our-work-desktop-heading .our-work-title-text {
+    font-size: 100px !important;
+  }
+
+  .our-work-description {
+    font-size: 18px !important;
+  }
+
+  .cta-button {
+    width: 225px !important;
+    height: 50px !important;
+  }
+
+  .cta-button-small {
+    width: 180px !important;
+    height: 44px !important;
+  }
+
+  .cta-button-text {
+    font-size: 15px !important;
+  }
+
+  .contact-form-heading {
+    font-size: 70px !important;
+    line-height: 75px !important;
+  }
+
+  .contact-form-description {
+    font-size: 28px !important;
+  }
 }
 
 /* 1440px screen - content-studio-0/1/2 h2 font size */
@@ -2206,6 +2361,54 @@ body {
     font-size: 60px !important;
     line-height: 70px !important;
   }
+
+  .accordion-heading {
+    font-size: 50px !important;
+    line-height: 60px !important;
+  }
+
+  .accordion-title {
+    font-size: 20px !important;
+  }
+
+  .accordion-content {
+    font-size: 16px !important;
+  }
+
+  .our-work-mobile-heading span {
+    font-size: 65px !important;
+  }
+
+  .our-work-desktop-heading .our-work-title-text {
+    font-size: 120px !important;
+  }
+
+  .our-work-description {
+    font-size: 20px !important;
+  }
+
+  .cta-button {
+    width: 230px !important;
+    height: 52px !important;
+  }
+
+  .cta-button-small {
+    width: 185px !important;
+    height: 46px !important;
+  }
+
+  .cta-button-text {
+    font-size: 16px !important;
+  }
+
+  .contact-form-heading {
+    font-size: 80px !important;
+    line-height: 85px !important;
+  }
+
+  .contact-form-description {
+    font-size: 30px !important;
+  }
 }
 
 @media (min-width: 1920px) and (max-width: 2559px) {
@@ -2224,5 +2427,53 @@ body {
   .gen-ai-heading {
     font-size: 65px !important;
     line-height: 75px !important;
+  }
+
+  .accordion-heading {
+    font-size: 55px !important;
+    line-height: 65px !important;
+  }
+
+  .accordion-title {
+    font-size: 22px !important;
+  }
+
+  .accordion-content {
+    font-size: 18px !important;
+  }
+
+  .our-work-mobile-heading span {
+    font-size: 70px !important;
+  }
+
+  .our-work-desktop-heading .our-work-title-text {
+    font-size: 140px !important;
+  }
+
+  .our-work-description {
+    font-size: 22px !important;
+  }
+
+  .cta-button {
+    width: 240px !important;
+    height: 55px !important;
+  }
+
+  .cta-button-small {
+    width: 190px !important;
+    height: 48px !important;
+  }
+
+  .cta-button-text {
+    font-size: 17px !important;
+  }
+
+  .contact-form-heading {
+    font-size: 90px !important;
+    line-height: 95px !important;
+  }
+
+  .contact-form-description {
+    font-size: 32px !important;
   }
 }

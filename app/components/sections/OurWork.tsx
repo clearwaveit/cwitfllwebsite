@@ -194,7 +194,7 @@ export default function OurWork({
         <div className="flex flex-col md:hidden py-12 px-4">
           {/* Title */}
           <div className="mb-8">
-            <h2 className="text-white">
+            <h2 className="text-white our-work-mobile-heading">
               <span className="block text-[48px] sm:text-[60px] font-[700] leading-[0.85] tracking-tight">
                 OUR
               </span>
@@ -282,7 +282,7 @@ export default function OurWork({
           >
             {/* Left Side - Title and CTA */}
             <div className="flex-shrink-0 w-[280px] lg:w-[400px] xl:w-[520px] flex flex-col justify-center items-start pl-8 lg:pl-16 xl:pl-20 pr-6 lg:pr-10 py-12 our-work-title-container">
-              <h2 className="text-white mb-12 lg:mb-16 xl:mb-20 our-work-title">
+              <h2 className="text-white mb-12 lg:mb-16 xl:mb-20 our-work-title our-work-desktop-heading">
                 <span className="block text-[70px] lg:text-[90px] xl:text-[128px] font-[700] leading-[0.85] tracking-tight our-work-title-text">
                   OUR
                 </span>
@@ -328,7 +328,7 @@ export default function OurWork({
 
                   {/* Description */}
                   <div className="max-w-[460px] px-5 lg:px-8 pb-4 lg:pb-16">
-                    <p className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[1.5] font-[400] our-work-item-description">
+                    <p className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[1.5] font-[400] our-work-item-description our-work-description">
                       {item.description}
                     </p>
                   </div>
