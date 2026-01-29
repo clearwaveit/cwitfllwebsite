@@ -210,8 +210,8 @@ export default function Studios() {
                     playsInline
                     className={`absolute inset-0 object-cover mx-auto video-responsive-studios video-studio-${index}`}
                     style={{
-                      left: index === 0 ? "-350px" : index === 1 ? "882px" : index === 2 ? "-150px" : "100px",
-                      top: index === 0 ? "-380px" : index === 1 ? "-88px" : index === 2 ? "-150px" : "-150px",
+                      left: index === 0 ? "-350px" : index === 1 ? "974px" : index === 2 ? "-150px" : "100px",
+                      top: index === 0 ? "-380px" : index === 1 ? "-200px" : index === 2 ? "-150px" : "-150px",
                       width: index === 0 ? "720px" : index === 1 ? "461px" : index === 2 ? "420px" : "420px",
                       height: index === 0 ? "405px" : index === 1 ? "461px" : index === 2 ? "420px" : "420px",
                       zIndex: -1000,
