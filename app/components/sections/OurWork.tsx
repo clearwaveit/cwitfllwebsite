@@ -307,11 +307,11 @@ export default function OurWork({
                 >
                   {/* Category Tags - Top */}
                   {item.category && (
-                    <div className="flex flex-col pt-4 lg:pt-10 px-5 lg:px-8 pb-40">
+                    <div className="flex flex-col pt-4 lg:pt-10 px-5 lg:px-8 pb-40 category-tags-container">
                       {item.category.split('\n').map((cat, idx) => (
                         <span
                           key={idx}
-                          className="text-white text-[14px] lg:text-[20px] xl:text-[20px] uppercase tracking-[0.1em] font-[400]"
+                          className="text-white text-[14px] lg:text-[20px] xl:text-[20px] uppercase tracking-[0.1em] font-[400] category-text"
                         >
                           {cat}
                         </span>
