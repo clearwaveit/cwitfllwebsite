@@ -2058,7 +2058,7 @@ body {
     max-width: 100% !important;
     position: absolute !important;
     top: 300px !important;
-    padding: 0 100px !important;
+    padding: 0 0 0 140px !important;
   }
 
   .contact-form-heading {
@@ -2206,7 +2206,7 @@ body {
     max-width: 100% !important;
     position: absolute !important;
     top: 450px !important;
-    padding: 0 100px !important;
+    padding: 0 0 0 140px !important;
   }
 
   .global-section-padding {
