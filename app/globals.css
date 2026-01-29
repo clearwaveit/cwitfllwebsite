@@ -1904,11 +1904,6 @@ body {
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
-  .paragraph-text {
-    font-size: 30px !important;
-    line-height: 40px !important;
-  }
-
   .video-studio-0 {
     left: 0 !important;
     top: -340px !important;
@@ -1997,11 +1992,6 @@ body {
 
   .padding-office-location-card {
     padding: 0 22px !important;
-  }
-
-  .gen-ai-heading {
-    font-size: 32px !important;
-    line-height: 40px !important;
   }
 
   .accordion-heading {
@@ -2213,11 +2203,6 @@ body {
     padding: 0 100px !important;
   }
 
-  .gen-ai-heading {
-    font-size: 45px !important;
-    line-height: 55px !important;
-  }
-
   .accordion-heading {
     font-size: 42px !important;
     line-height: 52px !important;
@@ -2289,11 +2274,6 @@ body {
     line-height: 70px !important;
   }
 
-  .gen-ai-heading {
-    font-size: 55px !important;
-    line-height: 65px !important;
-  }
-
   .accordion-heading {
     font-size: 48px !important;
     line-height: 58px !important;
@@ -2360,11 +2340,6 @@ body {
     line-height: 70px !important;
   }
 
-  .gen-ai-heading {
-    font-size: 60px !important;
-    line-height: 70px !important;
-  }
-
   .accordion-heading {
     font-size: 50px !important;
     line-height: 60px !important;
@@ -2425,11 +2400,6 @@ body {
 
   .padding-office-location-card {
     padding: 0 50px !important;
-  }
-
-  .gen-ai-heading {
-    font-size: 65px !important;
-    line-height: 75px !important;
   }
 
   .accordion-heading {

@@ -176,9 +176,9 @@ export default function GenAI() {
   return (
     <section ref={sectionRef} className="relative bg-black pt-24 pb-50 overflow-hidden">
       <div className="relative z-10 container-fluid mx-auto">
-        <div className="space-y-32 md:space-y-20 h-full">
+        <div className="space-y-20 sm:space-y-24 md:space-y-20 lg:space-y-20 h-full">
           {/* Main Content Div */}
-          <div className="relative flex flex-col items-center max-w-[1494px] mx-auto h-full min-h-[400px] md:min-h-[800px] justify-center overflow-hidden">
+          <div className="relative flex flex-col items-center h-full min-h-[300px] sm:min-h-[400px] md:min-h-[600px] lg:min-h-[700px] xl:min-h-[800px] justify-center overflow-hidden">
             {/* Background Video */}
             <video
               ref={videoRef}
@@ -205,10 +205,10 @@ export default function GenAI() {
             />
 
             {/* Content */}
-            <div className="relative z-20 w-full flex flex-col items-center text-center gap-14 pt-100 lg:pt-200">
+            <div className="relative z-20 w-full flex flex-col items-center text-center gap-8 sm:gap-10 md:gap-12 lg:gap-14 pt-100 sm:pt-100 md:pt-100 lg:pt-140 xl:pt-180 2xl:pt-200">
               <h2
                 ref={headingRef}
-                className="text-[20px] md:text-[60px] font-[400] text-white leading-tight md:leading-[60px] gen-ai-heading"
+                className="text-[20px] sm:text-[28px] md:text-[32px] lg:text-[45px] xl:text-[55px] 2xl:text-[60px] font-[400] text-white leading-tight sm:leading-[35px] md:leading-[40px] lg:leading-[55px] xl:leading-[65px] 2xl:leading-[70px]"
               >
                 Redefining Businesses<br />
                 with AI-as-a-Service
