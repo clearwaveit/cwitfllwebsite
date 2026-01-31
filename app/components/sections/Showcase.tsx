@@ -30,7 +30,7 @@ const sliderCards: SliderCard[] = [
     image: clockImg,
     title: "300+ Projects",
     subtitle: "Delivered",
-    description: "Across 25+ industries",
+    description: "",
   },
   {
     type: "text",
@@ -45,11 +45,11 @@ const sliderCards: SliderCard[] = [
     image: digitalImg,
     title: "End-to-End",
     subtitle: "Services",
-    description: "Design, Development, SEO, SMM & Branding",
+    description: "Design, Development, SEO & Digital Growth",
   },
   {
     type: "text",
-    title: "3 Engangement Models",
+    title: "3 Engagement Models",
     subtitle: "Solutions",
     description: "Classic / Agile / Venture",
   },
@@ -58,7 +58,7 @@ const sliderCards: SliderCard[] = [
     image: lensImg,
     title: "Scalable Solutions",
     subtitle: "",
-    description: "Built for startups to enterprise-level systems",
+    description: "Built for startups to\nenterprise-level systems",
   },
 ];
 
@@ -67,30 +67,31 @@ export default function Showcase() {
   const headlineRef = useRef<HTMLDivElement>(null);
   const gradientTextRef = useRef<HTMLSpanElement>(null);
 
-  // Animate headline on scroll
+  // Animate text reveal on scroll
   useGSAP(
     () => {
       if (!headlineRef.current) return;
 
-      gsap.fromTo(
-        headlineRef.current,
-        {
-          y: 50,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          delay: 0.25, // Minor delay
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 70%",
-            toggleActions: "play none none reverse",
-          },
+      const text = headlineRef.current.querySelector("h2");
+      if (!text) return;
+
+      // Split text into words/chars if needed, or just animate opacity of the whole block
+      // For the effect "text start appearing full opacity once you start scrolling":
+      
+      // Reset initial state
+      gsap.set(text, { opacity: 0.3 }); // Start semi-transparent
+
+      gsap.to(text, {
+        opacity: 1,
+        duration: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 60%", // Start fading in when section hits 60% of viewport
+          end: "top 30%",   // Full opacity when section hits 30% of viewport
+          scrub: true,      // Tie animation to scroll position
         }
-      );
+      });
     },
     sectionRef,
     []
@@ -152,17 +153,9 @@ export default function Showcase() {
       <div className="relative z-20 container mx-auto px-4">
         {/* Text Section - Centered vertically */}
         <div className="flex items-center justify-center h-[20vh] md:min-h-[50vh]">
-          <div ref={headlineRef} className="text-left space-y-6">
-            <h2 className="text-[#ffffff] text-[16px] sm:text-[26px] md:text-[34px] lg:text-[60px] leading-[30px] md:leading-[58px] lg:leading-[72px] font-[400] tracking-normal showcase-heading">
-              Website Design Company in Dubai delivering
-              <br />
-              <span
-                className="bg-clip-text text-[#D9D9D9] transition-all duration-500"
-              >
-                digital experiences powered by creativity and
-              </span>
-              <br />
-              AI efficiency.
+          <div ref={headlineRef} className="text-left space-y-6 lg:max-w-[70%]">
+            <h2 className="text-[#ffffff] text-[16px] sm:text-[26px] md:text-[34px] lg:text-[40px] leading-[30px] md:leading-[58px] lg:leading-[52px] font-[400] tracking-normal showcase-heading">
+              Clearwave is a website design company in Dubai, delivering custom web design and web development solutions for businesses looking to build fast, scalable, and SEO-friendly digital platforms.
             </h2>
           </div>
         </div>

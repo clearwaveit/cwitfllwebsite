@@ -128,10 +128,10 @@ export default function DigitalExperienceServices() {
         {/* Text Section */}
         <TextSection
           paragraphs={[
-            "ClearWave, one of the best agencies in Dubai, we design and develop websites, e-commerce platforms, and digital experiences in Dubai that are crafted to captivate, built to perform, and ready to grow.",
+            "Clearwave is a website design company rooted in Dubai, working across teams in the UK and the US. We design and develop websites, web applications, and mobile applications, alongside e-commerce platforms, UI/UX design, branding, and SEO. Our work focuses on building digital platforms that are scalable, practical, and built to perform over time.",
             "As we are adept in developing visual and verbal excellence,  we make sure your brand is highlighted with a user-friendly, accessible and adaptive user interface that will make your website relevant in this ever-evolving prospect."
           ]}
-          className="py-12 md:py-64 text-section-padding w-full max-w-[1330px]"
+          className="py-12 md:py-40 text-section-padding w-full max-w-[1330px]"
         />
       </div>
     </section>

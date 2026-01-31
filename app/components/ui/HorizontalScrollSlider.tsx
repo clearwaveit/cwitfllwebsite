@@ -293,7 +293,7 @@ export default function HorizontalScrollSlider({
     <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
       <div
         ref={sliderRef}
-        className={`flex gap-6 will-change-transform ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        className={`flex gap-6 px-4 md:px-10 will-change-transform ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
         style={{ width: "fit-content" }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}

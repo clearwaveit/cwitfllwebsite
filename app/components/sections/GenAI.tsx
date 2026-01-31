@@ -174,9 +174,9 @@ export default function GenAI() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative bg-black pt-24 pb-50 overflow-hidden">
+    <section ref={sectionRef} className="relative bg-black pt-0 pb-24 overflow-hidden">
       <div className="relative z-10 container-fluid mx-auto">
-        <div className="space-y-20 sm:space-y-24 md:space-y-20 lg:space-y-20 h-full">
+        <div className="space-y-0 h-full">
           {/* Main Content Div */}
           <div className="relative flex flex-col items-center h-full min-h-[300px] sm:min-h-[400px] md:min-h-[600px] lg:min-h-[700px] xl:min-h-[800px] justify-center overflow-hidden">
             {/* Background Video */}

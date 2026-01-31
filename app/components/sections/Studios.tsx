@@ -15,19 +15,19 @@ const studios = [
   {
     title: "Digital Experience Studio",
     description:
-      "As we are adept in developing visual and verbal excellence, we make sure your brand is highlighted with a user-friendly, accessible and adaptive user interface that will make your website relevant in this ever-evolving prospect.",
+      "We design and develop digital experiences that are intuitive, accessible, and performance-driven. Our focus is on creating websites and platforms that balance strong visual identity with usability, speed, and search engine visibility — ensuring long-term relevance in an ever-evolving digital landscape.",
     video: "/videos/animated_clip_1.mp4",
   },
   {
     title: "Application Development Studio",
     description:
-      "As we are adept in developing visual and verbal excellence, we make sure your brand is highlighted with a user-friendly, accessible and adaptive user interface that will make your website relevant in this ever-evolving prospect.",
+      "We design and develop digital experiences that are intuitive, accessible, and performance-driven. Our focus is on creating websites and platforms that balance strong visual identity with usability, speed, and search engine visibility — ensuring long-term relevance in an ever-evolving digital landscape.",
     video: "/videos/animated_clip_2.mp4",
   },
   {
     title: "Growth & Branding Studio",
     description:
-      "As we are adept in developing visual and verbal excellence, we make sure your brand is highlighted with a user-friendly, accessible and adaptive user interface that will make your website relevant in this ever-evolving prospect.",
+      "We design and develop digital experiences that are intuitive, accessible, and performance-driven. Our focus is on creating websites and platforms that balance strong visual identity with usability, speed, and search engine visibility — ensuring long-term relevance in an ever-evolving digital landscape.",
     video: "/videos/animated_clip_3.mp4",
   },
 ];
