@@ -35,10 +35,24 @@ export default function GenAI() {
     video.pause();
     video.currentTime = 0;
 
-    // Wait for video metadata to load to get duration
+    let trigger: ScrollTrigger | undefined;
+    let isSetup = false;
+
+    // Wait for video to be fully ready before setting up ScrollTrigger
     const setupScrollSync = () => {
+      // Prevent multiple setups
+      if (isSetup) return;
+      
       const videoDuration = video.duration;
-      if (!videoDuration || isNaN(videoDuration)) return;
+      if (!videoDuration || isNaN(videoDuration) || videoDuration === 0) {
+        // If duration not ready, try again after a short delay
+        setTimeout(setupScrollSync, 100);
+        return;
+      }
+
+      // Ensure video is at start
+      video.currentTime = 0;
+      video.pause();
 
       // Calculate section height for scroll distance
       const sectionHeight = section.offsetHeight;
@@ -47,7 +61,7 @@ export default function GenAI() {
       const scrollDistance = sectionHeight + viewportHeight;
 
       // Create ScrollTrigger to sync video with scroll
-      const trigger = ScrollTrigger.create({
+      trigger = ScrollTrigger.create({
         trigger: section,
         start: "top center", // Start when section reaches center
         end: `+=${scrollDistance}px`, // End after scrolling through section
@@ -65,14 +79,15 @@ export default function GenAI() {
         onEnter: () => {
           // When section enters center, ensure video is at start
           video.currentTime = 0;
+          video.pause();
         },
         onLeave: () => {
           // When leaving, pause at current position
           video.pause();
         },
         onEnterBack: () => {
-          // When scrolling back, resume from current position
-          // Video will continue from where it was
+          // When scrolling back, ensure video is at correct position
+          // Video will continue from where scroll progress is
         },
         onLeaveBack: () => {
           // When scrolling back past start, reset to beginning
@@ -81,23 +96,34 @@ export default function GenAI() {
         },
       });
 
-      return trigger;
+      // Refresh ScrollTrigger to ensure it's properly initialized
+      ScrollTrigger.refresh();
+      isSetup = true;
     };
 
-    let trigger: ScrollTrigger | undefined;
+    // Wait for video to be fully ready (canplaythrough is better than loadedmetadata)
+    const handleCanPlay = () => {
+      setupScrollSync();
+    };
 
-    // If video is already loaded
-    if (video.readyState >= 1) {
-      trigger = setupScrollSync();
+    // If video is already ready
+    if (video.readyState >= 3) { // HAVE_FUTURE_DATA or HAVE_ENOUGH_DATA
+      setupScrollSync();
     } else {
-      // Wait for metadata to load
+      // Wait for video to be ready to play
+      video.addEventListener('canplaythrough', handleCanPlay, { once: true });
+      // Also listen for loadedmetadata as fallback
       video.addEventListener('loadedmetadata', () => {
-        trigger = setupScrollSync();
-      });
+        // Double check duration is available
+        if (video.duration && !isNaN(video.duration) && video.duration > 0) {
+          setupScrollSync();
+        }
+      }, { once: true });
     }
 
     return () => {
       if (trigger) trigger.kill();
+      video.removeEventListener('canplaythrough', handleCanPlay);
     };
   }, []);
 
@@ -185,8 +211,6 @@ export default function GenAI() {
               src="/videos/animated_gen_ai_clip_2.mp4"
               muted
               playsInline
-              autoPlay
-              loop
               preload="auto"
               className="absolute inset-0 object-cover z-0 w-full h-full video-responsive-gen-ai"
               style={{
@@ -200,6 +224,8 @@ export default function GenAI() {
                 const video = e.currentTarget;
                 if (video) {
                   video.setAttribute('webkit-playsinline', 'true');
+                  video.pause();
+                  video.currentTime = 0;
                 }
               }}
             />
