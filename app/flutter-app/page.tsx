@@ -137,7 +137,7 @@ export default function FlutterAppPage() {
       <ClientTestimonials />
       <Accordion />
       <ProjectContactForm />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }

@@ -80,7 +80,7 @@ export default function Home() {
         paragraphs={[ministryPara]}
         className="max-w-[1294px] mx-auto text-center md:my-60 my-20 md:px-0 px-4 global-section-padding"
       /> */}
-      <DigitalExperienceBanner
+      {/* <DigitalExperienceBanner
         title={
           <>
             Contact Us
@@ -93,7 +93,8 @@ export default function Home() {
         }}
         contactForm={<ContactForm />}
       />
-      <OfficeLocations />
+      <OfficeLocations /> */}
+      <Blogs />
       <Accordion />
     </main>
   );

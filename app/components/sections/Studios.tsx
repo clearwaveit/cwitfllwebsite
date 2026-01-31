@@ -246,7 +246,7 @@ export default function Studios() {
                     <p className="text-[16px] md:text-[20px] text-white mb-4 max-w-[730px] leading-relaxed">
                       {studio.description}
                     </p>
-                    <div className="flex flex-col pb-10 md:pb-6">
+                    {/* <div className="flex flex-col pb-10 md:pb-6">
                       <ul className="flex gap-12 list-style-none">
                         <li className="text-[12px] md:text-[30px]">UI / UX Design</li>
                         <li className="text-[12px] md:text-[30px]">Webite Development</li>
@@ -255,7 +255,7 @@ export default function Studios() {
                         <li className="text-[12px] md:text-[30px]">CMS & Integrations</li>
                         <li className="text-[12px] md:text-[30px]">Ecommerce Solutions</li>
                       </ul>
-                    </div>
+                    </div> */}
                     <CallToActionButton variant="shiny" />
                   </div>
                 </div>

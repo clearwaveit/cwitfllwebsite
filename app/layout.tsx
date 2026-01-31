@@ -32,7 +32,7 @@ export default function RootLayout({
           <WhatsAppButton onClick={() => setIsChatOpen(!isChatOpen)} />
           <WhatsAppChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
           {children}
-          {/* <Footer /> */}
+          <Footer />
         </SmoothScrollProvider>
       </body>
     </html>

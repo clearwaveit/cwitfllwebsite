@@ -803,11 +803,11 @@ body {
   }
 
   .video-studio-1 {
-    top: -320px !important;
-    left: 746px !important;
+    top: -240px !important;
+    left: 680px !important;
     width: 350px !important;
-    height: 450px !important;
-    min-height: 350px !important;
+    height: 300px !important;
+    min-height: 300px !important;
   }
 
   .video-studio-2 {
@@ -1274,7 +1274,8 @@ body {
   }
 
   .blogs-section-content-container {
-    max-width: 1370px !important;
+    width: 100% !important;
+    max-width: 1570px !important;
     /* padding-left: 100px !important;
     padding-right: 100px !important; */
   }
@@ -1453,7 +1454,8 @@ body {
   }
 
   .blogs-section-content-container {
-    max-width: 1370px !important;
+    width: 100% !important;
+    max-width: 1600px !important;
     /* padding-left: 120px !important;
     padding-right: 120px !important; */
   }

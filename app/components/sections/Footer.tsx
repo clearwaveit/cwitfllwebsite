@@ -44,7 +44,7 @@ export default function Footer() {
 
         {/* CTA Content */}
         <div className="relative md:top-[-150px] z-10 h-full flex flex-col items-center justify-center text-center px-4 footer-cta-content">
-          <h2 className="text-[60px] md:text-[80px] font-light leading-[80px] text-white mb-4 footer-heading">
+          <h2 className="text-[60px] md:text-[80px] font-[700] leading-[80px] text-white mb-4 footer-heading">
             Get Started now!
           </h2>
           <p className="text-[16px] md:text-[20px] text-white mb-8 max-w-2xl footer-paragraph">

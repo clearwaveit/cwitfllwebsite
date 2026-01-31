@@ -153,10 +153,9 @@ export default function Header() {
 
   const menuItems = [
     { label: "Home", href: "/" },
-    { label: "Digital Experience Studio", href: "/digital-experience-studio" },
+    { label: "Services", href: "/services" },
     { label: "About Us", href: "/about-us" },
     { label: "Our Work", href: "/our-work" },
-    { label: "Work Details", href: "/work-details" },
     { label: "Contact Us", href: "/contact-us" },
   ];
 
@@ -164,58 +163,75 @@ export default function Header() {
     <>
       <header ref={headerRef} className="fixed top-4 left-0 right-0 z-50 bg-transparent">
         <div className="container-fluid mx-auto px-4 sm:px-6 lg:px-16">
-          <div className="flex h-16 items-center justify-between">
+          <div className="flex h-[48px] sm:h-[56px] md:h-[64px] lg:h-[72px] xl:h-[80px] 2xl:h-[88px] items-center justify-between">
             {/* Logo */}
             <div className="flex items-center">
-              <a href="/" className="relative h-12 w-auto">
+              <a href="/" className="relative h-[32px] sm:h-[40px] md:h-[56px] lg:h-[64px] xl:h-[72px] 2xl:h-[80px] w-auto">
                 <Image
                   src="/imgs/cwit_logo_1.png"
                   alt="CWIT Logo"
                   width={100}
                   height={100}
-                  className="h-[36px] md:h-[64px] min-w-[84px] md:min-w-[127px] w-auto h-auto object-contain"
+                  className="h-[32px] sm:h-[40px] md:h-[56px] lg:h-[64px] xl:h-[72px] 2xl:h-[80px] min-w-[72px] sm:min-w-[90px] md:min-w-[110px] lg:min-w-[127px] xl:min-w-[140px] 2xl:min-w-[160px] w-auto h-auto object-contain"
                   priority
                 />
               </a>
             </div>
 
-            {/* Right side - CTA Button and Hamburger */}
+            {/* Right side - Desktop Menu and Hamburger */}
             <div className="flex items-center gap-4">
-              {/* Call to Action Button - Completely hidden on mobile/tablet, only in nav menu */}
-              {!["/contact-us", "/digital-experience-studio", "/about-us", "/work-details", "/our-work"].includes(pathname) && !isMenuOpen && (
-                <CallToActionButton variant="shiny" className="hidden md:inline-flex" />
-              )}
+              {/* Desktop Menu Items - Hidden on mobile */}
+              <nav className="hidden lg:flex items-center gap-4 xl:gap-6 2xl:gap-8">
+                {menuItems.map((item, index) => {
+                  const active = isActive(item.href);
+                  return (
+                    <Link
+                      key={index}
+                      href={item.href}
+                      className={`text-[10px] sm:text-[11px] md:text-[13px] lg:text-[15px] xl:text-[16px] 2xl:text-[17px] font-medium transition-colors hover:text-[#0DFCC1] ${
+                        active ? "text-[#0DFCC1]" : "text-white"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+                {/* CTA Button in menu - Desktop */}
+                {pathname !== "/contact-us" && (
+                  <CallToActionButton variant="shiny" className="ml-4 xl:ml-6 2xl:ml-8" />
+                )}
+              </nav>
 
-              {/* Hamburger Button */}
-              {/* <button
+              {/* Hamburger Button - Visible on mobile/tablet, hidden on desktop */}
+              <button
                 onClick={toggleMenu}
-                className={`relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg transition-colors group ${
+                className={`relative z-50 flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 flex-col items-center justify-center gap-1 sm:gap-1.5 rounded-lg transition-colors group lg:hidden ${
                   isMenuOpen ? "hover:bg-white" : "hover:bg-white/10"
                 }`}
                 aria-label="Toggle menu"
               >
                 <span
-                  className={`h-0.5 w-5 md:w-8 origin-center transform transition-all duration-300 ${
+                  className={`h-0.5 w-4 sm:w-5 md:w-6 lg:w-8 origin-center transform transition-all duration-300 ${
                     isMenuOpen
-                      ? "translate-y-2 rotate-45 bg-white group-hover:bg-black"
+                      ? "translate-y-1.5 sm:translate-y-2 rotate-45 bg-white group-hover:bg-black"
                       : "bg-white"
                   }`}
                 />
                 <span
-                  className={`h-0.5 w-5 md:w-8 transition-all duration-300 ${
+                  className={`h-0.5 w-4 sm:w-5 md:w-6 lg:w-8 transition-all duration-300 ${
                     isMenuOpen
                       ? "opacity-0 bg-white group-hover:bg-black"
                       : "opacity-100 bg-white"
                   }`}
                 />
                 <span
-                  className={`h-0.5 w-5 md:w-8 origin-center transform transition-all duration-300 ${
+                  className={`h-0.5 w-4 sm:w-5 md:w-6 lg:w-8 origin-center transform transition-all duration-300 ${
                     isMenuOpen
-                      ? "-translate-y-2 -rotate-45 bg-white group-hover:bg-black"
+                      ? "-translate-y-1.5 sm:-translate-y-2 -rotate-45 bg-white group-hover:bg-black"
                       : "bg-white"
                   }`}
                 />
-              </button> */}
+              </button>
             </div>
           </div>
         </div>
@@ -241,26 +257,17 @@ export default function Header() {
       >
         <div className="flex h-full flex-col pt-20 md:pt-20">
           {/* Menu Items */}
-          <nav className="flex-1 px-4 md:px-6 pt-6 md:pt-10">
-            {/* CTA Button inside nav */}
-            <div className="mb-6 md:mb-8">
-              <CallToActionButton 
-                variant="shiny" 
-                size="small"
-                onClick={() => setIsMenuOpen(false)}
-              />
-            </div>
-            
-            <ul className="space-y-2">
+          <nav className="flex-1 px-4 md:px-6 pt-6 md:pt-10 flex flex-col items-end">
+            <ul className="space-y-2 md:space-y-3 w-full flex flex-col items-end">
               {menuItems.map((item, index) => {
                 const active = isActive(item.href);
                 return (
-                  <li key={index}>
+                  <li key={index} className="w-auto">
                     {item.href.startsWith("/") ? (
                       <Link
                         href={item.href}
                         onClick={() => setIsMenuOpen(false)}
-                        className={`menu-item block rounded-lg px-4 py-3 text-base md:text-lg font-medium transition-colors hover:text-[#0DFCC1] ${
+                        className={`menu-item block rounded-lg px-3 py-2.5 md:px-4 md:py-3 lg:px-5 lg:py-3.5 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[14px] 2xl:text-[15px] font-medium transition-colors hover:text-[#0DFCC1] text-right ${
                           active ? "text-[#0DFCC1]" : "text-white"
                         }`}
                       >
@@ -270,7 +277,7 @@ export default function Header() {
                       <a
                         href={item.href}
                         onClick={(e) => handleLinkClick(e, item.href)}
-                        className="menu-item block rounded-lg px-4 py-3 text-base md:text-lg font-medium text-zinc-900 transition-colors hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800"
+                        className="menu-item block rounded-lg px-3 py-2.5 md:px-4 md:py-3 lg:px-5 lg:py-3.5 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[14px] 2xl:text-[15px] font-medium text-zinc-900 transition-colors hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800 text-right"
                       >
                         {item.label}
                       </a>
@@ -279,6 +286,17 @@ export default function Header() {
                 );
               })}
             </ul>
+            
+            {/* CTA Button inside nav - Mobile/Tablet */}
+            {pathname !== "/contact-us" && (
+              <div className="mt-6 md:mt-8 w-full flex justify-end">
+                <CallToActionButton 
+                  variant="shiny" 
+                  size="small"
+                  onClick={() => setIsMenuOpen(false)}
+                />
+              </div>
+            )}
           </nav>
 
           {/* Footer in Menu */}

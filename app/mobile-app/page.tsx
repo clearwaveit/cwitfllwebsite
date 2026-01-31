@@ -192,7 +192,7 @@ export default function MobileAppPage() {
             <ClientTestimonials />
             <Accordion />
             <ProjectContactForm />
-            <Footer />
+            {/* <Footer /> */}
         </main>
     );
 }
