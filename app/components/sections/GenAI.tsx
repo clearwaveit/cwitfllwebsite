@@ -38,6 +38,17 @@ export default function GenAI() {
     let trigger: ScrollTrigger | undefined;
     let isSetup = false;
 
+    // Track when video reaches end during forward play
+    let hasPlayedForward = false; // Track if video has played forward once
+    const handleTimeUpdate = () => {
+      if (!hasPlayedForward && video.currentTime >= video.duration - 0.1) {
+        video.pause();
+        video.currentTime = video.duration;
+        hasPlayedForward = true;
+      }
+    };
+    video.addEventListener('timeupdate', handleTimeUpdate);
+
     // Wait for video to be fully ready before setting up ScrollTrigger
     const setupScrollSync = () => {
       // Prevent multiple setups
@@ -53,46 +64,85 @@ export default function GenAI() {
       // Ensure video is at start
       video.currentTime = 0;
       video.pause();
+      hasPlayedForward = false; // Reset flag
 
-      // Calculate section height for scroll distance
-      const sectionHeight = section.offsetHeight;
-      const viewportHeight = window.innerHeight;
-      // Use section height for scroll distance
-      const scrollDistance = sectionHeight + viewportHeight;
-
-      // Create ScrollTrigger to sync video with scroll
+      // Create ScrollTrigger - forward plays once, reverse scrubs
+      let lastProgress = 0;
+      
       trigger = ScrollTrigger.create({
         trigger: section,
-        start: "top center", // Start when section reaches center
-        end: `+=${scrollDistance}px`, // End after scrolling through section
-        scrub: true, // Direct scrubbing - video plays exactly as scroll progresses
+        start: "center center", // Start when section center is at viewport center
+        end: "bottom top", // End when section bottom reaches viewport top
         onUpdate: (self) => {
-          // Set video time based on scroll progress (0 to 1)
-          const progress = self.progress;
-          const targetTime = progress * videoDuration;
+          const currentProgress = self.progress;
+          const videoDuration = video.duration;
           
-          // Update video time directly for precise scrubbing
-          if (Math.abs(video.currentTime - targetTime) > 0.1) {
-            video.currentTime = targetTime;
+          // Detect scroll direction
+          if (currentProgress > lastProgress) {
+            // Forward scroll - play video only once
+            if (!hasPlayedForward) {
+              // Start playing from beginning if not started
+              if (video.currentTime === 0 && video.paused) {
+                video.play().catch((err) => {
+                  console.log("Video play error:", err);
+                });
+              }
+              // Let video play naturally - don't scrub
+            } else {
+              // Already played once, keep at end
+              if (video.currentTime < videoDuration - 0.1) {
+                video.pause();
+                video.currentTime = videoDuration;
+              }
+            }
+          } else if (currentProgress < lastProgress) {
+            // Reverse scroll - scrub video based on progress (only if forward has played)
+            if (hasPlayedForward) {
+              const targetTime = currentProgress * videoDuration;
+              
+              // Sync video time with scroll progress (reverse scrubbing)
+              if (Math.abs(video.currentTime - targetTime) > 0.05) {
+                video.currentTime = targetTime;
+              }
+              
+              // Keep video paused during reverse scrub
+              if (!video.paused) {
+                video.pause();
+              }
+            }
           }
+          
+          lastProgress = currentProgress;
         },
         onEnter: () => {
-          // When section enters center, ensure video is at start
-          video.currentTime = 0;
-          video.pause();
-        },
-        onLeave: () => {
-          // When leaving, pause at current position
-          video.pause();
+          // Forward scroll - reset and start playing
+          if (!hasPlayedForward) {
+            video.playbackRate = 1;
+            video.currentTime = 0;
+            video.play().catch((err) => {
+              console.log("Video play error:", err);
+            });
+          }
         },
         onEnterBack: () => {
-          // When scrolling back, ensure video is at correct position
-          // Video will continue from where scroll progress is
+          // Reverse scroll - start scrubbing from end (only if forward has played)
+          if (hasPlayedForward) {
+            video.currentTime = video.duration;
+            video.pause();
+          }
+        },
+        onLeave: () => {
+          // When leaving section (scrolling forward past end)
+          video.pause();
+          video.currentTime = video.duration;
+          hasPlayedForward = true; // Mark as played
         },
         onLeaveBack: () => {
-          // When scrolling back past start, reset to beginning
+          // When scrolling back past start, reset to allow forward play again
           video.currentTime = 0;
           video.pause();
+          video.playbackRate = 1;
+          hasPlayedForward = false; // Reset flag to allow forward play again
         },
       });
 
@@ -124,6 +174,7 @@ export default function GenAI() {
     return () => {
       if (trigger) trigger.kill();
       video.removeEventListener('canplaythrough', handleCanPlay);
+      video.removeEventListener('timeupdate', handleTimeUpdate);
     };
   }, []);
 
@@ -211,12 +262,14 @@ export default function GenAI() {
               src="/videos/animated_gen_ai_clip_2.mp4"
               muted
               playsInline
+              loop={false}
               preload="auto"
               className="absolute inset-0 object-cover z-0 w-full h-full video-responsive-gen-ai"
               style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
+                objectPosition: 'center',
                 display: 'block',
               }}
               onLoadedMetadata={(e) => {

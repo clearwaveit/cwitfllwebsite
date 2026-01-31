@@ -62,8 +62,9 @@ export default function Studios() {
     gsap.set([video2, video3, content2, content3], { scale: 0.3 });
 
     const viewportHeight = window.innerHeight;
-    // 3 studios * viewport height for smooth transitions
-    const endValue = viewportHeight * 3;
+    // Reduced scroll distance - Studio 3 fade out ke baad scroll khatam
+    // Timeline ends right after Studio 3 fades out
+    const endValue = viewportHeight * 2.0;
 
     // Create a timeline for the scroll animation
     const tl = gsap.timeline({
