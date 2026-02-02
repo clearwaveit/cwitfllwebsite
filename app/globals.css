@@ -104,7 +104,7 @@ body {
 
   /* CTA Content - responsive positioning */
   .footer-cta-content {
-    top: -200px !important;
+    top: -210px !important;
     /* min-height: 400px; */
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -130,22 +130,22 @@ body {
   }
 
   /* Footer links container - responsive padding */
-  .footer-links-container {
+  /* .footer-links-container {
     padding-left: 1rem;
     padding-right: 1rem;
-  }
+  } */
 
   /* Footer links grid - responsive gap */
-  .footer-links-grid {
+  /* .footer-links-grid {
     gap: 1.5rem !important;
     width: 100%;
     max-width: 1280px;
-  }
+  } */
 
   /* Footer links - responsive font size */
-  .footer-link {
+  /* .footer-link {
     font-size: 12px !important;
-  }
+  } */
 
   /* Footer text - responsive font size */
   /* .footer-text {
@@ -179,9 +179,9 @@ body {
     font-size: 16px !important;
   }
 
-  .footer-link {
+  /* .footer-link {
     font-size: 18px !important;
-  }
+  } */
 
   .footer-vector-bg {
     min-height: 1200px;
@@ -192,13 +192,13 @@ body {
     min-height: 500px;
   }
 
-  .footer-contact-info {
+  /* .footer-contact-info {
     align-items: flex-end !important;
-  }
+  } */
 
-  .footer-copyright {
+  /* .footer-copyright {
     align-items: flex-end !important;
-  }
+  } */
 }
 
 /* Large tablet / Small desktop (1024px - 1919px) */
@@ -212,9 +212,9 @@ body {
     font-size: 18px !important;
   }
 
-  .footer-link {
+  /* .footer-link {
     font-size: 22px !important;
-  }
+  } */
 
   /* .footer-text {
     font-size: 22px !important;
@@ -712,8 +712,8 @@ body {
   }
 
   .contact-form-heading {
-    font-size: 40px !important;
-    line-height: 50px !important;
+    font-size: 30px !important;
+    line-height: 40px !important;
   }
 
   .mask-studio-image {
@@ -1075,7 +1075,7 @@ body {
 
   .accordion-content-container {
     width: 100% !important;
-    max-width: 1100px !important;
+    max-width: 1200px !important;
     /* padding-left: 80px !important;
     padding-right: 80px !important; */
   }
@@ -1089,9 +1089,14 @@ body {
 
   .blogs-section-content-container {
     width: 100% !important;
-    max-width: 1100px !important;
+    max-width: 1200px !important;
     /* padding-left: 80px !important;
     padding-right: 80px !important; */
+  }
+
+  .footer-links-container {
+    width: 100% !important;
+    max-width: 1200px !important;
   }
 
   .industries-section-content-container {
@@ -1261,9 +1266,15 @@ body {
   }
 
   .accordion-content-container {
-    max-width: 1370px !important;
+    width: 100% !important;
+    max-width: 1570px !important;
     /* padding-left: 100px !important;
     padding-right: 100px !important; */
+  }
+
+  .footer-links-container {
+    width: 100% !important;
+    max-width: 1570px !important;
   }
 
   .project-contact-form-content-container {
@@ -1412,37 +1423,37 @@ body {
 /* 1920px screen - max-w-[1570px] */
 @media (min-width: 1920px) and (max-width: 2559px) {
   .hero-banner-content-container {
-    max-width: 1570px !important;
+    max-width: 1600px !important;
     /* padding-left: 120px !important;
     padding-right: 120px !important; */
   }
 
   .app-why-opt-content-container {
-    max-width: 1570px !important;
+    max-width: 1600px !important;
     /* padding-left: 120px !important;
     padding-right: 120px !important; */
   }
 
   .page-banner-content-container {
-    max-width: 1570px !important;
+    max-width: 1600px !important;
     /* padding-left: 120px !important;
     padding-right: 120px !important; */
   }
 
   .business-features-content-container {
-    max-width: 1570px !important;
+    max-width: 1600px !important;
     /* padding-left: 120px !important;
     padding-right: 120px !important; */
   }
 
   .app-start-to-end-content-container {
-    max-width: 1570px !important;
+    max-width: 1600px !important;
     /* padding-left: 120px !important;
     padding-right: 120px !important; */
   }
 
   .accordion-content-container {
-    max-width: 1570px !important;
+    max-width: 1600px !important;
     /* padding-left: 120px !important;
     padding-right: 120px !important; */
   }
@@ -1460,20 +1471,25 @@ body {
     padding-right: 120px !important; */
   }
 
+  .footer-links-container {
+    width: 100% !important;
+    max-width: 1600px !important;
+  }
+
   .industries-section-content-container {
-    max-width: 1570px !important;
+    max-width: 1600px !important;
     /* padding-left: 120px !important;
     padding-right: 120px !important; */
   }
 
   .technologies-heading-container {
-    max-width: 1570px !important;
+    max-width: 1600px !important;
     /* padding-left: 120px !important;
     padding-right: 120px !important; */
   }
 
   .ui-ux-tilt-content-container {
-    max-width: 1570px !important;
+    max-width: 1600px !important;
     /* padding-left: 120px !important;
     padding-right: 120px !important; */
   }
@@ -1694,6 +1710,10 @@ body {
 
   .our-work-responsive-card .max-w-\[460px\] {
     padding-bottom: 8px !important;
+  }
+  
+  .text-section-padding {
+    padding: 100px !important;
   }
 }
 
@@ -2063,10 +2083,10 @@ body {
     padding: 0 0 0 140px !important;
   }
 
-  .contact-form-heading {
+  /* .contact-form-heading {
     font-size: 60px !important;
     line-height: 50px !important;
-  }
+  } */
 
   .mask-studio-image {
     width: 1000px !important;
@@ -2074,7 +2094,7 @@ body {
   }
 
   .text-section-padding {
-    padding: 20px !important;
+    padding: 100px !important;
   }
 
 }
@@ -2460,5 +2480,36 @@ body {
 
   .contact-form-description {
     font-size: 32px !important;
+  }
+}
+
+/* ServiceDetailSection Video - Fix cutting issues by controlling text content width */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .service-detail-text-content {
+    max-width: 90% !important;
+  }
+
+  .service-detail-section-grid {
+    gap: 1.5rem !important;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1411px) {
+  .service-detail-text-content {
+    max-width: 85% !important;
+  }
+
+  .service-detail-section-grid {
+    gap: 1.5rem !important;
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1720px) {
+  .service-detail-text-content {
+    max-width: 88% !important;
+  }
+
+  .service-detail-section-grid {
+    gap: 2rem !important;
   }
 }

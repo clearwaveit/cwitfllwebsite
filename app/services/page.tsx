@@ -9,7 +9,7 @@ import Accordion from "../components/sections/Accordion";
 import ourWorkImg from "@/app/assets/imgs/our_work_img.png";
 import vectorBg from "@/app/assets/imgs/Mask group (1).png";
 
-export default function DigitalExperienceStudioPage() {
+export default function ServicesPage() {
   const services = [
     {
       "title": "UI / UX Design",

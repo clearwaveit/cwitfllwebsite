@@ -191,7 +191,7 @@ export default function OurWork({
         className={`relative min-h-screen bg-black overflow-hidden ${className}`}
       >
         {/* Mobile Layout - Vertical Stack */}
-        <div className="flex flex-col md:hidden py-12 px-4">
+        <div className="flex flex-col md:hidden py-12 md:py-20">
           {/* Title */}
           <div className="mb-8 flex justify-center">
             <h2 className="text-white our-work-mobile-heading text-center">

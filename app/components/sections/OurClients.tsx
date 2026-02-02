@@ -65,7 +65,7 @@ export default function OurClients() {
   }, [imagesLoaded]);
 
   return (
-    <section className="relative bg-black md:py-34 pt-0 overflow-hidden">
+    <section className="relative bg-black py-20 md:py-34 pt-0 overflow-hidden">
       <div className="relative z-10 mx-auto px-4 sm:px-6 lg:px-0">
         {/* Title Section - Top Left */}
         {/* <div className="mb-8 md:mb-10 w-full max-w-[1494px] mx-auto global-section-padding">

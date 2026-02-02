@@ -173,7 +173,7 @@ export default function Accordion() {
 
   return (
     <section className="relative min-h-screen bg-black py-24 overflow-hidden">
-      <div className="relative z-10 mx-auto px-3 md:px-0 lg:px-0 global-section-padding accordion-content-container">
+      <div className="relative z-10 mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 global-section-padding accordion-content-container">
         <h2 className="text-[30px] md:text-[50px] font-[500] text-white leading-[60px] md:leading-[80px] mb-10 accordion-heading">
           FAQ's
         </h2>

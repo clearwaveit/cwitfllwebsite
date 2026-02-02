@@ -258,7 +258,7 @@ export default function Header() {
         <div className="flex h-full flex-col pt-20 md:pt-20">
           {/* Menu Items */}
           <nav className="flex-1 px-4 md:px-6 pt-6 md:pt-10 flex flex-col items-end">
-            <ul className="space-y-2 md:space-y-3 w-full flex flex-col items-end">
+            <ul className="space-y-2 md:space-y-3 w-full flex flex-col items-center">
               {menuItems.map((item, index) => {
                 const active = isActive(item.href);
                 return (
@@ -289,7 +289,7 @@ export default function Header() {
             
             {/* CTA Button inside nav - Mobile/Tablet */}
             {pathname !== "/contact-us" && (
-              <div className="mt-6 md:mt-8 w-full flex justify-end">
+              <div className="mt-6 md:mt-8 w-full flex justify-center">
                 <CallToActionButton 
                   variant="shiny" 
                   size="small"
