@@ -116,7 +116,7 @@ export default function IndustriesSection({
   return (
     <section
       ref={sectionRef}
-      className={`relative min-h-screen bg-black py-20 md:py-32 overflow-hidden ${className}`}
+      className={`relative h-full md:min-h-screen bg-black pb-20 md:py-32 overflow-hidden ${className}`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 industries-section-content-container">
         {/* Heading */}

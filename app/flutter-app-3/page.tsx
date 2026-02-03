@@ -2,7 +2,6 @@ import OurClients from "../components/sections/OurClients";
 import AppWhyOpt, { ServiceCard } from "@/app/components/sections/AppWhyOpt";
 import Accordion from "../components/sections/Accordion";
 import ProjectContactForm from "../components/sections/ProjectContactForm";
-import Footer from "../components/sections/Footer";
 import ecommerceAppImg from "@/app/assets/imgs/ecommerce_app.png";
 import HeroBanner, { StatItem } from "@/app/components/ui/HeroBanner";
 import flutterBannerImg3 from "@/app/assets/imgs/flutter_banner_3.png";
@@ -178,7 +177,6 @@ export default function FlutterAppPage3() {
       />
       <Accordion />
       <ProjectContactForm />
-      <Footer />
     </main>
   );
 }

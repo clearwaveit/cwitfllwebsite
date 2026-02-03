@@ -173,7 +173,7 @@ export default function BusinessFeaturesSection({
       ref={sectionRef}
       className={`relative min-h-screen bg-black py-20 md:py-32 overflow-hidden ${className}`}
     >
-      <div className={`container mx-auto h-full min-h-screen business-features-content-container ${containerClassName}`}>
+      <div className={`container mx-auto h-full min-h-screen business-features-content-container px-4 sm:px-6 md:ps-38 lg:ps-38 xl:ps-48 ${containerClassName}`}>
         <div className="flex flex-col md:flex-row items-center justify-between h-full min-h-screen gap-8 md:gap-12">
           {/* Left Side - Content */}
           <div

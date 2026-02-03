@@ -1,5 +1,4 @@
 import PageBanner from "@/app/components/ui/PageBanner";
-import SplitContentSection from "@/app/components/sections/SplitContentSection";
 import IndustriesSection, { IndustryCard } from "@/app/components/sections/AppIndustriesSection";
 import OurClients from "../components/sections/OurClients";
 import AppWhyOpt, { ServiceCard } from "@/app/components/sections/AppWhyOpt";
@@ -9,8 +8,6 @@ import ourWorkImg from "@/app/assets/imgs/our_work_img.png";
 import ClientTestimonials from "../components/sections/ClientTestimonials";
 import Accordion from "../components/sections/Accordion";
 import ProjectContactForm from "../components/sections/ProjectContactForm";
-import Footer from "../components/sections/Footer";
-import digitalPageBgImg from "@/app/assets/imgs/digital_page_bg_img.png";
 import nextjssrc from "@/app/assets/imgs/next_js.png";
 import AppStartToEnd, { FeatureCard } from "../components/sections/AppStartToEnd";
 
@@ -200,7 +197,6 @@ export default function NextJsPage() {
       <ClientTestimonials />
       <Accordion />
       <ProjectContactForm />
-      <Footer />
     </main>
   );
 }

@@ -5,7 +5,6 @@ import BusinessFeaturesSection, { BusinessFeature } from "@/app/components/secti
 import ClientTestimonials from "../components/sections/ClientTestimonials";
 import Accordion from "../components/sections/Accordion";
 import ProjectContactForm from "../components/sections/ProjectContactForm";
-import Footer from "../components/sections/Footer";
 import flutterAppImg from "@/app/assets/imgs/flutter_app.png";
 import AppStartToEnd, { FeatureCard } from "../components/sections/AppStartToEnd";
 
@@ -137,7 +136,6 @@ export default function FlutterAppPage() {
       <ClientTestimonials />
       <Accordion />
       <ProjectContactForm />
-      {/* <Footer /> */}
     </main>
   );
 }

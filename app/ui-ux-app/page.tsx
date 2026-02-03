@@ -9,7 +9,6 @@ import ourWorkImg from "@/app/assets/imgs/our_work_img.png";
 import ClientTestimonials from "../components/sections/ClientTestimonials";
 import Accordion from "../components/sections/Accordion";
 import ProjectContactForm from "../components/sections/ProjectContactForm";
-import Footer from "../components/sections/Footer";
 import AppStartToEnd, { FeatureCard } from "../components/sections/AppStartToEnd";
 import UiUxTiltSection from "@/app/components/sections/UiUxTiltSection";
 
@@ -172,7 +171,6 @@ export default function UiUXAppPage() {
       <ClientTestimonials />
       <Accordion />
       <ProjectContactForm />
-      <Footer />
     </main>
   );
 }

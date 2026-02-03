@@ -163,6 +163,7 @@ export default function AppWhyOpt({
       ref={sectionRef}
       className={`relative min-h-screen bg-black py-20 md:py-42 overflow-hidden ${className}`}
     >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 industries-section-content-container">
       {/* Video - Behind everything */}
       {finalVideoSrc && (
         <div
@@ -220,7 +221,7 @@ export default function AppWhyOpt({
         {services && Array.isArray(services) && services.length > 0 && (
           <div
             ref={cardsRef}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-5 lg:gap-6 xl:gap-6 2xl:gap-7 min-[1440px]:gap-8 min-[1920px]:gap-8"
           >
             {services.map((service, index) => {
               const bgColor = service.bgColor || "bg-[#1a1a1a]";
@@ -230,12 +231,12 @@ export default function AppWhyOpt({
               return (
                 <div
                   key={index}
-                  className={`${bgColor} flex flex-col justify-between items-start gap-8 md:gap-30 border border-[#BFBFBF] rounded-[10px] py-6 md:pt-8 md:pb-12 px-6 md:px-6 hover:border-[#BFBFBF] transition-all duration-300`}
+                  className={`${bgColor} flex flex-col justify-between items-start gap-4 sm:gap-5 md:gap-6 lg:gap-7 xl:gap-8 2xl:gap-9 min-[1440px]:gap-10 min-[1920px]:gap-12 border border-[#BFBFBF] rounded-[10px] py-4 sm:py-5 md:py-6 lg:pt-7 lg:pb-10 xl:pt-8 xl:pb-11 2xl:pt-8 2xl:pb-12 min-[1440px]:pt-9 min-[1440px]:pb-[52px] min-[1920px]:pt-10 min-[1920px]:pb-14 px-4 sm:px-5 md:px-6 lg:px-7 xl:px-8 2xl:px-9 min-[1440px]:px-10 min-[1920px]:px-12 hover:border-[#BFBFBF] transition-all duration-300`}
                 >
-                  <h3 className={`${textColor} text-[18px] md:text-[30px] font-[700] mb-3 md:mb-4 app-why-opt-service-heading`}>
+                  <h3 className={`${textColor} text-[18px] sm:text-[20px] md:text-[24px] lg:text-[26px] xl:text-[28px] 2xl:text-[29px] min-[1440px]:text-[29.5px] min-[1920px]:text-[30px] font-[700] mb-2 sm:mb-2.5 md:mb-3 lg:mb-3.5 xl:mb-4 2xl:mb-4 min-[1440px]:mb-4.5 min-[1920px]:mb-5 app-why-opt-service-heading`}>
                     {service.title}
                   </h3>
-                  <p className={`${descColor} ${textColor} text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20.5px] font-[350] leading-normal app-why-opt-service-description`}>
+                  <p className={`${descColor} ${textColor} text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[20.25px] min-[1920px]:text-[20.5px] font-[350] leading-normal app-why-opt-service-description`}>
                     {service.description}
                   </p>
                 </div>
@@ -272,6 +273,7 @@ export default function AppWhyOpt({
           )}
         </div>
       )}
+      </div>
     </section>
   );
 }

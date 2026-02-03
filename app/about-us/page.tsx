@@ -78,7 +78,7 @@ export default function AboutUsPage() {
       <BackgroundImageSection
         backgroundImage={digitalPageBgImg}
         alt="Background"
-        className="relative bg-black overflow-hidden h-[146px] md:h-[748px]"
+        className="relative bg-black overflow-hidden h-[146px] md:min-h-[400px] lg:min-h-[500px] xl:min-h-[600px] 2xl:min-h-[700px] min-[1720px]:min-h-[748px]"
       />
       {services.map((service, index) => (
         <ServiceDetailSection

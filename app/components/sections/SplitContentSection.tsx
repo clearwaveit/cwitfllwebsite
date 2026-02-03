@@ -166,21 +166,21 @@ export default function SplitContentSection({
   return (
     <section
       ref={sectionRef}
-      className={`relative min-h-screen bg-black py-20 md:py-32 overflow-hidden ${className}`}
+      className={`relative min-h-screen bg-black py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28 2xl:py-30 min-[1440px]:py-32 min-[1920px]:py-36 overflow-hidden ${className}`}
     >
-      <div className="h-full min-h-screens">
+      <div className="h-full min-h-screen">
         <div
-          className={`flex flex-col ${isContentRight ? "md:flex-row-reverse" : "md:flex-row"} ${contentMaxWidth} items-center justify-between h-full min-h-screen gap-8 md:gap-12`}
+          className={`flex flex-col ${isContentRight ? "md:flex-row-reverse" : "md:flex-row"} ${contentMaxWidth} items-center justify-between h-full min-h-screen gap-6 sm:gap-7 md:gap-8 lg:gap-10 xl:gap-11 2xl:gap-12 min-[1440px]:gap-14 min-[1920px]:gap-16`}
         >
           {/* Content Section */}
           <div
             ref={contentRef}
-            className={`w-full md:max-w-full flex flex-col justify-end md:ps-42 space-y-6 md:space-y-8 ${contentClassName}`}
+            className={`w-full md:max-w-full flex flex-col justify-end px-4 sm:px-6 md:ps-38 lg:ps-38 xl:ps-48 space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7 xl:space-y-8 2xl:space-y-9 min-[1440px]:space-y-10 min-[1920px]:space-y-12 ${contentClassName}`}
           >
             {/* Heading */}
             <h1
               ref={headingRef}
-              className={`text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white leading-tight split-content-title ${titleClassName}`}
+              className={`text-[32px] sm:text-[40px] md:text-[32px] lg:text-[40px] xl:text-[48px] 2xl:text-[58px] min-[1440px]:text-[59px] min-[1920px]:text-[60px] font-[700] text-white leading-tight split-content-title ${titleClassName}`}
             >
               {title}
             </h1>
@@ -188,14 +188,14 @@ export default function SplitContentSection({
             {/* Description */}
             <div
               ref={descriptionRef}
-              className={`text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] max-w-[706px] text-white leading-relaxed split-content-description ${descriptionClassName}`}
+              className={`text-[14px] sm:text-[15px] md:text-[15px] lg:text-[16px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[20.25px] min-[1920px]:text-[20.5px] max-w-full md:max-w-[600px] lg:max-w-[650px] xl:max-w-[680px] 2xl:max-w-[700px] min-[1440px]:max-w-[706px] min-[1920px]:max-w-[720px] text-white leading-relaxed split-content-description ${descriptionClassName}`}
             >
               {description}
             </div>
 
             {/* Contact Us Button */}
             {buttonText && (
-              <div ref={buttonRef} className="pt-4">
+              <div ref={buttonRef} className="pt-3 sm:pt-3.5 md:pt-4 lg:pt-4.5 xl:pt-5 2xl:pt-5 min-[1440px]:pt-6 min-[1920px]:pt-6">
                 <CallToActionButton variant="shiny" className="rounded-full">
                   {buttonText}
                 </CallToActionButton>
@@ -209,12 +209,12 @@ export default function SplitContentSection({
               ref={imageRef}
               className={`w-full flex items-center justify-end ${imageClassName}`}
             >
-              <div className={`relative w-full h-[600px] md:h-[700px] lg:h-[800px] ${imageMaxWidth} overflow-hidden split-content-image-container`}>
+              <div className={`relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[650px] 2xl:h-[700px] min-[1440px]:h-[750px] min-[1920px]:h-[800px] min-[2560px]:h-[850px] ${imageMaxWidth} overflow-hidden split-content-image-container`}>
                 <Image
                   src={image}
                   alt={imageAlt}
                   fill
-                  className="object-cover object-left rounded-l-[20px] md:rounded-l-[30px]"
+                  className="object-cover object-left rounded-[15px] sm:rounded-l-[18px] md:rounded-l-[22px] lg:rounded-l-[25px] xl:rounded-l-[28px] 2xl:rounded-l-[30px] min-[1440px]:rounded-l-[32px] min-[1920px]:rounded-l-[35px] min-[2560px]:rounded-l-[40px]"
                   priority
                   unoptimized
                 />
@@ -228,7 +228,7 @@ export default function SplitContentSection({
               ref={videoContainerRef}
               className={`w-full flex items-center justify-end ${imageClassName}`}
             >
-              <div className={`relative w-full h-[600px] md:h-[700px] lg:h-[800px] ${imageMaxWidth} overflow-hidden rounded-l-[20px] md:rounded-l-[30px]`}>
+              <div className={`relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[650px] 2xl:h-[700px] min-[1440px]:h-[750px] min-[1920px]:h-[800px] ${imageMaxWidth} overflow-hidden rounded-[15px] sm:rounded-[18px] md:rounded-l-[22px] lg:rounded-l-[25px] xl:rounded-l-[28px] 2xl:rounded-l-[30px] min-[1440px]:rounded-l-[32px] min-[1920px]:rounded-l-[35px]`}>
                 <video
                   ref={videoRef}
                   src={videoSrc}
@@ -236,7 +236,7 @@ export default function SplitContentSection({
                   loop
                   muted
                   playsInline
-                  className={`w-full h-full ${videoElementClassName} rounded-l-[20px] md:rounded-l-[30px]`}
+                  className={`w-full h-full ${videoElementClassName} rounded-l-[15px] sm:rounded-l-[18px] md:rounded-l-[22px] lg:rounded-l-[25px] xl:rounded-l-[28px] 2xl:rounded-l-[30px] min-[1440px]:rounded-l-[32px] min-[1920px]:rounded-l-[35px]`}
                 />
               </div>
             </div>

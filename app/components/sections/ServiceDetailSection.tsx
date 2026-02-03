@@ -27,12 +27,12 @@ export default function ServiceDetailSection({
   const textContent = (
     <div className="flex flex-col space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7 xl:space-y-8">
       {/* Main Heading */}
-      <h2 className="text-[28px] sm:text-[32px] md:text-[50px] lg:text-[65px] xl:text-[75px] 2xl:text-[80px] font-light text-white leading-[32px] sm:leading-[38px] md:leading-[55px] lg:leading-[70px] xl:leading-[80px] 2xl:leading-[88px]">
+      <h2 className="text-[20px] sm:text-[28px] md:text-[35px] lg:text-[45px] xl:text-[50px] 2xl:text-[60px] min-[1440px]:text-[70px] min-[1920px]:text-[80px] font-[700] text-white leading-[32px] sm:leading-[38px] md:leading-[55px] lg:leading-[60px] xl:leading-[70px] 2xl:leading-[75px] min-[1440px]:leading-[80px] min-[1920px]:leading-[88px]">
         {service?.title}
       </h2>
 
       {/* Description Paragraph */}
-      <p className="text-[14px] sm:text-[15px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[22px] font-light text-white leading-relaxed">
+      <p className="text-[14px] sm:text-[15px] md:text-[18px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[500] text-white leading-relaxed">
         {service?.description}
       </p>
 
@@ -40,7 +40,7 @@ export default function ServiceDetailSection({
       <div className="flex flex-col space-y-0">
         {service?.services.map((serviceItem, index) => (
           <div key={index}>
-            <p className="text-[16px] sm:text-[18px] md:text-[22px] lg:text-[26px] xl:text-[28px] 2xl:text-[30px] font-light text-white py-3 sm:py-3.5 md:py-4 lg:py-4.5 xl:py-5">
+            <p className="text-[16px] sm:text-[18px] md:text-[22px] lg:text-[24px] xl:text-[26px] 2xl:text-[28px] min-[1440px]:text-[29px] min-[1920px]:text-[30px] font-[500] text-white py-3 sm:py-3.5 md:py-4 lg:py-4.5 xl:py-5">
               {serviceItem}
             </p>
             {index < service.services.length - 1 && (

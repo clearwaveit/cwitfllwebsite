@@ -8,11 +8,7 @@ import OurClients from "@/app/components/sections/OurClients";
 import Blogs from "@/app/components/sections/blogs";
 import Accordion from "@/app/components/sections/Accordion";
 import TextSection from "@/app/components/ui/TextSection";
-import DigitalExperienceBanner from "./components/sections/DigitalExperienceBanner";
-import OfficeLocations from "./components/sections/OfficeLocations";
-import vectorBg from "@/app/assets/imgs/Mask group (1).png";
 import maskGroupImg from "@/app/assets/imgs/Mask group.png";
-import ContactForm from "./components/ui/ContactForm";
 import Image from "next/image";
 
 export default function Home() {
@@ -62,7 +58,7 @@ export default function Home() {
         <TextSection
           paragraphs={[
             "Clearwave is a website design company rooted in Dubai, working across teams in the UK and the US. We design and develop websites, web applications, and mobile applications, alongside e-commerce platforms, UI/UX design, branding, and SEO. Our work focuses on building digital platforms that are scalable, practical, and built to perform over time."]}
-          className="relative z-10 container mx-auto md:my-50 my-20 md:px-0 px-4 global-section-padding"
+          className="relative z-10 container mx-auto md:my-50 my-20 md:px-[50px] px-4 global-section-padding"
         />
       </div>
       <Studios />
@@ -75,25 +71,6 @@ export default function Home() {
         showCTA={true}
       />
       <OurClients />
-      {/* <Blogs /> */}
-      {/* <TextSection
-        paragraphs={[ministryPara]}
-        className="max-w-[1294px] mx-auto text-center md:my-60 my-20 md:px-0 px-4 global-section-padding"
-      /> */}
-      {/* <DigitalExperienceBanner
-        title={
-          <>
-            Contact Us
-          </>
-        }
-        description="Digital Experiences That Inspire and Perform"
-        backgroundImage={{
-          src: vectorBg.src,
-          alt: "Background",
-        }}
-        contactForm={<ContactForm />}
-      />
-      <OfficeLocations /> */}
       <Blogs />
       <Accordion />
     </main>

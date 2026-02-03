@@ -205,7 +205,7 @@ export default function OurWork({
           </div>
 
           {/* Cards - Vertical scroll on mobile */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 px-4 sm:px-5">
             {workItems.map((item, index) => (
               <div
                 key={index}
@@ -334,7 +334,7 @@ export default function OurWork({
                   </div>
 
                   {/* Image - Bottom */}
-                  <div className="relative w-full h-[220px] lg:h-[280px] xl:h-[342px] overflow-hidden our-work-item-image">
+                  <div className="relative w-full h-[220px] lg:h-[260px] xl:h-[300px] 2xl:h-[320px] min-[1440px]:h-[335px] min-[1920px]:h-[342px] overflow-hidden our-work-item-image">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -421,33 +421,33 @@ export default function OurWork({
       <div className="relative z-10">
         {/* Title Section */}
         <div className="flex justify-center mb-6 md:mb-10">
-          <h2 className="text-[60px] md:text-[200px] font-graphik-light-weight-300 text-white">
+          <h2 className="text-[60px] md:text-[120px] lg:text-[140px] xl:text-[160px] 2xl:text-[180px] min-[1440px]:text-[190px] min-[1920px]:text-[200px] font-[400] text-white">
             {title}
           </h2>
         </div>
 
         {/* Content Grid - 2x2 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2 mb-10 mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2 mb-10 mx-auto px-4 sm:px-5 md:px-0">
           {workItems.map((item, index) => (
             <div key={index} className="flex flex-col">
               {/* Image */}
-              <div className="relative w-full h-[300px] md:h-[500px] overflow-hidden mb-6 md:mb-10">
+              <div className="relative w-full h-[300px] md:h-[400px] lg:h-[450px] xl:h-[500px] 2xl:h-[520px] min-[1440px]:h-[535px] min-[1920px]:h-[542px] overflow-hidden mb-6 md:mb-10">
                 <Image
                   src={item.image}
                   alt={item.title}
                   width={957}
                   height={542}
-                  className="object-cover w-[957px] h-[300px] md:w-[957px] md:h-[542px]"
+                  className="object-cover w-full h-full"
                   unoptimized
                 />
               </div>
 
               {/* Text Content */}
               <div className="text-white ps-6 md:pb-10 pb-6 md:pb-20 px-4 md:pe-0">
-                <h3 className="text-[26px] md:text-[36px] font-light leading-[40px] md:leading-[48px] mb-3">
+                <h3 className="text-[26px] md:text-[32px] lg:text-[34px] xl:text-[36px] 2xl:text-[38px] min-[1440px]:text-[39px] min-[1920px]:text-[40px] font-light leading-[40px] md:leading-[42px] lg:leading-[44px] xl:leading-[46px] 2xl:leading-[48px] min-[1440px]:leading-[50px] min-[1920px]:leading-[52px] mb-3">
                   {item.title}
                 </h3>
-                <p className="text-[16px] md:text-[22px] leading-relaxed opacity-90">
+                <p className="text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[21px] min-[1440px]:text-[21.5px] min-[1920px]:text-[22px] leading-relaxed opacity-90">
                   {item.description}
                 </p>
               </div>
