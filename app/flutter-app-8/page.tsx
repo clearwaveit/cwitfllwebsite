@@ -121,13 +121,16 @@ export default function FlutterAppPage8() {
       <HeroBanner
         title="Tech-Driven Digital Solutions"
         description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam porttitor urna eu augue finibus pharetra. Proin faucibus mi eu velit hendrerit, id convallis neque varius. Nunc elementum erat quis mollis mattis. Etiam non mauris urna."
-        titleMaxWidth="max-w-[900px]"
-        descriptionMaxWidth="max-w-[750px]"
-        titleClassName="md:text-[60px] lg:text-[80px]"
+        titleMaxWidth="max-w-[750px] md:max-w-[900px]"
+        descriptionMaxWidth="max-w-[750px] font-normal text-[14px] md:text-[20px] lg:text-[24px]"
+        titleClassName="text-[28px] md:text-[60px] lg:text-[80px]"
         backgroundImage={flutterBannerImg3}
         showOverlay={true}
         gradientOverlay={true}
         stats={heroStats}
+        className="h-[450px] md:h-[500px] lg:h-screen"
+        minHeight="h-[450px] md:h-[500px] lg:h-screen"
+        contentClassName="pt-20 pb-10 md:py-6 lg:py-0"
       />
 
       <SplitContentSection
@@ -147,11 +150,11 @@ export default function FlutterAppPage8() {
       <HeroBanner
         badge="FEBRURY 8, 2024"
         title="Unleashing the Power of Artificial Neural Networks: From Innovative Website Design to the Future of AI"
-        titleClassName="text-[60px]"
+        titleClassName="text-[18px] md:text-[60px] lg:text-[80px]"
         description="In the rapidly evolving landscape of digital innovation, the past 24 months have witnessed remarkable strides, with artificial intelligence"
         buttonText="READ POST"
         titleMaxWidth="max-w-[990px]"
-        descriptionMaxWidth="max-w-[980px]"
+        descriptionMaxWidth="max-w-[980px] text-[10px] md:text-[20px] lg:text-[24px]"
         backgroundImage={flutter_app_1_banner_1}
         gradientOverlay={true}
         minHeight="auto"

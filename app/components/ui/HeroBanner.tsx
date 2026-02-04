@@ -288,7 +288,7 @@ export default function HeroBanner({
 
       {/* Content Container - Takes full height with flex layout */}
       <div
-        className={`${maxWidth} relative z-10 mx-auto flex flex-col h-full hero-banner-content-container`}
+        className={`${maxWidth} relative z-10 mx-auto container px-4 sm:px-6 lg:px-8 flex flex-col h-full hero-banner-content-container`}
         style={{
           minHeight: height ? undefined : minHeight,
           height: height ? "100%" : undefined
@@ -300,7 +300,7 @@ export default function HeroBanner({
           {badge && (
             <span
               ref={badgeRef}
-              className={`text-[12px] sm:text-[14px] md:text-[16px] font-[500] text-white/80 uppercase tracking-wider mb-4 md:mb-6 ${badgeClassName}`}
+              className={`text-[12px] sm:text-[14px] md:text-[16px] font-[500] text-white/80 uppercase tracking-wider mb-2 md:mb-6 hero-banner-badge ${badgeClassName}`}
             >
               {badge}
             </span>
@@ -310,7 +310,7 @@ export default function HeroBanner({
           {title && (
             <h1
               ref={headingRef}
-              className={`${titleMaxWidth} font-[700] text-white leading-tight mb-6 md:mb-8 hero-banner-title ${titleClassName || "text-[32px] sm:text-[40px] md:text-[50px] lg:text-[80px]"}`}
+              className={`${titleMaxWidth} font-[700] text-white leading-tight mb-4 md:mb-8 hero-banner-title ${titleClassName || "text-[32px] sm:text-[40px] md:text-[50px] lg:text-[80px]"}`}
             >
               {title}
             </h1>
@@ -320,7 +320,7 @@ export default function HeroBanner({
           {description && (
             <p
               ref={descriptionRef}
-              className={`${descriptionMaxWidth} text-[14px] sm:text-[16px] md:text-[20px] font-[500] text-white/90 leading-relaxed max-w-[600px] hero-banner-description ${descriptionClassName}`}
+              className={`${descriptionMaxWidth || "text-[14px] sm:text-[16px] md:text-[20px]"} font-[500] text-white/90 leading-relaxed max-w-[600px] hero-banner-description ${descriptionClassName}`}
             >
               {description}
             </p>
@@ -328,7 +328,7 @@ export default function HeroBanner({
 
           {/* Button (optional) */}
           {buttonText && buttonText.trim() !== "" && (
-            <div ref={buttonRef} className={`mt-8 md:mt-10 ${buttonClassName}`}>
+            <div ref={buttonRef} className={`mt-4 md:mt-10 ${buttonClassName}`}>
               <CallToActionButton variant="shiny" className="rounded-full">
                 {buttonText}
               </CallToActionButton>
@@ -340,20 +340,20 @@ export default function HeroBanner({
         {stats && stats.length > 0 && (
           <div
             ref={statsRef}
-            className={`grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 pb-12 md:pb-20 ${statsContainerClassName}`}
+            className={`grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-12 pb-12 md:pb-20 ${statsContainerClassName}`}
           >
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <p
-                  className={`text-[12px] sm:text-[14px] md:text-[20px] font-[500] text-white/70 mb-2 hero-banner-stat-label ${stat.labelClassName || ""}`}
+                  className={`text-[14px] sm:text-[20px] md:text-[18px] lg:text-[20px] font-normal md:font-[500] lg:font-[500] xl:font-[500] 2xl:font-[500]  text-white mb-2 hero-banner-stat-label ${stat.labelClassName || ""}`}
                 >
-                  {stat.label}
+                  {stat.label} 
                 </p>
                 <p
                   ref={(el) => {
                     numberRefs.current[index] = el;
                   }}
-                  className={`text-[36px] sm:text-[48px] md:text-[60px] lg:text-[80px] font-[500] text-white leading-none hero-banner-stat-value ${stat.valueClassName || ""}`}
+                  className={`text-[20px] sm:text-[20px] md:text-[60px] lg:text-[80px] font-normal md:font-[500] lg:font-[500] xl:font-[500] 2xl:font-[500] text-white leading-none hero-banner-stat-value ${stat.valueClassName || ""}`}
                 >
                   {stat.value}
                 </p>

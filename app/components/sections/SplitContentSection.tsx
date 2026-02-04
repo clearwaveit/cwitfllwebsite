@@ -175,12 +175,12 @@ export default function SplitContentSection({
           {/* Content Section */}
           <div
             ref={contentRef}
-            className={`w-full md:max-w-full flex flex-col justify-end px-4 sm:px-6 md:ps-38 lg:ps-38 xl:ps-48 space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7 xl:space-y-8 2xl:space-y-9 min-[1440px]:space-y-10 min-[1920px]:space-y-12 ${contentClassName}`}
+            className={`container mx-auto flex flex-col justify-end px-4 sm:px-6 md:ps-26 lg:ps-38 xl:ps-46 2xl:ps-60 space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7 xl:space-y-8 2xl:space-y-9 min-[1440px]:space-y-10 min-[1920px]:space-y-12 ${contentClassName}`}
           >
             {/* Heading */}
             <h1
               ref={headingRef}
-              className={`text-[32px] sm:text-[40px] md:text-[32px] lg:text-[40px] xl:text-[48px] 2xl:text-[58px] min-[1440px]:text-[59px] min-[1920px]:text-[60px] font-[700] text-white leading-tight split-content-title ${titleClassName}`}
+              className={`text-[32px] sm:text-[40px] md:text-[36px] lg:text-[40px] xl:text-[48px] 2xl:text-[58px] min-[1440px]:text-[59px] min-[1920px]:text-[60px] font-[700] text-white leading-tight split-content-title ${titleClassName}`}
             >
               {title}
             </h1>

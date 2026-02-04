@@ -174,7 +174,7 @@ export default function Accordion() {
   return (
     <section className="relative min-h-screen bg-black py-24 overflow-hidden">
       <div className="relative z-10 mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 global-section-padding accordion-content-container">
-        <h2 className="text-[30px] md:text-[50px] font-[500] text-white leading-[60px] md:leading-[80px] mb-10 accordion-heading">
+        <h2 className="text-[28px] sm:text-[32px] md:text-[40px] lg:text-[44px] xl:text-[48px] 2xl:text-[52px] min-[1440px]:text-[54px] min-[1920px]:text-[55px] font-[500] text-white leading-tight sm:leading-[1.2] md:leading-[1.25] lg:leading-[1.3] xl:leading-[1.35] 2xl:leading-[1.4] mb-8 sm:mb-10 md:mb-12 lg:mb-14 xl:mb-16 accordion-heading">
           FAQ's
         </h2>
 
@@ -192,7 +192,7 @@ export default function Accordion() {
                   onClick={() => toggleItem(item.id)}
                   className={`w-full flex items-center justify-between px-6 py-5 text-left border border-[#4E4E4E] transition-colors duration-300 ${isOpen ? 'rounded-t-[10px] rounded-b-none' : 'rounded-[10px]'}`}
                 >
-                  <h3 className={`text-[14px] md:text-[20px] pr-8 accordion-title ${isOpen ? 'text-white font-bold' : 'text-white font-medium'}`}>
+                  <h3 className={`text-[14px] sm:text-[15px] md:text-[16px] lg:text-[17px] xl:text-[18px] 2xl:text-[19px] min-[1440px]:text-[20px] min-[1920px]:text-[22px] pr-8 accordion-title ${isOpen ? 'text-white font-bold' : 'text-white font-medium'}`}>
                     {item.title}
                   </h3>
 
@@ -252,7 +252,7 @@ export default function Accordion() {
                   style={item.id === 1 ? { display: 'block', height: 'auto', opacity: 1 } : { display: 'none', height: '0px', opacity: 0 }}
                 >
                   <div className={`p-6 ${isOpen ? 'rounded-b-[10px]' : 'bg-black'}`}>
-                    <p className="text-[12px] md:text-[16px] text-white leading-relaxed accordion-content">
+                    <p className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px] 2xl:text-[17px] min-[1440px]:text-[18px] min-[1920px]:text-[18px] text-white leading-relaxed accordion-content">
                       {item.content}
                     </p>
                   </div>

@@ -250,15 +250,15 @@ export default function Header() {
       {/* Mobile Menu */}
       <div
         ref={menuRef}
-        className={`fixed right-0 top-0 z-40 h-full w-full max-w-full md:max-w-[20vw] bg-black shadow-2xl dark:bg-zinc-900 ${
+        className={`fixed right-0 top-0 z-40 h-full w-full max-w-full md:max-w-full bg-black shadow-2xl dark:bg-zinc-900 ${
           isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
         }`}
         style={{ transform: "translateX(100%)" }}
       >
         <div className="flex h-full flex-col pt-20 md:pt-20">
           {/* Menu Items */}
-          <nav className="flex-1 px-4 md:px-6 pt-6 md:pt-10 flex flex-col items-end">
-            <ul className="space-y-2 md:space-y-3 w-full flex flex-col items-center">
+          <nav className="flex-1 px-4 md:px-6 pt-6 md:pt-10 flex flex-col justify-center items-end">
+            <ul className="space-y-2 md:space-y-3 w-full flex flex-col justify-center items-center">
               {menuItems.map((item, index) => {
                 const active = isActive(item.href);
                 return (
@@ -267,7 +267,7 @@ export default function Header() {
                       <Link
                         href={item.href}
                         onClick={() => setIsMenuOpen(false)}
-                        className={`menu-item block rounded-lg px-3 py-2.5 md:px-4 md:py-3 lg:px-5 lg:py-3.5 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[14px] 2xl:text-[15px] font-medium transition-colors hover:text-[#0DFCC1] text-right ${
+                        className={`menu-item block rounded-lg px-3 py-2.5 md:px-4 md:py-3 lg:px-5 lg:py-3.5 text-[14px] sm:text-[16px] md:text-[18px] lg:text-[13px] xl:text-[14px] 2xl:text-[15px] font-medium transition-colors hover:text-[#0DFCC1] text-right ${
                           active ? "text-[#0DFCC1]" : "text-white"
                         }`}
                       >

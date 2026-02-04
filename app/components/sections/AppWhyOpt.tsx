@@ -168,9 +168,9 @@ export default function AppWhyOpt({
       {finalVideoSrc && (
         <div
           ref={videoContainerRef}
-          className={`absolute ${videoTopOffset || ""} ${videoPosition === "left" ? `left-0 ${videoRightOffset || "pl-4 md:pl-8"}` : `${videoRightOffset || "right-0 pr-4 md:pr-8"}`} inset-0 z-10 flex items-center ${videoPosition === "left" ? "justify-start" : "justify-end"}`}
+          className={`absolute ${videoTopOffset || ""} ${videoPosition === "left" ? `left-0 ${videoRightOffset || "pl-4 sm:pl-6 md:pl-8 lg:pl-12"}` : `${videoRightOffset || "right-0 pr-4 sm:pr-6 md:pr-8 lg:pr-12"}`} inset-0 z-10 flex items-center ${videoPosition === "left" ? "justify-start" : "justify-end"}`}
         >
-          <div className={`relative w-full ${videoMaxWidth} h-[400px] md:h-[600px]`}>
+          <div className={`relative w-full ${videoMaxWidth === "max-w-[900px]" ? "max-w-[280px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[650px] xl:max-w-[750px] 2xl:max-w-[900px]" : videoMaxWidth} h-[250px] xs:h-[300px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[600px] 2xl:h-[650px]`}>
             <video
               ref={videoRef}
               src={finalVideoSrc}

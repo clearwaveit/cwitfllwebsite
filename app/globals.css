@@ -544,7 +544,7 @@ body {
   }
 
   .global-section-padding {
-    padding: 0 110px !important;
+    padding: 0 196px !important;
   }
 
   .digital-experience-banner-video {
@@ -758,6 +758,10 @@ body {
   .content-studio-2 {
     top: -50px !important;
     padding: 0 15px !important;
+  }
+
+  .hero-banner-badge {
+    font-size: 10px !important;
   }
 }
 
@@ -1166,7 +1170,7 @@ body {
   }
 
   .app-start-to-end-video-container {
-    max-width:600px !important;
+    max-width: 600px !important;
     height: 500px !important;
   }
 
@@ -1184,7 +1188,7 @@ body {
   }
 
   .hero-banner-title {
-    font-size: 48px !important;
+    font-size: 58px !important;
     line-height: 1.2 !important;
   }
 
@@ -1375,10 +1379,10 @@ body {
     font-size: 19px !important;
   }
 
-  .hero-banner-title {
+  /* .hero-banner-title {
     font-size: 60px !important;
     line-height: 1.2 !important;
-  }
+  } */
 
   .hero-banner-description {
     font-size: 19px !important;
@@ -1392,10 +1396,10 @@ body {
     font-size: 60px !important;
   }
 
-  .split-content-title {
+  /* .split-content-title {
     font-size: 54px !important;
     line-height: 1.2 !important;
-  }
+  } */
 
   .split-content-description {
     font-size: 19px !important;
@@ -1652,6 +1656,7 @@ body {
   .our-work-container {
     height: 750px !important;
   }
+
   .our-work-item-image {
     height: 240px !important;
   }
@@ -1711,7 +1716,7 @@ body {
   .our-work-responsive-card .max-w-\[460px\] {
     padding-bottom: 8px !important;
   }
-  
+
   .text-section-padding {
     padding: 100px !important;
   }
@@ -1865,7 +1870,7 @@ body {
   }
 
   .ui-ux-item {
-    font-size: 18px !important;
+    font-size: 16px !important;
   }
 }
 
@@ -2097,6 +2102,22 @@ body {
     padding: 100px !important;
   }
 
+  .hero-banner-title {
+    font-size: 38px !important;
+  }
+
+  .hero-banner-description {
+    font-size: 14px !important;
+  }
+
+  .hero-banner-stat-value {
+    font-size: 32px !important;
+  }
+
+  .hero-banner-stat-label {
+    font-size: 12px !important;
+  }
+
 }
 
 /* 930px screen - content studio 2 responsive styles */
@@ -2232,7 +2253,7 @@ body {
   }
 
   .global-section-padding {
-    padding: 0 100px !important;
+    padding: 0 154px !important;
   }
 
   .accordion-heading {
@@ -2281,6 +2302,23 @@ body {
 
   .contact-form-description {
     font-size: 24px !important;
+  }
+
+  .hero-banner-title {
+    font-size: 40px !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero-banner-description {
+    font-size: 16px !important;
+  }
+
+  .hero-banner-stat-value {
+    font-size: 40px !important;
+  }
+
+  .hero-banner-stat-label {
+    font-size: 14px !important;
   }
 }
 

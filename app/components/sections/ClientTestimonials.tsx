@@ -65,7 +65,7 @@ export default function ClientTestimonials() {
         {/* Heading with purple dot */}
         <div className="flex items-center justify-center gap-3 mb-8 md:mb-12">
           <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#9333ea]"></div>
-          <h2 className="text-[12px] md:text-[20px] lg:text-[40px] font-light text-white text-center">
+          <h2 className="text-[14px] sm:text-[16px] md:text-[20px] lg:text-[24px] xl:text-[28px] 2xl:text-[32px] min-[1440px]:text-[36px] min-[1920px]:text-[40px] font-[350] text-white text-center">
             What Our Client Say
           </h2>
         </div>
@@ -90,7 +90,7 @@ export default function ClientTestimonials() {
                     </div>
 
                     {/* Testimonial Text */}
-                    <p className="text-white text-[16px] md:text-[20px] lg:text-[30px] font-light leading-normal text-center">
+                    <p className="text-white text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[26px] min-[1440px]:text-[28px] min-[1920px]:text-[30px] font-[350] leading-relaxed text-center">
                       {testimonial.text}
                     </p>
                   </div>
