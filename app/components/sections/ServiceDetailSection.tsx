@@ -2,6 +2,7 @@
 
 import CallToActionButton from "@/app/components/ui/CallToActionButton";
 import Image, { StaticImageData } from "next/image";
+import { useRouter } from "next/navigation";
 
 interface ServiceDetailSectionProps {
   service: {
@@ -13,6 +14,8 @@ interface ServiceDetailSectionProps {
   graphicAlt?: string;
   imagePosition?: "left" | "right";
   className?: string;
+  buttonText?: string;
+  redirectUrl?: string;
 }
 
 export default function ServiceDetailSection({
@@ -21,8 +24,24 @@ export default function ServiceDetailSection({
   graphicAlt = "Service graphic",
   imagePosition = "right",
   className = "",
+  buttonText = "Read More",
+  redirectUrl,
 }: ServiceDetailSectionProps) {
+  const router = useRouter();
   const isImageLeft = imagePosition === "left";
+
+  const handleButtonClick = () => {
+    if (redirectUrl) {
+      // Scroll to top immediately
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      // Navigate to the page
+      router.push(redirectUrl);
+      // Ensure scroll to top after navigation completes
+      setTimeout(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }, 100);
+    }
+  };
 
   const textContent = (
     <div className="flex flex-col space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7 xl:space-y-8">
@@ -52,7 +71,12 @@ export default function ServiceDetailSection({
 
       {/* Call to Action Button */}
       <div className="pt-3 sm:pt-3.5 md:pt-4 lg:pt-4.5 xl:pt-5 relative z-10">
-        <CallToActionButton variant="shiny" />
+        <CallToActionButton 
+          variant="shiny"
+          onClick={redirectUrl ? handleButtonClick : undefined}
+        >
+          {buttonText}
+        </CallToActionButton>
       </div>
     </div>
   );

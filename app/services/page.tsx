@@ -80,15 +80,26 @@ export default function ServicesPage() {
         alt="Background"
         className="relative bg-black overflow-hidden h-[146px] md:h-[748px]"
       />
-      {services.map((service, index) => (
-        <ServiceDetailSection
-          key={index}
-          service={service}
-          graphicImage={graphicImage}
-          graphicAlt="Gen AI Image"
-          imagePosition={index % 2 === 0 ? "right" : "left"}
-        />
-      ))}
+      {services.map((service, index) => {
+        const redirectUrls = [
+          "/ui-ux-app",
+          "/web-app",
+          "/ecommerce-app",
+          "/work-details"
+        ];
+        
+        return (
+          <ServiceDetailSection
+            key={index}
+            service={service}
+            graphicImage={graphicImage}
+            graphicAlt="Gen AI Image"
+            imagePosition={index % 2 === 0 ? "right" : "left"}
+            buttonText="Read More"
+            redirectUrl={redirectUrls[index]}
+          />
+        );
+      })}
       <OurWork
         title="OUR WORK"
         workItems={defaultWorkItems}
