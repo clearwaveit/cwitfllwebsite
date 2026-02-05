@@ -9,7 +9,7 @@ import Accordion from "../components/sections/Accordion";
 import ourWorkImg from "@/app/assets/imgs/our_work_img.png";
 import vectorBg from "@/app/assets/imgs/Mask group (1).png";
 
-export default function ServicesPage() {
+export default function DigitalExperienceStudioPages() {
   const services = [
     {
       "title": "UI / UX Design",
@@ -41,21 +41,25 @@ export default function ServicesPage() {
       title: "The Oxford Institute",
       description: "70% increased in digital interaction of potential students looking for information",
       image: ourWorkImg,
+      category: "EDUCATION\nTECH\nWEBSITE",
     },
     {
       title: "The Oxford Institute",
       description: "70% increased in digital interaction of potential students looking for information",
       image: ourWorkImg,
+      category: "EDUCATION\nTECH\nWEBSITE",
     },
     {
       title: "The Oxford Institute",
       description: "70% increased in digital interaction of potential students looking for information",
       image: ourWorkImg,
+      category: "EDUCATION\nTECH\nWEBSITE",
     },
     {
       title: "The Oxford Institute",
       description: "70% increased in digital interaction of potential students looking for information",
       image: ourWorkImg,
+      category: "EDUCATION\nTECH\nWEBSITE",
     },
   ];
   return (
@@ -81,13 +85,6 @@ export default function ServicesPage() {
         className="relative bg-black overflow-hidden h-[146px] md:h-[748px]"
       />
       {services.map((service, index) => {
-        const redirectUrls = [
-          "/ui-ux-app",
-          "/web-app",
-          "/ecommerce-app",
-          "/work-details"
-        ];
-        
         return (
           <ServiceDetailSection
             key={index}
@@ -96,7 +93,6 @@ export default function ServicesPage() {
             graphicAlt="Gen AI Image"
             imagePosition={index % 2 === 0 ? "right" : "left"}
             buttonText="Read More"
-            redirectUrl={redirectUrls[index]}
           />
         );
       })}
@@ -106,7 +102,6 @@ export default function ServicesPage() {
         ctaVariant="outline"
         className="bg-black"
         showCTA={true}
-        useNewDesign={false}
       />
       <Accordion />
     </main>

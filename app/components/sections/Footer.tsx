@@ -7,12 +7,111 @@ import phoneIcon from "@/app/assets/imgs/phone.png";
 import linkedinIcon from "@/app/assets/imgs/linkedin.png";
 import instagramIcon from "@/app/assets/imgs/Instagram.png";
 import twitterIcon from "@/app/assets/imgs/twitter.png";
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function Footer() {
+  const footerRef = useRef<HTMLElement>(null);
+  const ctaSectionRef = useRef<HTMLElement>(null);
+  const ctaHeadingRef = useRef<HTMLHeadingElement>(null);
+  const ctaParagraphRef = useRef<HTMLParagraphElement>(null);
+  const ctaButtonRef = useRef<HTMLDivElement>(null);
+  const linksSectionRef = useRef<HTMLDivElement>(null);
+  const linksColumnsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!footerRef.current || !ctaSectionRef.current) return;
+
+    // CTA Section Animations
+    const ctaHeading = ctaHeadingRef.current;
+    const ctaParagraph = ctaParagraphRef.current;
+    const ctaButton = ctaButtonRef.current;
+
+    if (ctaHeading && ctaParagraph && ctaButton) {
+      // Set initial state
+      gsap.set([ctaHeading, ctaParagraph, ctaButton], { opacity: 0, y: 50 });
+
+      // Create timeline for CTA section
+      const ctaTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ctaSectionRef.current,
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      ctaTl
+        .to(ctaHeading, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out",
+        })
+        .to(ctaParagraph, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out",
+        }, "+=0.2")
+        .to(ctaButton, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out",
+        }, "+=0.2");
+    }
+
+    // Footer Links Section Animations
+    const linksColumns = linksColumnsRef.current;
+    if (linksColumns && linksSectionRef.current) {
+      const columns = linksColumns.querySelectorAll('.footer-column');
+      
+      // Set initial state
+      gsap.set(columns, { opacity: 0, y: 60 });
+
+      // Create timeline for links section
+      const linksTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: linksSectionRef.current,
+          start: "top 85%",
+          end: "bottom 20%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      linksTl.to(columns, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        stagger: 0.2,
+      });
+    }
+
+    return () => {
+      const triggers = ScrollTrigger.getAll();
+      triggers.forEach((trigger) => {
+        if (
+          trigger.trigger === ctaSectionRef.current ||
+          trigger.trigger === linksSectionRef.current
+        ) {
+          trigger.kill();
+        }
+      });
+    };
+  }, []);
+
   return (
-    <footer className="relative bg-black text-white footer-responsive">
+    <footer ref={footerRef} className="relative bg-black text-white footer-responsive">
       {/* Call to Action Section */}
       <section
+        ref={ctaSectionRef}
         className="relative overflow-hidden footer-section md:h-[1223px] h-[1023px] md:min-h-[1223px] min-h-[800px]"
         style={{
           width: '1920px',
@@ -44,21 +143,23 @@ export default function Footer() {
 
         {/* CTA Content */}
         <div className="relative md:top-[-150px] z-10 h-full flex flex-col items-center justify-center text-center px-4 footer-cta-content">
-          <h2 className="text-[60px] md:text-[80px] font-[700] leading-[80px] text-white mb-4 footer-heading">
+          <h2 ref={ctaHeadingRef} className="text-[60px] md:text-[80px] font-[700] leading-[80px] text-white mb-4 footer-heading">
             Get Started now!
           </h2>
-          <p className="text-[16px] md:text-[20px] text-white mb-8 max-w-2xl footer-paragraph">
+          <p ref={ctaParagraphRef} className="text-[16px] md:text-[20px] text-white mb-8 max-w-2xl footer-paragraph">
             Request for a free quote, submit your RFP/RFI.
           </p>
-          <CallToActionButton variant="shiny" />
+          <div ref={ctaButtonRef}>
+            <CallToActionButton variant="shiny" />
+          </div>
         </div>
 
         {/* Footer Links Section - Overlay on Vector */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 bg-black/10 footer-links-section global-section-padding-footer pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-16 lg:pb-16 xl:pt-20 xl:pb-20 2xl:pt-22 2xl:pb-22">
+        <div ref={linksSectionRef} className="absolute bottom-0 left-0 right-0 z-20 bg-black/10 footer-links-section global-section-padding-footer pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-16 lg:pb-16 xl:pt-20 xl:pb-20 2xl:pt-22 2xl:pb-22">
           <div className="flex justify-center items-center mx-auto footer-links-container global-section-padding px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 lg:gap-10 xl:gap-12 2xl:gap-14 footer-links-grid w-full">
+            <div ref={linksColumnsRef} className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 lg:gap-10 xl:gap-12 2xl:gap-14 footer-links-grid w-full">
               {/* Navigation Links */}
-              <div className="flex flex-col items-start">
+              <div className="footer-column flex flex-col items-start">
                 <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
                   <li>
                     <a href="/" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
@@ -89,7 +190,7 @@ export default function Footer() {
               </div>
 
               {/* Service Categories */}
-              <div className="flex flex-col items-start">
+              <div className="footer-column flex flex-col items-start">
                 <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
                   <li>
                     <a href="#" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
@@ -120,7 +221,7 @@ export default function Footer() {
               </div>
 
               {/* Contact Information */}
-              <div className="flex flex-col justify-center items-start md:items-start lg:items-end footer-contact-info mt-4 sm:mt-0">
+              <div className="footer-column flex flex-col justify-center items-start md:items-start lg:items-end footer-contact-info mt-4 sm:mt-0">
                 <ul className="font-graphik-light-weight-300 space-y-1.5 sm:space-y-2 md:space-y-2.5 lg:space-y-3">
                   <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
                     Trade Center Area
@@ -190,7 +291,7 @@ export default function Footer() {
               </div>
 
               {/* Copyright and Legal */}
-              <div className="flex flex-col justify-start md:justify-start lg:justify-center items-start md:items-start lg:items-end footer-copyright mt-4 sm:mt-0">
+              <div className="footer-column flex flex-col justify-start md:justify-start lg:justify-center items-start md:items-start lg:items-end footer-copyright mt-4 sm:mt-0">
                 <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
                   <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
                     CWIT © 2025

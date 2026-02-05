@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import CallToActionButton from "@/app/components/ui/CallToActionButton";
-import maskGroupImg from "@/app/assets/imgs/Mask group.png";
 import { useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -17,22 +16,26 @@ const studios = [
     description:
       "We design and develop digital experiences that are intuitive, accessible, and performance-driven. Our focus is on creating websites and platforms that balance strong visual identity with usability, speed, and search engine visibility — ensuring long-term relevance in an ever-evolving digital landscape.",
     video: "/videos/animated_clip_1.mp4",
+    href: "/digital-experience-studio",
   },
   {
     title: "Application Development Studio",
     description:
       "We design and develop digital experiences that are intuitive, accessible, and performance-driven. Our focus is on creating websites and platforms that balance strong visual identity with usability, speed, and search engine visibility — ensuring long-term relevance in an ever-evolving digital landscape.",
     video: "/videos/animated_clip_2.mp4",
+    href: "/application-development-studio",
   },
   {
     title: "Growth & Branding Studio",
     description:
       "We design and develop digital experiences that are intuitive, accessible, and performance-driven. Our focus is on creating websites and platforms that balance strong visual identity with usability, speed, and search engine visibility — ensuring long-term relevance in an ever-evolving digital landscape.",
     video: "/videos/animated_clip_3.mp4",
+    href: "/growth-branding-studio",
   },
 ];
 
 export default function Studios() {
+  const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -219,9 +222,6 @@ export default function Studios() {
                     }}
                   />
 
-                  {/* Overlay for text readability */}
-                  {/* <div className="absolute inset-0 bg-black/40 z-10" /> */}
-
                   {/* Content */}
                   <div className={`content-wrapper relative z-20 w-full content-studio-${index === 0 ? "ps-0 lg:ps-[110px] lg:pt-0 content-studio-0" : index === 1 ? "ps-0 lg:ps-50 content-studio-1" : index === 2 ? "ps-0 lg:ps-115 content-studio-2" : "ps-0"}`}>
                     <h2 className={`text-[30px] md:text-[80px] font-[700] text-white leading-[32px] md:leading-[80px] mb-6 ${index === 0 ? 'studio-heading-0' : index === 1 ? 'studio-heading-1' : 'studio-heading-2'}`}>
@@ -243,20 +243,13 @@ export default function Studios() {
                         studio.title
                       )}
                     </h2>
-                    <p className="text-[16px] md:text-[20px] text-white mb-4 max-w-[730px] leading-relaxed">
+                    <p className="text-[16px] md:text-[20px] text-white mb-4 md:py-10 max-w-[730px] leading-relaxed">
                       {studio.description}
                     </p>
-                    {/* <div className="flex flex-col pb-10 md:pb-6">
-                      <ul className="flex gap-12 list-style-none">
-                        <li className="text-[12px] md:text-[30px]">UI / UX Design</li>
-                        <li className="text-[12px] md:text-[30px]">Webite Development</li>
-                      </ul>
-                      <ul className="flex gap-12 list-style-none">
-                        <li className="text-[12px] md:text-[30px]">CMS & Integrations</li>
-                        <li className="text-[12px] md:text-[30px]">Ecommerce Solutions</li>
-                      </ul>
-                    </div> */}
-                    <CallToActionButton variant="shiny" />
+                    <CallToActionButton 
+                      variant="shiny" 
+                      onClick={() => router.push(studio.href)}
+                    />
                   </div>
                 </div>
               </div>

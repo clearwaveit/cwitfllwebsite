@@ -2551,3 +2551,9 @@ body {
     gap: 2rem !important;
   }
 }
+
+/* Menu Toggle Button Hover Animation */
+.menu-toggle-btn:not([data-menu-open="true"]):hover .menu-text-container {
+  transform: translateY(-50%) !important;
+  opacity: 1 !important;
+}

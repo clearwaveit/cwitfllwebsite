@@ -3,6 +3,13 @@
 import Image from "next/image";
 import playIcon from "@/app/assets/imgs/blogs_video_btn.png";
 import blogImg from "@/app/assets/imgs/blog_img.png";
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const blogs = [
   {
@@ -23,16 +30,92 @@ const blogs = [
 ];
 
 export default function Blogs() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sectionRef.current || !titleRef.current || !cardsRef.current) return;
+
+    const title = titleRef.current;
+    const cards = cardsRef.current.querySelectorAll('.blogs-card');
+
+    // Set initial state
+    gsap.set(title, { opacity: 0, y: 50 });
+    gsap.set(cards, { opacity: 0, y: 80, scale: 0.9 });
+
+    // Create timeline for animations
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        end: "bottom 20%",
+        toggleActions: "play none none reverse",
+      },
+    });
+
+    // Animate title
+    tl.to(title, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power3.out",
+    });
+
+    // Animate cards with stagger
+    tl.to(cards, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.8,
+      ease: "power3.out",
+      stagger: 0.2,
+    }, "-=0.4");
+
+    // Hover animations for cards
+    cards.forEach((card) => {
+      const cardElement = card as HTMLElement;
+      
+      cardElement.addEventListener('mouseenter', () => {
+        gsap.to(cardElement, {
+          scale: 1.05,
+          y: -10,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      });
+
+      cardElement.addEventListener('mouseleave', () => {
+        gsap.to(cardElement, {
+          scale: 1,
+          y: 0,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      });
+    });
+
+    return () => {
+      tl.kill();
+      const triggers = ScrollTrigger.getAll();
+      triggers.forEach((trigger) => {
+        if (trigger.trigger === sectionRef.current) {
+          trigger.kill();
+        }
+      });
+    };
+  }, []);
+
   return (
-    <section className="relative min-h-screen bg-black py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24 2xl:py-28 overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen bg-black py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24 2xl:py-28 overflow-hidden">
       <div className="relative z-10 mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 global-section-padding blogs-section-content-container">
-        <h2 className="text-[24px] sm:text-[30px] md:text-[40px] lg:text-[50px] xl:text-[55px] 2xl:text-[60px] font-[500] text-white leading-[32px] sm:leading-[40px] md:leading-[50px] lg:leading-[60px] xl:leading-[70px] 2xl:leading-[80px] mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+        <h2 ref={titleRef} className="text-[24px] sm:text-[30px] md:text-[40px] lg:text-[50px] xl:text-[55px] 2xl:text-[60px] font-[500] text-white leading-[32px] sm:leading-[40px] md:leading-[50px] lg:leading-[60px] xl:leading-[70px] 2xl:leading-[80px] mb-6 sm:mb-8 md:mb-10 lg:mb-12">
           Latest Blogs and Insights
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-7 xl:gap-8 2xl:gap-10 blogs-cards-grid">
+        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-7 xl:gap-8 2xl:gap-10 blogs-cards-grid">
           {blogs.map((blog, index) => (
-            <div key={index} className="relative flex flex-col w-full sm:w-auto md:w-full lg:w-auto xl:w-full 2xl:w-auto h-auto sm:h-[350px] md:h-[400px] lg:h-[450px] xl:h-[480px] 2xl:h-[500px] blogs-section blogs-card">
+            <div key={index} className="relative flex flex-col w-full sm:w-auto md:w-full lg:w-auto xl:w-full 2xl:w-auto h-auto sm:h-[350px] md:h-[400px] lg:h-[450px] xl:h-[480px] 2xl:h-[500px] blogs-section blogs-card cursor-pointer">
               {/* Image with play button */}
               <div className="relative w-full h-[180px] sm:h-[200px] md:h-[220px] lg:h-[240px] xl:h-[250px] 2xl:h-[260px] flex items-center justify-center mb-0 overflow-hidden">
                 <Image

@@ -20,9 +20,9 @@ export default function WhatsAppButton({
       {showOnDesktop && (
         <button
           onClick={onClick}
-          className="fixed hidden md:block right-[70px] bottom-[70px] z-50 cursor-pointer hover:scale-110 transition-transform duration-300 whatsapp-button"
+          className="fixed hidden md:block right-[70px] bottom-[70px] z-30 cursor-pointer hover:scale-110 transition-transform duration-300 whatsapp-button"
           style={{
-            zIndex: 50,
+            zIndex: 30,
           }}
         >
           <Image
@@ -39,9 +39,9 @@ export default function WhatsAppButton({
       {showOnMobile && (
         <button
           onClick={onClick}
-          className="fixed md:hidden right-[15px] bottom-[50px] z-50 cursor-pointer hover:scale-110 transition-transform duration-300"
+          className="fixed md:hidden right-[15px] bottom-[50px] z-30 cursor-pointer hover:scale-110 transition-transform duration-300"
           style={{
-            zIndex: 50,
+            zIndex: 30,
           }}
         >
           <Image

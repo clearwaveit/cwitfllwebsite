@@ -10,7 +10,7 @@ import OurClients from "../components/sections/OurClients";
 import ourWorkImg from "@/app/assets/imgs/our_work_img.png";
 import vectorBg from "@/app/assets/imgs/Mask group (1).png";
 
-export default function AboutUsPage() {
+export default function ApplicationDevelopmentStudioPage() {
   const services = [
     {
       "title": "UI / UX Design",
@@ -42,21 +42,25 @@ export default function AboutUsPage() {
       title: "The Oxford Institute",
       description: "70% increased in digital interaction of potential students looking for information",
       image: ourWorkImg,
+      category: "EDUCATION\nTECH\nWEBSITE",
     },
     {
       title: "The Oxford Institute",
       description: "70% increased in digital interaction of potential students looking for information",
       image: ourWorkImg,
+      category: "EDUCATION\nTECH\nWEBSITE",
     },
     {
       title: "The Oxford Institute",
       description: "70% increased in digital interaction of potential students looking for information",
       image: ourWorkImg,
+      category: "EDUCATION\nTECH\nWEBSITE",
     },
     {
       title: "The Oxford Institute",
       description: "70% increased in digital interaction of potential students looking for information",
       image: ourWorkImg,
+      category: "EDUCATION\nTECH\nWEBSITE",
     },
   ];
   return (
@@ -95,7 +99,6 @@ export default function AboutUsPage() {
         ctaVariant="outline"
         className="bg-black"
         showCTA={true}
-        useNewDesign={false}
       />
       <OurClients />
       <Accordion />

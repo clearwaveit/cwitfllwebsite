@@ -72,14 +72,10 @@ export default function CallToActionButton({
     // Check current pathname
     const currentPath = window.location.pathname;
     
-    // If onClick is provided and we're on /services page, let onClick handle navigation and skip default
-    if (onClick && currentPath === '/services') {
-      onClick();
-      return;
-    }
-    
+    // If onClick is provided, let it handle navigation and skip default behavior
     if (onClick) {
       onClick();
+      return;
     }
     
     // If on mobile-app, web-app, logo-app, etc. pages, scroll to project-contact-form

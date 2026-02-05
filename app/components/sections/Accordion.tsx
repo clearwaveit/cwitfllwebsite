@@ -1,8 +1,13 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useGSAP } from "@/app/hooks/useGSAP";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const accordionItems = [
   {
@@ -49,6 +54,9 @@ const accordionItems = [
 
 export default function Accordion() {
   const [openItems, setOpenItems] = useState<number[]>([1]); // First item expanded by default
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const itemsContainerRef = useRef<HTMLDivElement>(null);
   const contentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const plusIconRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const minusIconRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
@@ -171,21 +179,71 @@ export default function Accordion() {
     });
   });
 
+  // ScrollTrigger animations for section entrance
+  useEffect(() => {
+    if (!sectionRef.current || !titleRef.current || !itemsContainerRef.current) return;
+
+    const title = titleRef.current;
+    const accordionItems = itemsContainerRef.current.querySelectorAll('.accordion-item');
+
+    // Set initial state
+    gsap.set(title, { opacity: 0, y: 50 });
+    gsap.set(accordionItems, { opacity: 0, y: 60, scale: 0.95 });
+
+    // Create timeline for animations
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        end: "bottom 20%",
+        toggleActions: "play none none reverse",
+      },
+    });
+
+    // Animate title
+    tl.to(title, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power3.out",
+    });
+
+    // Animate accordion items with stagger (one by one like blogs)
+    tl.to(accordionItems, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.8,
+      ease: "power3.out",
+      stagger: 0.2,
+    }, "-=0.4");
+
+    return () => {
+      tl.kill();
+      const triggers = ScrollTrigger.getAll();
+      triggers.forEach((trigger) => {
+        if (trigger.trigger === sectionRef.current) {
+          trigger.kill();
+        }
+      });
+    };
+  }, []);
+
   return (
-    <section className="relative min-h-screen bg-black py-24 overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen bg-black py-24 overflow-hidden">
       <div className="relative z-10 mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 global-section-padding accordion-content-container">
-        <h2 className="text-[28px] sm:text-[32px] md:text-[40px] lg:text-[44px] xl:text-[48px] 2xl:text-[52px] min-[1440px]:text-[54px] min-[1920px]:text-[55px] font-[500] text-white leading-tight sm:leading-[1.2] md:leading-[1.25] lg:leading-[1.3] xl:leading-[1.35] 2xl:leading-[1.4] mb-8 sm:mb-10 md:mb-12 lg:mb-14 xl:mb-16 accordion-heading">
+        <h2 ref={titleRef} className="text-[28px] sm:text-[32px] md:text-[40px] lg:text-[44px] xl:text-[48px] 2xl:text-[52px] min-[1440px]:text-[54px] min-[1920px]:text-[55px] font-[500] text-white leading-tight sm:leading-[1.2] md:leading-[1.25] lg:leading-[1.3] xl:leading-[1.35] 2xl:leading-[1.4] mb-8 sm:mb-10 md:mb-12 lg:mb-14 xl:mb-16 accordion-heading">
           FAQ's
         </h2>
 
-        <div className="space-y-3">
+        <div ref={itemsContainerRef} className="space-y-3">
           {accordionItems.map((item) => {
             const isOpen = openItems.includes(item.id);
 
             return (
               <div
                 key={item.id}
-                className={`overflow-hidden rounded-[10px] ${isOpen ? 'rounded-[10px] border border-[#0DFCC1]' : 'border-0'}`}
+                className={`accordion-item overflow-hidden rounded-[10px] ${isOpen ? 'rounded-[10px] border border-[#0DFCC1]' : 'border-0'}`}
               >
                 {/* Accordion Header - Dark Grey Rectangle */}
                 <button
