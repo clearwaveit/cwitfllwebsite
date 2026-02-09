@@ -8,6 +8,7 @@ import linkedinIcon from "@/app/assets/imgs/linkedin.png";
 import instagramIcon from "@/app/assets/imgs/Instagram.png";
 import twitterIcon from "@/app/assets/imgs/twitter.png";
 import { useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -23,9 +24,20 @@ export default function Footer() {
   const ctaButtonRef = useRef<HTMLDivElement>(null);
   const linksSectionRef = useRef<HTMLDivElement>(null);
   const linksColumnsRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!footerRef.current || !ctaSectionRef.current) return;
+
+    // Kill existing ScrollTriggers
+    ScrollTrigger.getAll().forEach((trigger) => {
+      if (
+        trigger.trigger === ctaSectionRef.current ||
+        trigger.trigger === linksSectionRef.current
+      ) {
+        trigger.kill();
+      }
+    });
 
     // CTA Section Animations
     const ctaHeading = ctaHeadingRef.current;
@@ -33,8 +45,16 @@ export default function Footer() {
     const ctaButton = ctaButtonRef.current;
 
     if (ctaHeading && ctaParagraph && ctaButton) {
-      // Set initial state
+      // Reset initial state
       gsap.set([ctaHeading, ctaParagraph, ctaButton], { opacity: 0, y: 50 });
+
+      // Check if element is already in view
+      const checkIfInView = () => {
+        if (!ctaSectionRef.current) return false;
+        const rect = ctaSectionRef.current.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        return rect.top < windowHeight * 0.8 && rect.bottom > 0;
+      };
 
       // Create timeline for CTA section
       const ctaTl = gsap.timeline({
@@ -43,6 +63,12 @@ export default function Footer() {
           start: "top 80%",
           end: "bottom 20%",
           toggleActions: "play none none reverse",
+          onEnter: () => {
+            ctaTl.play();
+          },
+          onEnterBack: () => {
+            ctaTl.play();
+          },
         },
       });
 
@@ -65,6 +91,13 @@ export default function Footer() {
           duration: 0.8,
           ease: "power3.out",
         }, "+=0.2");
+
+      // If already in view, trigger animation immediately
+      if (checkIfInView()) {
+        setTimeout(() => {
+          ctaTl.play();
+        }, 100);
+      }
     }
 
     // Footer Links Section Animations
@@ -72,8 +105,16 @@ export default function Footer() {
     if (linksColumns && linksSectionRef.current) {
       const columns = linksColumns.querySelectorAll('.footer-column');
       
-      // Set initial state
+      // Reset initial state
       gsap.set(columns, { opacity: 0, y: 60 });
+
+      // Check if element is already in view
+      const checkIfInView = () => {
+        if (!linksSectionRef.current) return false;
+        const rect = linksSectionRef.current.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        return rect.top < windowHeight * 0.85 && rect.bottom > 0;
+      };
 
       // Create timeline for links section
       const linksTl = gsap.timeline({
@@ -82,6 +123,12 @@ export default function Footer() {
           start: "top 85%",
           end: "bottom 20%",
           toggleActions: "play none none reverse",
+          onEnter: () => {
+            linksTl.play();
+          },
+          onEnterBack: () => {
+            linksTl.play();
+          },
         },
       });
 
@@ -92,7 +139,17 @@ export default function Footer() {
         ease: "power3.out",
         stagger: 0.2,
       });
+
+      // If already in view, trigger animation immediately
+      if (checkIfInView()) {
+        setTimeout(() => {
+          linksTl.play();
+        }, 100);
+      }
     }
+
+    // Refresh ScrollTrigger after setup
+    ScrollTrigger.refresh();
 
     return () => {
       const triggers = ScrollTrigger.getAll();
@@ -105,7 +162,7 @@ export default function Footer() {
         }
       });
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <footer ref={footerRef} className="relative bg-black text-white footer-responsive">

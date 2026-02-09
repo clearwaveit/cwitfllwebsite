@@ -134,7 +134,7 @@ export default function Hero() {
       </div>
 
       {/* Sticky Bar at Bottom */}
-      <div 
+      {/* <div 
         className="absolute bottom-4 md:bottom-6 z-20 w-full py-3 px-4 md:py-1 md:px-6"
         style={{ backgroundColor: '#2dfdc3' }}
       >
@@ -143,7 +143,7 @@ export default function Hero() {
             Creating Exceptional Digital Experiences With Cutting-Edge Technology
           </p>
         </div>
-      </div>
+      </div> */}
       
       {/* Content Overlay */}
       {/* <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 w-full">

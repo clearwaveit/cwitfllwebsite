@@ -109,7 +109,7 @@ export default function Blogs() {
   return (
     <section ref={sectionRef} className="relative min-h-screen bg-black py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24 2xl:py-28 overflow-hidden">
       <div className="relative z-10 mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 global-section-padding blogs-section-content-container">
-        <h2 ref={titleRef} className="text-[24px] sm:text-[30px] md:text-[40px] lg:text-[50px] xl:text-[55px] 2xl:text-[60px] font-[500] text-white leading-[32px] sm:leading-[40px] md:leading-[50px] lg:leading-[60px] xl:leading-[70px] 2xl:leading-[80px] mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+        <h2 ref={titleRef} className="text-[24px] sm:text-[30px] md:text-[40px] lg:text-[50px] xl:text-[55px] 2xl:text-[60px] font-[500] text-white leading-[1.3] sm:leading-[1.33] md:leading-[1.25] lg:leading-[1.2] xl:leading-[1.27] 2xl:leading-[1.33] mb-6 sm:mb-8 md:mb-10 lg:mb-12">
           Latest Blogs and Insights
         </h2>
 
@@ -132,10 +132,10 @@ export default function Blogs() {
                   <span className="text-blue-600 text-[12px] sm:text-[14px] md:text-[15px] lg:text-[16px] xl:text-[17px] 2xl:text-[18px] font-medium block">
                     {blog.category}
                   </span>
-                  <h3 className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] 2xl:text-[24px] font-bold text-black leading-tight">
+                  <h3 className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] 2xl:text-[24px] font-bold text-black leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25]">
                     {blog.title}
                   </h3>
-                  <p className="text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-relaxed">
+                  <p className="text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
                     {blog.description}
                   </p>
                 </div>

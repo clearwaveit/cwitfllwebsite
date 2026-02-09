@@ -224,7 +224,7 @@ export default function Studios() {
 
                   {/* Content */}
                   <div className={`content-wrapper relative z-20 w-full content-studio-${index === 0 ? "ps-0 lg:ps-[110px] lg:pt-0 content-studio-0" : index === 1 ? "ps-0 lg:ps-50 content-studio-1" : index === 2 ? "ps-0 lg:ps-115 content-studio-2" : "ps-0"}`}>
-                    <h2 className={`text-[30px] md:text-[80px] font-[700] text-white leading-[32px] md:leading-[80px] mb-6 ${index === 0 ? 'studio-heading-0' : index === 1 ? 'studio-heading-1' : 'studio-heading-2'}`}>
+                    <h2 className={`text-[30px] md:text-[80px] font-[700] text-white leading-[1.2] sm:leading-[1.3] md:leading-[1.1] lg:leading-[1.05] xl:leading-[1.0] 2xl:leading-[0.95] mb-6 ${index === 0 ? 'studio-heading-0' : index === 1 ? 'studio-heading-1' : 'studio-heading-2'}`}>
                       {index === 0 ? (
                         <>
                           Digital<br />
@@ -243,7 +243,7 @@ export default function Studios() {
                         studio.title
                       )}
                     </h2>
-                    <p className="text-[16px] md:text-[20px] text-white mb-4 md:py-10 max-w-[730px] leading-relaxed">
+                    <p className="text-[16px] md:text-[20px] text-white mb-4 md:py-10 max-w-[730px] leading-[1.5] sm:leading-[1.6] md:leading-[1.65] lg:leading-[1.7] xl:leading-[1.65] 2xl:leading-[1.6]">
                       {studio.description}
                     </p>
                     <CallToActionButton 

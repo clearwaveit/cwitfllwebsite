@@ -154,7 +154,7 @@ export default function Showcase() {
         {/* Text Section - Centered vertically */}
         <div className="flex items-center justify-center h-[20vh] md:min-h-[50vh]">
           <div ref={headlineRef} className="text-left space-y-6 lg:max-w-[70%]">
-            <h2 className="text-[#ffffff] text-[16px] sm:text-[26px] md:text-[34px] lg:text-[40px] leading-[30px] md:leading-[58px] lg:leading-[52px] font-[400] tracking-normal showcase-heading">
+            <h2 className="text-[#ffffff] text-[16px] sm:text-[26px] md:text-[34px] lg:text-[40px] leading-[1.4] sm:leading-[1.5] md:leading-[1.6] lg:leading-[1.5] xl:leading-[1.4] 2xl:leading-[1.3] font-[400] tracking-normal showcase-heading">
               Clearwave is a website design company in Dubai, delivering custom web design and web development solutions for businesses looking to build fast, scalable, and SEO-friendly digital platforms.
             </h2>
           </div>

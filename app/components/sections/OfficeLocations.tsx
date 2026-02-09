@@ -74,36 +74,36 @@ export default function OfficeLocations({ className = "" }: OfficeLocationsProps
   }, []);
 
   return (
-    <section ref={sectionRef} className={`bg-black text-white py-16 md:py-24 ${className}`}>
+    <section ref={sectionRef} className={`bg-transparent text-white py-16 md:py-24 ${className}`}>
       <div className="max-w-[1294px] mx-auto global-section-padding office-locations-container">
-        <div className="office-locations-grid">
+        <div className="flex flex-col gap-8">
           {offices.map((office, index) => (
             <div
               key={index}
               ref={(el) => { cardRefs.current[index] = el; }}
               className="padding-office-location-card office-location-card"
             >
-              <h3 className="text-[24px] md:text-[41px] office-location-heading font-[400] mb-6">
+              <h3 className="text-[24px] md:text-[41px] office-location-heading font-[300] mb-2 text-white">
                 {office.city}
               </h3>
               <div>
                 {office.address.map((line, lineIndex) => (
                   <p
                     key={lineIndex}
-                    className="text-[14px] md:text-[26px] office-location-text text-white"
+                    className="text-[14px] md:text-[26px] office-location-text text-white font-[300]"
                   >
                     {line}
                   </p>
                 ))}
                 <a
                   href={`mailto:${office.email}`}
-                  className="block text-[14px] md:text-[26px] office-location-text text-white/90 hover:text-[#0DFCC1] transition-colors"
+                  className="block text-[14px] md:text-[26px] office-location-text text-white font-[300] hover:text-[#0DFCC1] transition-colors"
                 >
                   {office.email}
                 </a>
                 <a
                   href={`tel:${office.phone.replace(/\s/g, "")}`}
-                  className="block text-[14px] md:text-[26px] office-location-text text-white/90 hover:text-[#0DFCC1] transition-colors"
+                  className="block text-[14px] md:text-[26px] office-location-text text-white font-[300] hover:text-[#0DFCC1] transition-colors"
                 >
                   {office.phone}
                 </a>
