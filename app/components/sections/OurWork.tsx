@@ -228,14 +228,14 @@ export default function OurWork({
 
                 {/* Title */}
                 <div className="px-4 pb-2">
-                  <h3 className="text-white text-[20px] sm:text-[24px] font-[400] leading-[1.2]">
+                  <h3 className="text-white text-[20px] sm:text-[24px] font-[400] leading-[1.3] sm:leading-[1.35] md:leading-[1.4]">
                     {item.title}
                   </h3>
                 </div>
 
                 {/* Description */}
                 <div className="px-4 pb-10">
-                  <p className="text-white text-[13px] sm:text-[14px] leading-[1.5] font-[300]">
+                  <p className="text-white text-[13px] sm:text-[14px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] font-[300]">
                     {item.description}
                   </p>
                 </div>
@@ -321,14 +321,14 @@ export default function OurWork({
 
                   {/* Title */}
                   <div className="px-5 lg:px-8 pb-2 lg:pb-3">
-                    <h3 className="text-white text-[28px] lg:text-[34px] xl:text-[41px] font-[400] leading-[1.2] our-work-item-title">
+                    <h3 className="text-white text-[28px] lg:text-[34px] xl:text-[41px] font-[400] leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] our-work-item-title">
                       {item.title}
                     </h3>
                   </div>
 
                   {/* Description */}
                   <div className="max-w-[460px] px-5 lg:px-8 pb-4 lg:pb-16">
-                    <p className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[1.5] font-[400] our-work-item-description our-work-description">
+                    <p className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] font-[400] our-work-item-description our-work-description">
                       {item.description}
                     </p>
                   </div>
@@ -403,7 +403,7 @@ export default function OurWork({
                   </h3>
 
                   {/* Description */}
-                  <p className="text-lg md:text-xl text-white leading-relaxed">
+                  <p className="text-lg md:text-xl text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]">
                     {selectedItem.description}
                   </p>
                 </div>
@@ -444,10 +444,10 @@ export default function OurWork({
 
               {/* Text Content */}
               <div className="text-white ps-6 md:pb-10 pb-6 md:pb-20 px-4 md:pe-0">
-                <h3 className="text-[26px] md:text-[32px] lg:text-[34px] xl:text-[36px] 2xl:text-[38px] min-[1440px]:text-[39px] min-[1920px]:text-[40px] font-light leading-[40px] md:leading-[42px] lg:leading-[44px] xl:leading-[46px] 2xl:leading-[48px] min-[1440px]:leading-[50px] min-[1920px]:leading-[52px] mb-3">
+                <h3 className="text-[26px] md:text-[32px] lg:text-[34px] xl:text-[36px] 2xl:text-[38px] min-[1440px]:text-[39px] min-[1920px]:text-[40px] font-light leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] mb-3">
                   {item.title}
                 </h3>
-                <p className="text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[21px] min-[1440px]:text-[21.5px] min-[1920px]:text-[22px] leading-relaxed opacity-90">
+                <p className="text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[21px] min-[1440px]:text-[21.5px] min-[1920px]:text-[22px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] opacity-90">
                   {item.description}
                 </p>
               </div>

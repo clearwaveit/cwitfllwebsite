@@ -143,15 +143,15 @@ export default function Carousel({
             <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/10 to-black/80" />
             {/* Top text section */}
             <div className="relative z-10 p-6 text-white">
-              <h3 className="text-[20px] md:text-[30px] font-bold text-white">{card.title}</h3>
+              <h3 className="text-[20px] md:text-[30px] font-bold text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]">{card.title}</h3>
               {card.subtitle && (
-                <p className="text-[20px] md:text-[30px] text-white">{card.subtitle}</p>
+                <p className="text-[20px] md:text-[30px] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]">{card.subtitle}</p>
               )}
             </div>
             {/* Bottom text section */}
             {card.description && (
               <div className="relative z-10 p-6 text-white">
-                <p className="text-[14px] md:text-[22px] text-white/70">{card.description}</p>
+                <p className="text-[14px] md:text-[22px] text-white/70 leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]">{card.description}</p>
               </div>
             )}
           </div>
@@ -177,23 +177,23 @@ export default function Carousel({
       >
         <div className={`h-[221px] md:h-[321px] w-[236px] md:w-[436px] p-8 flex flex-col justify-between border border-[#BFBFBF] rounded-[10px] ${bgColor}`}>
           <div>
-            <h3 className={`text-[20px] md:text-[30px] font-bold mb-1 ${titleColor}`}>
+            <h3 className={`text-[20px] md:text-[30px] font-bold mb-1 ${titleColor} leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]`}>
               {card.title}
             </h3>
             {card.subtitle && (
-              <p className={`text-[20px] md:text-[30px] mb-2 ${titleColor}`}>
+              <p className={`text-[20px] md:text-[30px] mb-2 ${titleColor} leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]`}>
                 {card.subtitle}
               </p>
             )}
           </div>
           <div>
             {card.description && (
-              <p className={`text-[16px] md:text-[22px] ${descColor}`}>
+              <p className={`text-[16px] md:text-[22px] ${descColor} leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]`}>
                 {card.description}
               </p>
             )}
             {card.marketInfo && (
-              <p className={`text-[16px] md:text-[22px] ${descColor}`}>
+              <p className={`text-[16px] md:text-[22px] ${descColor} leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]`}>
                 {card.marketInfo}
               </p>
             )}

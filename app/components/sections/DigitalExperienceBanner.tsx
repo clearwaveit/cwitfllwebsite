@@ -503,14 +503,14 @@ export default function DigitalExperienceBanner({
           <div className="ps-6 md:ps-4 lg:ps-12 xl:ps-8 pt-26 sm:pt-20 md:pt-30 lg:pt-50 xl:pt-70 pointer-events-auto w-full md:w-auto">
             <h1
               ref={headingRef}
-              className="text-[22px] sm:text-[32px] md:text-[50px] lg:text-[65px] xl:text-[80px] font-[500] text-white leading-[32px] sm:leading-[38px] md:leading-[55px] lg:leading-[70px] xl:leading-[80px] mb-3 sm:mb-4 md:mb-5 lg:mb-6 contact-form-heading"
+              className="text-[22px] sm:text-[32px] md:text-[50px] lg:text-[65px] xl:text-[80px] font-[500] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] mb-3 sm:mb-4 md:mb-5 lg:mb-6 contact-form-heading"
             >
               {title}
             </h1>
             {description && (
               <p
                 ref={textRef}
-                className="text-[14px] sm:text-[16px] md:text-[20px] lg:text-[24px] xl:text-[30px] font-light text-white leading-relaxed contact-form-description"
+                className="text-[14px] sm:text-[16px] md:text-[20px] lg:text-[24px] xl:text-[30px] font-light text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] contact-form-description"
               >
                 {description}
               </p>

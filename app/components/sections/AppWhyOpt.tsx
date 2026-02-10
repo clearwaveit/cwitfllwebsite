@@ -197,7 +197,7 @@ export default function AppWhyOpt({
         {/* Heading */}
         <h2
           ref={headingRef}
-          className="text-[22px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white mb-8 md:mb-12 leading-tight max-w-[1300px] app-why-opt-title"
+          className="text-[22px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white mb-8 md:mb-12 leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] max-w-[1300px] app-why-opt-title"
         >
           {title}
         </h2>
@@ -208,7 +208,7 @@ export default function AppWhyOpt({
             {paragraphs.map((paragraph, index) => (
               <p
                 key={index}
-                className="text-[14px] sm:text-[16px] md:text-[20px] font-[350] text-white leading-normal"
+                className="text-[14px] sm:text-[16px] md:text-[20px] font-[350] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
               >
                 {paragraph}
               </p>
@@ -236,7 +236,7 @@ export default function AppWhyOpt({
                   <h3 className={`${textColor} text-[18px] sm:text-[20px] md:text-[24px] lg:text-[26px] xl:text-[28px] 2xl:text-[29px] min-[1440px]:text-[29.5px] min-[1920px]:text-[30px] font-[700] mb-2 sm:mb-2.5 md:mb-3 lg:mb-3.5 xl:mb-4 2xl:mb-4 min-[1440px]:mb-4.5 min-[1920px]:mb-5 app-why-opt-service-heading`}>
                     {service.title}
                   </h3>
-                  <p className={`${descColor} ${textColor} text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[20.25px] min-[1920px]:text-[20.5px] font-[350] leading-normal app-why-opt-service-description`}>
+                  <p className={`${descColor} ${textColor} text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[20.25px] min-[1920px]:text-[20.5px] font-[350] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] app-why-opt-service-description`}>
                     {service.description}
                   </p>
                 </div>

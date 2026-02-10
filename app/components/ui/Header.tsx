@@ -35,6 +35,10 @@ export default function Header() {
   const centerButtonRef = useRef<HTMLButtonElement>(null);
   const centerButtonIconRef = useRef<HTMLDivElement>(null);
   const centerButtonTextRef = useRef<HTMLDivElement>(null);
+  const menuItemsRef = useRef<(HTMLLIElement | null)[]>([]);
+  const submenuItemsRef = useRef<{ [key: number]: (HTMLLIElement | null)[] }>({});
+  const ctaButtonRef = useRef<HTMLDivElement>(null);
+  const officeLocationsRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -112,6 +116,10 @@ export default function Header() {
           opacity: 1,
           duration: 0.35,
           ease: "power2.out",
+          onComplete: () => {
+            // Animate menu items after menu opens
+            animateMenuContent();
+          },
         });
     }
 
@@ -119,13 +127,52 @@ export default function Header() {
     if (isClosing) {
       document.body.style.overflow = "";
 
-      gsap.timeline({
-        onComplete: () => {
-          setIsClosing(false);
-          setIsMenuOpen(false);
-          if (menuRef.current) menuRef.current.style.display = "none";
-        },
-      })
+      // Animate menu content out (reverse of entrance)
+      const menuItems = menuItemsRef.current.filter(Boolean);
+      const closeTimeline = gsap.timeline();
+
+      // Animate menu items out (reverse stagger - last to first)
+      if (menuItems.length > 0) {
+        closeTimeline.to(menuItems.reverse(), {
+          opacity: 0,
+          y: 50,
+          scale: 0.95,
+          duration: 0.6,
+          ease: "power3.in",
+          stagger: 0.1,
+        });
+      }
+
+      // Animate CTA button out
+      if (ctaButtonRef.current) {
+        closeTimeline.to(
+          ctaButtonRef.current,
+          {
+            opacity: 0,
+            y: 30,
+            duration: 0.6,
+            ease: "power2.in",
+          },
+          "-=0.3"
+        );
+      }
+
+      // Animate OfficeLocations out
+      if (officeLocationsRef.current) {
+        closeTimeline.to(
+          officeLocationsRef.current,
+          {
+            opacity: 0,
+            x: 50,
+            duration: 0.6,
+            ease: "power3.in",
+          },
+          "-=0.4"
+        );
+      }
+
+      // Then close the menu container
+      closeTimeline
         .to(inner, {
           opacity: 0,
           duration: 0.25,
@@ -144,9 +191,57 @@ export default function Header() {
           },
           "<"
         )
-        .to(overlay, { opacity: 0, duration: 0.25 });
+        .to(overlay, { opacity: 0, duration: 0.25 })
+        .eventCallback("onComplete", () => {
+          setIsClosing(false);
+          setIsMenuOpen(false);
+          if (menuRef.current) menuRef.current.style.display = "none";
+          // Reset menu items array order
+          menuItemsRef.current.reverse();
+        });
     }
   }, [isMenuOpen, isClosing]);
+
+  // Animate menu content (menu items, CTA button, OfficeLocations)
+  const animateMenuContent = () => {
+    // Animate menu items
+    const menuItems = menuItemsRef.current.filter(Boolean);
+    if (menuItems.length > 0) {
+      gsap.set(menuItems, { opacity: 0, y: 50, scale: 0.95 });
+      gsap.to(menuItems, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        ease: "power3.out",
+        stagger: 0.15,
+      });
+    }
+
+    // Animate CTA button
+    if (ctaButtonRef.current) {
+      gsap.set(ctaButtonRef.current, { opacity: 0, y: 30 });
+      gsap.to(ctaButtonRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        delay: menuItems.length * 0.15 + 0.2,
+      });
+    }
+
+    // Animate OfficeLocations
+    if (officeLocationsRef.current) {
+      gsap.set(officeLocationsRef.current, { opacity: 0, x: 50 });
+      gsap.to(officeLocationsRef.current, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        delay: 0.3,
+      });
+    }
+  };
 
   // Center button entrance animation on page load/route change
   useEffect(() => {
@@ -397,6 +492,7 @@ export default function Header() {
                   onClick={() => {
                     router.push('/contact-us');
                   }}
+                  className="font-[300]"
                 />
               )}
             </div>
@@ -420,18 +516,20 @@ export default function Header() {
       {/* Side Menu - Modal Style */}
       <div
         ref={menuRef}
-        className={`fixed inset-0 z-50 flex items-center justify-center ${isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
+        className={`fixed inset-0 z-50 flex items-center justify-center overflow-y-auto ${isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
           }`}
         style={{ display: isMenuOpen ? "flex" : "none" }}
       >
         <div
           ref={menuContentRef}
-          className="bg-[#2C2C2C] shadow-2xl m-2 md:m-2 lg:m-2 w-[calc(100%-1rem)] md:w-[calc(100%-1rem)] lg:w-[calc(100%-1rem)] h-[calc(100vh-1rem)] md:h-[calc(100vh-1rem)] lg:h-[calc(100vh-1rem)] rounded-[30px] overflow-y-auto"
+          className="bg-[#2C2C2C] shadow-2xl m-2 md:m-2 lg:m-2 w-[calc(100%-1rem)] md:w-[calc(100%-1rem)] lg:w-[calc(100%-1rem)] h-[calc(100vh-1rem)] md:h-[calc(100vh-1rem)] lg:h-[calc(100vh-1rem)] rounded-[30px] overflow-y-auto relative"
         >
-          <div ref={menuInnerRef} className="flex flex-col lg:flex-row h-full gap-4 md:gap-6 lg:gap-8">
+          {/* Gradient overlay - 100% width, from bottom 0% to top 0%, bottom to top */}
+          <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-[#0DFCC1]/15 via-[#0DFCC1]/7 to-transparent pointer-events-none z-10" />
+          <div ref={menuInnerRef} className="flex flex-col lg:flex-row h-full gap-4 md:gap-6 lg:gap-8 overflow-hidden">
             {/* Menu Items - Left Side */}
-            <nav className="flex-1 flex flex-col justify-between py-6 px-4 sm:py-8 sm:px-6 md:py-12 md:px-8 lg:py-40 lg:px-16 w-full min-w-0">
-              <ul className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
+            <nav className="flex-1 flex flex-col justify-center py-6 px-4 sm:py-8 sm:px-6 md:py-12 md:px-8 lg:py-40 lg:px-16 w-full min-w-0 overflow-y-auto">
+              <ul className="flex flex-col items-center sm:flex-col sm:items-center md:flex-col md:items-center lg:items-start space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
                 {menuItems.map((item, index) => {
                   const active = isActive(item.href);
                   const hasSubmenu = item.submenu && item.submenu.length > 0;
@@ -440,9 +538,62 @@ export default function Header() {
                   return (
                     <li 
                       key={index}
+                      ref={(el) => { menuItemsRef.current[index] = el; }}
                       className="relative"
-                      onMouseEnter={() => hasSubmenu && setHoveredServiceIndex(index)}
-                      onMouseLeave={() => hasSubmenu && setHoveredServiceIndex(null)}
+                      onMouseEnter={() => {
+                        if (hasSubmenu) {
+                          setHoveredServiceIndex(index);
+                          // Animate submenu background and items in
+                          setTimeout(() => {
+                            const submenuContainer = document.querySelector(`[data-submenu-index="${index}"]`);
+                            const subItems = submenuItemsRef.current[index]?.filter(Boolean);
+                            if (submenuContainer && subItems && subItems.length > 0) {
+                              // Animate submenu container
+                              gsap.fromTo(
+                                submenuContainer,
+                                { opacity: 0, x: -10 },
+                                {
+                                  opacity: 1,
+                                  x: 0,
+                                  duration: 0.3,
+                                  ease: "power2.out",
+                                }
+                              );
+                              // Animate submenu items
+                              gsap.fromTo(
+                                subItems,
+                                { opacity: 0, y: 20, x: -10 },
+                                {
+                                  opacity: 1,
+                                  y: 0,
+                                  x: 0,
+                                  duration: 0.6,
+                                  ease: "power2.out",
+                                  stagger: 0.1,
+                                  delay: 0.1,
+                                }
+                              );
+                            }
+                          }, 10);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (hasSubmenu) {
+                          setHoveredServiceIndex(null);
+                          // Animate submenu items out
+                          const subItems = submenuItemsRef.current[index]?.filter(Boolean);
+                          if (subItems && subItems.length > 0) {
+                            gsap.to(subItems, {
+                              opacity: 0,
+                              y: 20,
+                              x: -10,
+                              duration: 0.4,
+                              ease: "power2.in",
+                              stagger: 0.05,
+                            });
+                          }
+                        }
+                      }}
                     >
                       {item.href.startsWith("/") ? (
                         <Link
@@ -457,7 +608,7 @@ export default function Header() {
                               router.push(item.href);
                             }, 900); // Match animation duration
                           }}
-                          className={`menu-item block text-[16px] sm:text-[20px] md:text-[32px] lg:text-[40px] xl:text-[46px] 2xl:text-[52px] font-light transition-colors hover:text-[#0DFCC1] hover:cursor-pointer ${active ? "text-[#0DFCC1]" : "text-[#ffffff]"
+                          className={`menu-item block text-[16px] sm:text-[20px] md:text-[24px] lg:text-[32px] xl:text-[40px] 2xl:text-[46px] leading-[20px] sm:leading-[24px] md:leading-[28px] lg:leading-[38px] xl:leading-[48px] 2xl:leading-[56px] font-light transition-colors hover:text-[#0DFCC1] hover:cursor-pointer ${active ? "text-[#0DFCC1]" : "text-[#ffffff]"
                             }`}
                         >
                           {item.label}
@@ -466,7 +617,7 @@ export default function Header() {
                         <a
                           href={item.href}
                           onClick={(e) => !hasSubmenu && handleLinkClick(e, item.href)}
-                          className={`menu-item block text-[16px] sm:text-[20px] md:text-[32px] lg:text-[40px] xl:text-[46px] 2xl:text-[52px] font-light text-[#ffffff] transition-colors hover:text-[#0DFCC1] hover:cursor-pointer ${hasSubmenu ? 'cursor-default' : ''}`}
+                          className={`menu-item block text-[16px] sm:text-[20px] md:text-[24px] lg:text-[32px] xl:text-[40px] 2xl:text-[46px] leading-[20px] sm:leading-[24px] md:leading-[28px] lg:leading-[38px] xl:leading-[48px] 2xl:leading-[56px] font-light text-[#ffffff] transition-colors hover:text-[#0DFCC1] hover:cursor-pointer ${hasSubmenu ? 'cursor-default' : ''}`}
                         >
                           {item.label}
                         </a>
@@ -475,17 +626,32 @@ export default function Header() {
                       {/* Dropdown Menu */}
                       {hasSubmenu && (
                         <div
-                          className={`absolute top-0 left-[300px] min-w-[200px] sm:min-w-[250px] md:min-w-[300px] lg:min-w-[350px] xl:min-w-[400px] 2xl:min-w-[450px] bg-[#2C2C2C] rounded-[15px] p-4 sm:p-5 md:p-6 lg:p-7 xl:p-8 2xl:p-9 shadow-2xl transition-all duration-300 ease-in-out ${
+                          data-submenu-index={index}
+                          onMouseEnter={() => setHoveredServiceIndex(index)}
+                          onMouseLeave={() => setHoveredServiceIndex(null)}
+                          className={`absolute top-[-20] left-[156px] min-w-[200px] sm:min-w-[250px] md:min-w-[300px] lg:min-w-[350px] xl:min-w-[400px] 2xl:min-w-[430px] bg-[#2C2C2C] rounded-[15px] p-4 sm:p-5 md:p-6 lg:p-7 xl:p-8 2xl:p-20 shadow-2xl ${
                             isHovered
-                              ? "opacity-100 z-50 visible translate-x-0"
-                              : "opacity-0 invisible translate-x-[-10px] pointer-events-none"
+                              ? "z-50 visible"
+                              : "invisible pointer-events-none"
                           }`}
+                          style={{
+                            opacity: isHovered ? 1 : 0,
+                            transform: isHovered ? 'translateX(0)' : 'translateX(-10px)',
+                          }}
                         >
                           <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                             {item.submenu?.map((subItem, subIndex) => {
                               const subActive = isActive(subItem.href);
                               return (
-                                <li key={subIndex}>
+                                <li 
+                                  key={subIndex}
+                                  ref={(el) => {
+                                    if (!submenuItemsRef.current[index]) {
+                                      submenuItemsRef.current[index] = [];
+                                    }
+                                    submenuItemsRef.current[index][subIndex] = el;
+                                  }}
+                                >
                                   <Link
                                     href={subItem.href}
                                     onClick={(e) => {
@@ -498,8 +664,8 @@ export default function Header() {
                                         router.push(subItem.href);
                                       }, 900); // Match animation duration
                                     }}
-                                    className={`block text-[14px] sm:text-[16px] md:text-[20px] lg:text-[24px] xl:text-[28px] 2xl:text-[32px] font-light text-[#ffffff] transition-colors hover:text-[#0DFCC1] ${
-                                      subActive ? "text-[#0DFCC1] hover:cursor-pointer" : ""
+                                    className={`block text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[26px] leading-[18px] sm:leading-[20px] md:leading-[22px] lg:leading-[26px] xl:leading-[32px] 2xl:leading-[36px] font-light transition-colors hover:text-[#0DFCC1] hover:cursor-pointer ${
+                                      subActive ? "text-[#0DFCC1]" : "text-[#ffffff]"
                                     }`}
                                   >
                                     {subItem.label}
@@ -516,7 +682,7 @@ export default function Header() {
               </ul>
 
               {/* CallToActionButton below menu items */}
-              <div className="mt-8 md:mt-12">
+              <div ref={ctaButtonRef} className="mt-8 md:mt-12 flex items-center justify-center sm:items-center justify-center md:justify-center lg:justify-start">
                 <CallToActionButton
                   variant="shiny"
                   size="small"
@@ -534,7 +700,7 @@ export default function Header() {
             </nav>
 
             {/* Image - Right Side */}
-            <div className="block lg:block w-full lg:w-[40%] xl:w-[45%] h-[200px] sm:h-[250px] md:h-[300px] lg:h-full p-2 sm:p-3 md:p-4 lg:p-4 flex-shrink-0">
+            <div ref={officeLocationsRef} className="flex-1 flex flex-col justify-center py-6 px-4 sm:py-8 sm:px-6 md:py-12 md:px-8 lg:py-40 lg:px-16 w-full min-w-0 overflow-y-auto">
               {/* <div className="relative w-full h-full rounded-[30px] overflow-hidden">
                 <Image
                   src={flutterApp1Banner1}

@@ -293,16 +293,16 @@ body {
 }
 
 .office-location-card {
-  text-align: center;
+  /* text-align: center; */
   width: 100%;
   min-width: 0;
 }
 
-@media (min-width: 575px) {
+/* @media (min-width: 575px) {
   .office-location-card {
     text-align: left;
   }
-}
+} */
 
 /* retina display */
 

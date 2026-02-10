@@ -310,7 +310,7 @@ export default function HeroBanner({
           {title && (
             <h1
               ref={headingRef}
-              className={`${titleMaxWidth} font-[700] text-white leading-tight mb-4 md:mb-8 hero-banner-title ${titleClassName || "text-[32px] sm:text-[40px] md:text-[50px] lg:text-[80px]"}`}
+              className={`${titleMaxWidth} font-[700] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] mb-4 md:mb-8 hero-banner-title ${titleClassName || "text-[32px] sm:text-[40px] md:text-[50px] lg:text-[80px]"}`}
             >
               {title}
             </h1>
@@ -320,7 +320,7 @@ export default function HeroBanner({
           {description && (
             <p
               ref={descriptionRef}
-              className={`${descriptionMaxWidth || "text-[14px] sm:text-[16px] md:text-[20px]"} font-[500] text-white/90 leading-relaxed max-w-[600px] hero-banner-description ${descriptionClassName}`}
+              className={`${descriptionMaxWidth || "text-[14px] sm:text-[16px] md:text-[20px]"} font-[500] text-white/90 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] max-w-[600px] hero-banner-description ${descriptionClassName}`}
             >
               {description}
             </p>
@@ -345,7 +345,7 @@ export default function HeroBanner({
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <p
-                  className={`text-[14px] sm:text-[20px] md:text-[18px] lg:text-[20px] font-normal md:font-[500] lg:font-[500] xl:font-[500] 2xl:font-[500]  text-white mb-2 hero-banner-stat-label ${stat.labelClassName || ""}`}
+                  className={`text-[14px] sm:text-[20px] md:text-[18px] lg:text-[20px] font-normal md:font-[500] lg:font-[500] xl:font-[500] 2xl:font-[500] text-white leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] mb-2 hero-banner-stat-label ${stat.labelClassName || ""}`}
                 >
                   {stat.label} 
                 </p>

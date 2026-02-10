@@ -182,7 +182,7 @@ export default function BusinessFeaturesSection({
             {/* Title */}
             <h2
               ref={titleRef}
-              className={`text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white leading-tight business-features-title ${titleClassName}`}
+              className={`text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] business-features-title ${titleClassName}`}
             >
               {title}
             </h2>
@@ -196,7 +196,7 @@ export default function BusinessFeaturesSection({
                     "text-[20px] sm:text-[24px] md:text-[28px] lg:text-[36px] font-bold text-white mb-3 md:mb-4 business-features-heading";
                   const featureDescriptionClassName =
                     feature.descriptionClassName ||
-                    "text-[14px] sm:text-[16px] md:text-[22px] text-white leading-relaxed business-features-description";
+                    "text-[14px] sm:text-[16px] md:text-[22px] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] business-features-description";
                   const featureContainerClassName = feature.className || "";
 
                   return (

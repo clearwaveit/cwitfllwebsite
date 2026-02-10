@@ -90,7 +90,7 @@ export default function ClientTestimonials() {
                     </div>
 
                     {/* Testimonial Text */}
-                    <p className="text-white text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[26px] min-[1440px]:text-[28px] min-[1920px]:text-[30px] font-[350] leading-relaxed text-center">
+                    <p className="text-white text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[26px] min-[1440px]:text-[28px] min-[1920px]:text-[30px] font-[350] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] text-center">
                       {testimonial.text}
                     </p>
                   </div>

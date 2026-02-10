@@ -51,7 +51,7 @@ export default function ServiceDetailSection({
       </h2>
 
       {/* Description Paragraph */}
-      <p className="text-[14px] sm:text-[15px] md:text-[18px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[500] text-white leading-relaxed">
+      <p className="text-[14px] sm:text-[15px] md:text-[18px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[500] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
         {service?.description}
       </p>
 
@@ -59,7 +59,7 @@ export default function ServiceDetailSection({
       <div className="flex flex-col space-y-0">
         {service?.services.map((serviceItem, index) => (
           <div key={index}>
-            <p className="text-[16px] sm:text-[18px] md:text-[22px] lg:text-[24px] xl:text-[26px] 2xl:text-[28px] min-[1440px]:text-[29px] min-[1920px]:text-[30px] font-[500] text-white py-3 sm:py-3.5 md:py-4 lg:py-4.5 xl:py-5">
+            <p className="text-[16px] sm:text-[18px] md:text-[22px] lg:text-[24px] xl:text-[26px] 2xl:text-[28px] min-[1440px]:text-[29px] min-[1920px]:text-[30px] font-[500] text-white leading-[1.4] sm:leading-[1.5] md:leading-[1.6] lg:leading-[1.55] xl:leading-[1.5] 2xl:leading-[1.45] py-3 sm:py-3.5 md:py-4 lg:py-4.5 xl:py-5">
               {serviceItem}
             </p>
             {index < service.services.length - 1 && (

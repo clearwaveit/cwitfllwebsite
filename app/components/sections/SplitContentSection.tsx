@@ -180,7 +180,7 @@ export default function SplitContentSection({
             {/* Heading */}
             <h1
               ref={headingRef}
-              className={`text-[32px] sm:text-[40px] md:text-[36px] lg:text-[40px] xl:text-[48px] 2xl:text-[58px] min-[1440px]:text-[59px] min-[1920px]:text-[60px] font-[700] text-white leading-tight split-content-title ${titleClassName}`}
+              className={`text-[32px] sm:text-[40px] md:text-[36px] lg:text-[40px] xl:text-[48px] 2xl:text-[58px] min-[1440px]:text-[59px] min-[1920px]:text-[60px] font-[700] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] split-content-title ${titleClassName}`}
             >
               {title}
             </h1>
@@ -188,7 +188,7 @@ export default function SplitContentSection({
             {/* Description */}
             <div
               ref={descriptionRef}
-              className={`text-[14px] sm:text-[15px] md:text-[15px] lg:text-[16px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[20.25px] min-[1920px]:text-[20.5px] max-w-full md:max-w-[600px] lg:max-w-[650px] xl:max-w-[680px] 2xl:max-w-[700px] min-[1440px]:max-w-[706px] min-[1920px]:max-w-[720px] text-white leading-relaxed split-content-description ${descriptionClassName}`}
+              className={`text-[14px] sm:text-[15px] md:text-[15px] lg:text-[16px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[20.25px] min-[1920px]:text-[20.5px] max-w-full md:max-w-[600px] lg:max-w-[650px] xl:max-w-[680px] 2xl:max-w-[700px] min-[1440px]:max-w-[706px] min-[1920px]:max-w-[720px] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] split-content-description ${descriptionClassName}`}
             >
               {description}
             </div>

@@ -245,7 +245,7 @@ export default function AppStartToEnd({
               {title && (
                 <h1
                   ref={headingRef}
-                  className="text-[32px] sm:text-[40px] md:text-[48px] lg:text-[54px] xl:text-[58px] 2xl:text-[60px] min-[1440px]:text-[61px] min-[1920px]:text-[62px] font-[700] text-white leading-tight app-start-to-end-title"
+                  className="text-[32px] sm:text-[40px] md:text-[48px] lg:text-[54px] xl:text-[58px] 2xl:text-[60px] min-[1440px]:text-[61px] min-[1920px]:text-[62px] font-[700] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] app-start-to-end-title"
                 >
                   {title}
                 </h1>
@@ -255,7 +255,7 @@ export default function AppStartToEnd({
               {description && (
                 <div
                   ref={descriptionRef}
-                  className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[20.5px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] text-white leading-relaxed max-w-full app-start-to-end-description"
+                  className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[20.5px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] max-w-full app-start-to-end-description"
                 >
                   {description}
                 </div>
@@ -290,8 +290,8 @@ export default function AppStartToEnd({
                   const textColor = card.textColor || "text-white";
                   const borderColor = card.borderColor || "border-transparent";
                   const hoverBorderColor = card.hoverBorderColor || "hover:border-[#555555]";
-                  const cardTitleClassName = card.titleClassName || `${textColor} text-[18px] md:text-[22px] lg:text-[26px] xl:text-[28px] 2xl:text-[29px] min-[1440px]:text-[29.5px] min-[1920px]:text-[30px] font-bold mb-3 md:mb-20 app-start-to-end-card-title`;
-                  const cardDescriptionClassName = card.descriptionClassName || `${textColor} text-[14px] md:text-[15px] lg:text-[18px] xl:text-[19px] 2xl:text-[19.5px] min-[1440px]:text-[20px] min-[1920px]:text-[20.5px] app-start-to-end-card-description`;
+                  const cardTitleClassName = card.titleClassName || `${textColor} text-[18px] md:text-[22px] lg:text-[26px] xl:text-[28px] 2xl:text-[29px] min-[1440px]:text-[29.5px] min-[1920px]:text-[30px] font-bold mb-3 md:mb-20 leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] app-start-to-end-card-title`;
+                  const cardDescriptionClassName = card.descriptionClassName || `${textColor} text-[14px] md:text-[15px] lg:text-[18px] xl:text-[19px] 2xl:text-[19.5px] min-[1440px]:text-[20px] min-[1920px]:text-[20.5px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] app-start-to-end-card-description`;
                   const cardContainerClassName = card.className || "";
 
                   return (
