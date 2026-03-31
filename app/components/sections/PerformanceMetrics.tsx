@@ -4,14 +4,21 @@ import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-export default function PerformanceMetrics() {
+const DEFAULT_METRICS = [
+  { title: "User Engagement", value: "88%" },
+  { title: "Conversion Rate", value: "21%" },
+  { title: "Site Security", value: "100%" },
+  { title: "Responsiveness", value: "95%" },
+];
+
+interface PerformanceMetricsProps {
+  metrics?: { title: string; value: string }[];
+}
+
+export default function PerformanceMetrics({
+  metrics = DEFAULT_METRICS,
+}: PerformanceMetricsProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const metrics = [
-    { title: "User Engagement", value: "88%" },
-    { title: "Conversion Rate", value: "21%" },
-    { title: "Site Security", value: "100%" },
-    { title: "Responsiveness", value: "95%" },
-  ];
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -56,7 +63,7 @@ export default function PerformanceMetrics() {
     return () => {
       ctx.revert();
     };
-  }, []);
+  }, [metrics]);
 
   return (
     <section

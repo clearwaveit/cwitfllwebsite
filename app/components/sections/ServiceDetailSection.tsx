@@ -2,6 +2,7 @@
 
 import CallToActionButton from "@/app/components/ui/CallToActionButton";
 import Image, { StaticImageData } from "next/image";
+import { useRouter } from "next/navigation";
 
 interface ServiceDetailSectionProps {
   service: {
@@ -11,28 +12,48 @@ interface ServiceDetailSectionProps {
   };
   graphicImage: string | StaticImageData;
   graphicAlt?: string;
+  videoSrc?: string;
   imagePosition?: "left" | "right";
   className?: string;
+  buttonText?: string;
+  redirectUrl?: string;
 }
 
 export default function ServiceDetailSection({
   service,
   graphicImage,
   graphicAlt = "Service graphic",
+  videoSrc,
   imagePosition = "right",
   className = "",
+  buttonText = "Read More",
+  redirectUrl,
 }: ServiceDetailSectionProps) {
+  const router = useRouter();
   const isImageLeft = imagePosition === "left";
 
+  const handleButtonClick = () => {
+    if (redirectUrl) {
+      // Scroll to top immediately
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      // Navigate to the page
+      router.push(redirectUrl);
+      // Ensure scroll to top after navigation completes
+      setTimeout(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }, 100);
+    }
+  };
+
   const textContent = (
-    <div className="flex flex-col space-y-8">
+    <div className="flex flex-col space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7 xl:space-y-8">
       {/* Main Heading */}
-      <h2 className="text-[40px] md:text-[80px] font-light text-white leading-tight">
+      <h2 className="text-[20px] sm:text-[28px] md:text-[35px] lg:text-[40px] xl:text-[42px] 2xl:text-[60px] min-[1440px]:text-[70px] min-[1920px]:text-[80px] font-[700] text-white leading-[32px] sm:leading-[38px] md:leading-[55px] lg:leading-[60px] xl:leading-[70px] 2xl:leading-[75px] min-[1440px]:leading-[80px] min-[1920px]:leading-[88px]">
         {service?.title}
       </h2>
 
       {/* Description Paragraph */}
-      <p className="text-[16px] md:text-[20px] font-light text-white leading-relaxed">
+      <p className="text-[14px] sm:text-[15px] md:text-[18px] lg:text-[14px] xl:text-[16px] 2xl:text-[20px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[500] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
         {service?.description}
       </p>
 
@@ -40,7 +61,7 @@ export default function ServiceDetailSection({
       <div className="flex flex-col space-y-0">
         {service?.services.map((serviceItem, index) => (
           <div key={index}>
-            <p className="text-[20px] md:text-[30px] font-light text-white py-4">
+            <p className="text-[16px] sm:text-[18px] md:text-[22px] lg:text-[20px] xl:text-[22px] 2xl:text-[28px] min-[1440px]:text-[29px] min-[1920px]:text-[30px] font-[500] text-white leading-[1.4] sm:leading-[1.5] md:leading-[1.6] lg:leading-[1.55] xl:leading-[1.5] 2xl:leading-[1.45] py-3 sm:py-3.5 md:py-4 lg:py-4.5 xl:py-5">
               {serviceItem}
             </p>
             {index < service.services.length - 1 && (
@@ -51,48 +72,63 @@ export default function ServiceDetailSection({
       </div>
 
       {/* Call to Action Button */}
-      <div className="pt-4 relative z-10">
-        <CallToActionButton variant="shiny" />
+      <div className="pt-3 sm:pt-3.5 md:pt-4 lg:pt-4.5 xl:pt-5 relative z-10">
+        <CallToActionButton 
+          variant="shiny"
+          onClick={redirectUrl ? handleButtonClick : undefined}
+        >
+          {buttonText}
+        </CallToActionButton>
       </div>
     </div>
   );
 
-  const graphicContent = graphicImage && (
-    <div className="flex items-center justify-center lg:justify-end h-full w-full max-w-[904px] pointer-events-none">
-      <div className="relative w-full max-w-[904px] h-[250px] md:h-[859px]">
-        <Image
-          src={graphicImage}
-          alt={graphicAlt}
-          width={904}
-          height={859}
-          className="object-contain"
-          unoptimized
-        />
+  const graphicContent = (
+    <div className="flex items-center justify-center lg:justify-end h-full w-full pointer-events-none overflow-visible">
+      <div className="relative w-full h-full min-h-[250px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] xl:min-h-[600px] 2xl:min-h-[700px] overflow-visible">
+        {videoSrc ? (
+          <video
+            src={videoSrc}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="object-cover w-full h-full rounded-lg service-detail-video"
+          />
+        ) : (
+          <Image
+            src={graphicImage}
+            alt={graphicAlt}
+            fill
+            className="object-cover w-full h-full rounded-lg"
+            unoptimized={typeof graphicImage === "string"}
+          />
+        )}
       </div>
     </div>
   );
 
   return (
-    <section className={`relative bg-black pb-24 overflow-hidden isolate ${className}`}>
-      <div className="relative z-10 mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-[1494px] global-section-padding">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
+    <section className={`relative bg-black pb-12 sm:pb-16 md:pb-20 lg:pb-24 xl:pb-28 2xl:pb-32 overflow-visible isolate ${className}`}>
+      <div className="relative z-10 mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 w-full max-w-[1494px] global-section-padding service-detail-section-container">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-14 2xl:gap-16 items-stretch w-full overflow-visible service-detail-section-grid">
           {/* Mobile: Always text first (order-1), then image (order-2) */}
           {/* Desktop: Respect imagePosition prop */}
           {isImageLeft ? (
             <>
-              <div className="order-1 lg:order-2">
+              <div className="order-1 lg:order-2 flex flex-col service-detail-text-content">
                 {textContent}
               </div>
-              <div className="order-2 lg:order-1">
+              <div className="order-2 lg:order-1 flex flex-col min-w-0 w-full">
                 {graphicContent}
               </div>
             </>
           ) : (
             <>
-              <div className="order-1 lg:order-1">
+              <div className="order-1 lg:order-1 flex flex-col service-detail-text-content">
                 {textContent}
               </div>
-              <div className="order-2 lg:order-2">
+              <div className="order-2 lg:order-2 flex flex-col min-w-0 w-full">
                 {graphicContent}
               </div>
             </>
@@ -102,4 +138,3 @@ export default function ServiceDetailSection({
     </section>
   );
 }
-

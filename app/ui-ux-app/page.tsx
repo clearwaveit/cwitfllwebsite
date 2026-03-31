@@ -9,9 +9,9 @@ import ourWorkImg from "@/app/assets/imgs/our_work_img.png";
 import ClientTestimonials from "../components/sections/ClientTestimonials";
 import Accordion from "../components/sections/Accordion";
 import ProjectContactForm from "../components/sections/ProjectContactForm";
-import Footer from "../components/sections/Footer";
 import AppStartToEnd, { FeatureCard } from "../components/sections/AppStartToEnd";
 import UiUxTiltSection from "@/app/components/sections/UiUxTiltSection";
+import animatedClip4 from "@/app/assets/imgs/animated_clip_4.png";
 
 export default function UiUXAppPage() {
   const defaultWorkItems: WorkItem[] = [
@@ -140,13 +140,15 @@ export default function UiUXAppPage() {
   return (
     <main className="min-h-screen relative">
       <PageBanner title="UI/ UX" minHeight="100vh" />
-      <BusinessFeaturesSection
+      <SplitContentSection
         title={businessFeaturesTitle}
-        features={businessFeatures}
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam porttitor urna eu augue finibus pharetra. Proin faucibus mi eu velit hendrerit."
         buttonText="CONTACT US"
-        videoSrc="/videos/animated_clip_4.mp4"
-        videoElementClassName="object-cover object-center_top rounded-[20px] md:rounded-[30px]"
-        containerClassName="max-w-[1634px] mx-auto"
+        image={animatedClip4}
+        imageAlt="UI/UX App"
+        layout="content-left"
+        imageMaxWidth="max-w-full"
+        imageClassName="md:max-w-full object-cover object-center_top rounded-[20px] md:rounded-[30px]"
       />
       <IndustriesSection
         title={industriesTitle}
@@ -172,7 +174,6 @@ export default function UiUXAppPage() {
       <ClientTestimonials />
       <Accordion />
       <ProjectContactForm />
-      <Footer />
     </main>
   );
 }

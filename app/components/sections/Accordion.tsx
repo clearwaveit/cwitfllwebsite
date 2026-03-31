@@ -1,54 +1,77 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useGSAP } from "@/app/hooks/useGSAP";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const accordionItems = [
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+const defaultAccordionItems = [
   {
     id: 1,
-    title: "What strategies do you use for optimizing website speed and performance?",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere velit aliquet suscipit volutpat. Curabitur iaculis ornare est. Vivamus eget nisi in turpis convallis tempor. Morbi bibendum velit vel justo tristique dapibus et nec eros. Etiam lacinia, risus et elementum vehicula, justo justo pulvinar nunc, eu auctor massa turpis vel ex. Integer faucibus dolor nibh, eu aliquet mauris mollis a. Aenean sodales ultricies leo eu elementum.",
+    title: "What strategies do you use for optimising website speed and performance?",
+    content: "We focus on clean development practices, efficient hosting infrastructure, and performance optimisation techniques such as caching, CDN usage, and Core Web Vitals improvements. The goal is to ensure websites load quickly, remain stable under traffic, and deliver a smooth experience across devices.",
   },
   {
     id: 2,
-    title: "How do you ensure data security and privacy for websites operating within Dubai's legal framework?",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere velit aliquet suscipit volutpat. Curabitur iaculis ornare est. Vivamus eget nisi in turpis convallis tempor. Morbi bibendum velit vel justo tristique dapibus et nec eros. Etiam lacinia, risus et elementum vehicula, justo justo pulvinar nunc, eu auctor massa turpis vel ex. Integer faucibus dolor nibh, eu aliquet mauris mollis a. Aenean sodales ultricies leo eu elementum.",
+    title: "How do you ensure data security and privacy for websites operating in Dubai?",
+    content: "We follow modern security practices including secure infrastructure, encrypted communication, access control policies, and regular monitoring. For businesses operating in the UAE, we also consider regional regulatory expectations and best practices around data protection.",
   },
   {
     id: 3,
-    title: "What are your capabilities in creating multilingual websites, particularly in Arabic and English?",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere velit aliquet suscipit volutpat. Curabitur iaculis ornare est. Vivamus eget nisi in turpis convallis tempor. Morbi bibendum velit vel justo tristique dapibus et nec eros. Etiam lacinia, risus et elementum vehicula, justo justo pulvinar nunc, eu auctor massa turpis vel ex. Integer faucibus dolor nibh, eu aliquet mauris mollis a. Aenean sodales ultricies leo eu elementum.",
+    title: "Can you build multilingual websites, including Arabic and English?",
+    content: "Yes. We regularly build multilingual websites with proper language architecture, right-to-left layout support, and SEO considerations for Arabic and English content.",
   },
   {
     id: 4,
-    title: "How do you approach search engine optimization (SEO) for the MENA region, particularly?",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere velit aliquet suscipit volutpat. Curabitur iaculis ornare est. Vivamus eget nisi in turpis convallis tempor. Morbi bibendum velit vel justo tristique dapibus et nec eros. Etiam lacinia, risus et elementum vehicula, justo justo pulvinar nunc, eu auctor massa turpis vel ex. Integer faucibus dolor nibh, eu aliquet mauris mollis a. Aenean sodales ultricies leo eu elementum.",
+    title: "How do you approach SEO for businesses in the MENA region?",
+    content: "Our approach combines technical SEO, content optimisation, and regional search behaviour analysis. This includes localisation strategies, Arabic keyword targeting, and structured site architecture that helps search engines understand and rank the website effectively.",
   },
   {
     id: 5,
-    title: "What post-launch support and maintenance services do you offer for websites?",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere velit aliquet suscipit volutpat. Curabitur iaculis ornare est. Vivamus eget nisi in turpis convallis tempor. Morbi bibendum velit vel justo tristique dapibus et nec eros. Etiam lacinia, risus et elementum vehicula, justo justo pulvinar nunc, eu auctor massa turpis vel ex. Integer faucibus dolor nibh, eu aliquet mauris mollis a. Aenean sodales ultricies leo eu elementum.",
+    title: "Do you provide post-launch support and maintenance?",
+    content: "Yes. After launch we provide ongoing support that can include performance monitoring, updates, infrastructure maintenance, SEO optimisation, and feature improvements as the platform evolves.",
   },
   {
     id: 6,
-    title: "What is your experience with creating websites for Dubai's real estate and tourism sector?",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere velit aliquet suscipit volutpat. Curabitur iaculis ornare est. Vivamus eget nisi in turpis convallis tempor. Morbi bibendum velit vel justo tristique dapibus et nec eros. Etiam lacinia, risus et elementum vehicula, justo justo pulvinar nunc, eu auctor massa turpis vel ex. Integer faucibus dolor nibh, eu aliquet mauris mollis a. Aenean sodales ultricies leo eu elementum.",
+    title: "Can you build websites for industries like real estate or tourism?",
+    content: "Yes. We have experience designing platforms for industries that require high-volume content, property listings, booking systems, and search-driven discovery such as real estate, hospitality, and tourism.",
   },
   {
     id: 7,
-    title: "How do you tailor e-commerce solutions for the retail and shopping industry?",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere velit aliquet suscipit volutpat. Curabitur iaculis ornare est. Vivamus eget nisi in turpis convallis tempor. Morbi bibendum velit vel justo tristique dapibus et nec eros. Etiam lacinia, risus et elementum vehicula, justo justo pulvinar nunc, eu auctor massa turpis vel ex. Integer faucibus dolor nibh, eu aliquet mauris mollis a. Aenean sodales ultricies leo eu elementum.",
+    title: "How do you develop e-commerce platforms?",
+    content: "We build scalable e-commerce platforms that support product management, payment integrations, inventory systems, and performance optimisation. Each platform is designed around the business model and expected traffic.",
   },
   {
     id: 8,
-    title: "What measures do you take to optimize websites for high traffic during Dubai's peak tourist seasons?",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere velit aliquet suscipit volutpat. Curabitur iaculis ornare est. Vivamus eget nisi in turpis convallis tempor. Morbi bibendum velit vel justo tristique dapibus et nec eros. Etiam lacinia, risus et elementum vehicula, justo justo pulvinar nunc, eu auctor massa turpis vel ex. Integer faucibus dolor nibh, eu aliquet mauris mollis a. Aenean sodales ultricies leo eu elementum.",
+    title: "How do you prepare websites for high traffic periods?",
+    content: "We architect systems to handle scale through cloud infrastructure, caching strategies, load balancing, and performance monitoring. This ensures platforms remain stable during peak traffic periods.",
   },
 ];
 
-export default function Accordion() {
-  const [openItems, setOpenItems] = useState<number[]>([1]); // First item expanded by default
+export interface AccordionItem {
+  id: number;
+  title: string;
+  content: string;
+}
+
+interface AccordionProps {
+  /** Section heading. Default: "FAQ's" */
+  title?: string;
+  /** FAQ items from CMS. When provided, overrides default items. */
+  items?: AccordionItem[];
+}
+
+export default function Accordion({ title = "FAQ's", items }: AccordionProps) {
+  const accordionItems = items && items.length > 0 ? items : defaultAccordionItems;
+  const firstItemId = accordionItems[0]?.id ?? 1;
+  const [openItems, setOpenItems] = useState<number[]>([firstItemId]); // First item expanded by default
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const itemsContainerRef = useRef<HTMLDivElement>(null);
   const contentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const plusIconRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const minusIconRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
@@ -136,7 +159,7 @@ export default function Accordion() {
       const minusIconEl = minusIconRefs.current[id];
 
       if (el) {
-        if (id === 1) {
+        if (id === firstItemId) {
           // First item: keep it open
           el.style.display = "block";
           el.style.height = "auto";
@@ -171,28 +194,85 @@ export default function Accordion() {
     });
   });
 
+  // ScrollTrigger animations for section entrance (re-runs when items change so CMS content is animated)
+  useEffect(() => {
+    if (!sectionRef.current || !titleRef.current || !itemsContainerRef.current) return;
+
+    const title = titleRef.current;
+    const accordionItemEls = itemsContainerRef.current.querySelectorAll('.accordion-item');
+
+    // Set initial state
+    gsap.set(title, { opacity: 0, y: 50 });
+    gsap.set(accordionItemEls, { opacity: 0, y: 60, scale: 0.95 });
+
+    const triggerEl = sectionRef.current;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: triggerEl,
+        start: "top 80%",
+        end: "bottom 20%",
+        toggleActions: "play none none reverse",
+        onEnter: () => tl.play(),
+        onEnterBack: () => tl.play(),
+      },
+    });
+
+    tl.to(title, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power3.out",
+    }).to(accordionItemEls, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.8,
+      ease: "power3.out",
+      stagger: accordionItemEls.length > 0 ? Math.min(0.2, 0.6 / accordionItemEls.length) : 0.2,
+    }, "-=0.4");
+
+    const alreadyInView = () => {
+      if (!triggerEl) return false;
+      const rect = triggerEl.getBoundingClientRect();
+      return rect.top < window.innerHeight * 0.85 && rect.bottom > 0;
+    };
+    if (alreadyInView()) {
+      setTimeout(() => tl.play(), 50);
+    }
+
+    ScrollTrigger.refresh();
+
+    return () => {
+      tl.kill();
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.trigger === triggerEl) st.kill();
+      });
+    };
+  }, [items?.length ?? 0]);
+
   return (
-    <section className="relative min-h-screen bg-black py-24 overflow-hidden">
-      <div className="relative z-10 mx-auto px-3 md:px-0 lg:px-0 global-section-padding accordion-content-container">
-        <h2 className="text-[30px] md:text-[50px] font-[500] text-white leading-[60px] md:leading-[80px] mb-10 accordion-heading">
-          FAQ's
+    <section ref={sectionRef} className="relative min-h-screen bg-black py-24 overflow-hidden">
+      <div className="relative z-10 mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 global-section-padding accordion-content-container">
+        <h2 ref={titleRef} className="text-[28px] sm:text-[32px] md:text-[40px] lg:text-[44px] xl:text-[48px] 2xl:text-[52px] min-[1440px]:text-[54px] min-[1920px]:text-[55px] font-[500] text-white leading-[1.2] sm:leading-[1.25] md:leading-[1.3] lg:leading-[1.35] xl:leading-[1.4] 2xl:leading-[1.45] mb-8 sm:mb-10 md:mb-12 lg:mb-14 xl:mb-16 accordion-heading">
+          {title}
         </h2>
 
-        <div className="space-y-3">
+        <div ref={itemsContainerRef} className="space-y-3">
           {accordionItems.map((item) => {
             const isOpen = openItems.includes(item.id);
 
             return (
               <div
                 key={item.id}
-                className={`overflow-hidden rounded-[10px] ${isOpen ? 'rounded-[10px] border border-[#0DFCC1]' : 'border-0'}`}
+                className={`accordion-item overflow-hidden rounded-[10px] ${isOpen ? 'rounded-[10px] border border-[#0DFCC1]' : 'border-0'}`}
               >
                 {/* Accordion Header - Dark Grey Rectangle */}
                 <button
                   onClick={() => toggleItem(item.id)}
                   className={`w-full flex items-center justify-between px-6 py-5 text-left border border-[#4E4E4E] transition-colors duration-300 ${isOpen ? 'rounded-t-[10px] rounded-b-none' : 'rounded-[10px]'}`}
                 >
-                  <h3 className={`text-[14px] md:text-[20px] pr-8 accordion-title ${isOpen ? 'text-white font-bold' : 'text-white font-medium'}`}>
+                  <h3 className={`text-[14px] sm:text-[15px] md:text-[16px] lg:text-[17px] xl:text-[18px] 2xl:text-[19px] min-[1440px]:text-[20px] min-[1920px]:text-[22px] pr-8 accordion-title ${isOpen ? 'text-white font-bold' : 'text-white font-medium'}`}>
                     {item.title}
                   </h3>
 
@@ -249,12 +329,13 @@ export default function Accordion() {
                     contentRefs.current[item.id] = el;
                   }}
                   className="overflow-hidden"
-                  style={item.id === 1 ? { display: 'block', height: 'auto', opacity: 1 } : { display: 'none', height: '0px', opacity: 0 }}
+                  style={item.id === firstItemId ? { display: 'block', height: 'auto', opacity: 1 } : { display: 'none', height: '0px', opacity: 0 }}
                 >
                   <div className={`p-6 ${isOpen ? 'rounded-b-[10px]' : 'bg-black'}`}>
-                    <p className="text-[12px] md:text-[16px] text-white leading-relaxed accordion-content">
-                      {item.content}
-                    </p>
+                    <div
+                      className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px] 2xl:text-[17px] min-[1440px]:text-[18px] min-[1920px]:text-[18px] text-white leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] accordion-content prose prose-invert max-w-none"
+                      dangerouslySetInnerHTML={{ __html: item.content || "" }}
+                    />
                   </div>
                 </div>
               </div>

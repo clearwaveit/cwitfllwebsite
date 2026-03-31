@@ -138,7 +138,7 @@ export default function TechnologiesSection({
         <div className="technologies-heading-container">
           <h2
             ref={headingRef}
-            className="text-[32px] sm:text-[40px] font-bold text-white mb-8 leading-tight"
+            className="text-[32px] sm:text-[40px] font-bold text-white mb-8 leading-[1.3] sm:leading-[1.35] md:leading-[1.4]"
           >
             {title}
           </h2>
@@ -184,7 +184,7 @@ export default function TechnologiesSection({
                 <h3 className="text-white text-[18px] font-bold mb-3">
                   {tech.title}
                 </h3>
-                <p className="text-white/70 text-[14px] leading-relaxed">
+                <p className="text-white/70 text-[14px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7]">
                   {tech.description}
                 </p>
               </div>
@@ -201,7 +201,7 @@ export default function TechnologiesSection({
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 technologies-heading-container">
             <h2
               ref={headingRef}
-              className="text-[48px] lg:text-[56px] font-bold text-white leading-tight max-w-[700px]"
+              className="text-[48px] lg:text-[56px] font-bold text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] max-w-[700px]"
             >
               {title}
             </h2>
@@ -261,7 +261,7 @@ export default function TechnologiesSection({
                     </h3>
 
                     {/* Description */}
-                    <p className="text-white/70 text-[14px] md:text-[16px] leading-relaxed flex-grow overflow-hidden">
+                    <p className="text-white/70 text-[14px] md:text-[16px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] flex-grow overflow-hidden">
                       {tech.description}
                     </p>
                   </div>

@@ -52,19 +52,27 @@ export default function PageBanner({
     []
   );
 
+  // Convert minHeight prop to responsive classes if it's "100vh"
+  const getHeightClasses = () => {
+    if (minHeight === "100vh") {
+      return "min-h-[300px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-screen";
+    }
+    return "";
+  };
+
   return (
     <section
       ref={sectionRef}
-      className={`relative bg-[#3A3A3A] flex items-center justify-start w-full ${className}`}
+      className={`relative bg-[#3A3A3A] flex items-center justify-start w-full ${getHeightClasses()} ${className}`}
       style={{
-        minHeight: minHeight,
+        minHeight: minHeight !== "100vh" ? minHeight : undefined,
       }}
     >
-      <div className=" px-4 sm:px-6 lg:px-8 w-full global-section-padding">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 industries-section-content-container">
         <div className={`${maxWidth} mx-auto page-banner-content-container`}>
           <h1
             ref={headingRef}
-            className="text-[40px] md:text-[96px] font-[700] text-white leading-[44px] md:leading-[80px] page-banner-title"
+            className="text-[36px] md:text-[60px] lg:text-[72px] xl:text-[84px] 2xl:text-[96px] min-[1440px]:text-[93px] min-[1920px]:text-[96px] font-[700] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] page-banner-title"
           >
             {title}
           </h1>

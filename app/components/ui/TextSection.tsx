@@ -61,8 +61,8 @@ export default function TextSection({
             key={index}
             ref={(el) => { paragraphRefs.current[index] = el; }}
             className={`text-white ${index === 0
-                ? firstParagraphClassName || "text-[18px] sm:text-[24px] md:text-[30px] lg:text-[34px] xl:text-[38px] font-[500] leading-[1.2] md:leading-[40px] lg:leading-[1.25] paragraph-text"
-                : "text-[12px] sm:text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] text-start font-light leading-relaxed mt-6 md:mt-8"
+                ? firstParagraphClassName || "text-[18px] sm:text-[24px] md:text-[30px] lg:text-[34px] xl:text-[38px] font-[500] leading-[1.3] sm:leading-[1.4] md:leading-[1.5] lg:leading-[1.4] xl:leading-[1.35] 2xl:leading-[1.3] paragraph-text"
+                : "text-[12px] sm:text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] text-start font-light leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] mt-6 md:mt-8"
               }`}
           >
             {paragraph}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 // import Link from "next/link";
 
 interface CallToActionButtonProps {
@@ -17,16 +18,17 @@ export default function CallToActionButton({
   variant = "outline",
   className = "",
   onClick,
-  children = "CALL TO ACTION",
+  children = "Let's Talk",
   type = "button",
   // href = "/contact-us",
   // href,
   size = "default",
   disabled = false,
 }: CallToActionButtonProps) {
+  const router = useRouter();
   const sizeClasses = size === "small"
-    ? "w-[140px] md:w-[180px] h-[36px] md:h-[45px] rounded-full px-4 py-2 md:text-[13px] text-[11px] cta-button-small"
-    : "w-[180px] md:w-[221px] h-[36px] md:h-[51px] rounded-full px-6 py-2 md:text-[15px] text-[11px] cta-button";
+    ? "w-[120px] sm:w-[140px] md:w-[160px] lg:w-[180px] xl:w-[200px] 2xl:w-[220px] h-[32px] sm:h-[36px] md:h-[40px] lg:h-[45px] xl:h-[50px] 2xl:h-[55px] rounded-full px-3 sm:px-4 md:px-5 lg:px-6 py-1.5 sm:py-2 md:py-2.5 lg:py-3 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[14px] 2xl:text-[15px] cta-button-small"
+    : "w-[150px] sm:w-[180px] md:w-[200px] lg:w-[221px] xl:w-[240px] 2xl:w-[260px] h-[32px] sm:h-[36px] md:h-[42px] lg:h-[51px] xl:h-[56px] 2xl:h-[60px] rounded-full px-4 sm:px-5 md:px-6 lg:px-7 xl:px-8 py-1.5 sm:py-2 md:py-2.5 lg:py-3 text-[10px] sm:text-[11px] md:text-[13px] lg:text-[15px] xl:text-[16px] 2xl:text-[17px] cta-button";
 
   const baseClasses = `${sizeClasses} font-graphik-light-weight-300 text-white hover:cursor-pointer transition-all duration-300 relative items-center justify-center z-50`;
 
@@ -54,9 +56,9 @@ export default function CallToActionButton({
   const hasDisplayClass = /\b(hidden|flex|inline-flex|block|inline-block|grid|inline-grid|table|inline-table|contents|list-item)\b/.test(className);
   const displayClass = hasDisplayClass ? '' : 'inline-flex';
 
-  // Temporary: Scroll to contact form section instead of navigating to /contact-us
+  // Handle navigation - scroll to form on specific pages, otherwise navigate to /contact-us
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // If type is submit, let the form handle it (don't prevent default or scroll)
+    // If type is submit, let the form handle it (don't prevent default or navigate)
     if (type === "submit") {
       if (onClick) {
         onClick();
@@ -66,14 +68,17 @@ export default function CallToActionButton({
     
     // For non-submit buttons, prevent default and handle navigation
     e.preventDefault();
-    if (onClick) {
-      onClick();
-    }
-
+    
     // Check current pathname
     const currentPath = window.location.pathname;
     
-    // If on mobile-app, web-app, or logo-app pages, scroll to project-contact-form
+    // If onClick is provided, let it handle navigation and skip default behavior
+    if (onClick) {
+      onClick();
+      return;
+    }
+    
+    // If on mobile-app, web-app, logo-app, etc. pages, scroll to project-contact-form
     if (
       currentPath === '/mobile-app' || 
       currentPath.startsWith('/mobile-app/') ||
@@ -125,21 +130,8 @@ export default function CallToActionButton({
       }
     }
     
-    // If on home page or other pages, try to find contact-form-section
-    const contactSection = document.getElementById('contact-form-section');
-    if (contactSection) {
-      // Section exists on current page, scroll to it smoothly
-      contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      // Section doesn't exist on current page, navigate to home page contact section
-      if (currentPath === '/') {
-        // Already on home page but section not found, try scrolling anyway
-        window.location.href = '/#contact-form-section';
-      } else {
-        // Navigate to home page contact section
-        window.location.href = '/#contact-form-section';
-      }
-    }
+    // For all other pages, navigate to /contact-us page
+    router.push('/contact-us');
   };
 
   // if (href) {

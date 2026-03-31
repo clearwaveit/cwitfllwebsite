@@ -2,7 +2,6 @@ import OurClients from "../components/sections/OurClients";
 import AppWhyOpt, { ServiceCard } from "@/app/components/sections/AppWhyOpt";
 import Accordion from "../components/sections/Accordion";
 import ProjectContactForm from "../components/sections/ProjectContactForm";
-import Footer from "../components/sections/Footer";
 import flutterAppImg1 from "@/app/assets/imgs/flutter_app_1.png";
 import HeroBanner, { StatItem } from "@/app/components/ui/HeroBanner";
 import flutterBannerImg1 from "@/app/assets/imgs/flutter_banner_1.png";
@@ -122,14 +121,16 @@ export default function FlutterAppPage1() {
       <HeroBanner
         title="Real Estate goes digital"
         description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam porttitor urna eu augue finibus pharetra. Proin faucibus mi eu velit hendrerit, id convallis neque varius. Nunc elementum erat quis mollis mattis. Etiam non mauris urna."
-        titleMaxWidth="max-w-[900px]"
-        descriptionMaxWidth="max-w-[750px]"
-        titleClassName="md:text-[60px] lg:text-[80px]"
+        titleMaxWidth="max-w-[750px] md:max-w-[900px]"
+        descriptionMaxWidth="max-w-[750px] font-normal text-[14px] md:text-[20px] lg:text-[24px]"
+        titleClassName="text-[28px] md:text-[60px] lg:text-[80px]"
         backgroundImage={flutterBannerImg1}
         showOverlay={false}
         gradientOverlay={false}
         stats={heroStats}
-        // maxWidth="max-w-[1570px]"
+        className="h-[450px] md:h-[500px] lg:h-screen"
+        minHeight="h-[450px] md:h-[500px] lg:h-screen"
+        contentClassName="pt-20 pb-10 md:py-6 lg:py-0"
         />
 
       <SplitContentSection
@@ -145,17 +146,15 @@ export default function FlutterAppPage1() {
       <AppWhyOpt
         title={title_3}
         services={whyOptServices}
-        // contentMaxWidth="w-[1104px] max-w-[1570px]"
         />
       <HeroBanner
         badge="FEBRURY 8, 2024"
         title="Augmented and Virtual Reality In Healthcare: Transforming Practice And Training"
-        titleClassName="text-[60px]"
-        // maxWidth="w-[1080px] max-w-[1494px]"
+        titleClassName="text-[18px] md:text-[60px] lg:text-[80px]"
         description="The landscape of medical education and healthcare delivery is rapidly evolving, with augmented reality (AR) and virtual reality (VR) emerging as transformative technologies. Let's delve into the multifaceted applications and future prospects of AR and VR in the medical field."
         buttonText="READ POST"
         titleMaxWidth="max-w-[970px]"
-        descriptionMaxWidth="max-w-[980px]"
+        descriptionMaxWidth="max-w-[980px] text-[10px] md:text-[20px] lg:text-[24px]"
         backgroundImage={flutter_app_1_banner_1}
         showOverlay={false}
         gradientOverlay={true}
@@ -183,7 +182,6 @@ export default function FlutterAppPage1() {
       />
       <Accordion />
       <ProjectContactForm />
-      <Footer />
     </main>
   );
 }

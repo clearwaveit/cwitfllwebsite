@@ -207,7 +207,7 @@ export default function ProjectContactForm({
           {/* Heading */}
           <h2
             ref={headingRef}
-            className="text-[32px] sm:text-[40px] md:text-[48px] lg:text-[60px] font-[700] text-white text-center mb-12 md:mb-16 leading-tight"
+            className="text-[28px] sm:text-[32px] md:text-[40px] lg:text-[50px] xl:text-[60px] 2xl:text-[65px] min-[1440px]:text-[70px] min-[1920px]:text-[80px] font-[700] text-white text-center mb-8 sm:mb-10 md:mb-12 lg:mb-14 xl:mb-16 leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] contact-form-heading"
           >
             <span className="block">{firstLine}</span>
             <span className="block">{secondLine}</span>

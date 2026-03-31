@@ -116,18 +116,18 @@ export default function IndustriesSection({
   return (
     <section
       ref={sectionRef}
-      className={`relative min-h-screen bg-black py-20 md:py-32 overflow-hidden ${className}`}
+      className={`relative h-full md:min-h-screen bg-black pb-20 md:py-32 overflow-hidden ${className}`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 industries-section-content-container">
         {/* Heading */}
         <h2
           ref={headingRef}
-          className="text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] font-bold text-white mb-12 md:mb-16"
+          className="text-[32px] sm:text-[40px] md:text-[48px] lg:text-[38px] xl:text-[48px] 2xl:text-[58px] min-[1440px]:text-[59px] min-[1920px]:text-[60px] font-bold text-white mb-12 md:mb-16"
         >
           {title}
         </h2>
         {description && (
-          <p className="text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] font-normal text-white mb-12 md:mb-16">
+          <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[20.5px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[350] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] mb-8 sm:mb-10 md:mb-12 lg:mb-14 xl:mb-16">
             {description}
           </p>
         )}
@@ -153,10 +153,10 @@ export default function IndustriesSection({
                   key={index}
                   className={`${bgColor} border ${borderColor} rounded-[10px] ${padding} ${hoverBorderColor} transition-all duration-300 ${cardClassName}`}
                 >
-                  <h3 className={`${titleColor} text-[20px] md:text-[30px] font-[700] mb-4 md:mb-6 ${titleClassName}`}>
+                  <h3 className={`${titleColor} text-[18px] sm:text-[20px] md:text-[24px] lg:text-[26px] xl:text-[28px] 2xl:text-[29px] min-[1440px]:text-[29.5px] min-[1920px]:text-[30px] font-[700] mb-3 sm:mb-4 md:mb-5 lg:mb-6 ${titleClassName}`}>
                     {industry.title}
                   </h3>
-                  <p className={`${descriptionColor} text-[14px] md:text-[20px] font-[300] leading-normal ${descriptionClassName}`}>
+                  <p className={`${descriptionColor} text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[20.25px] min-[1920px]:text-[20.5px] font-[350] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] ${descriptionClassName}`}>
                     {industry.description}
                   </p>
                 </div>

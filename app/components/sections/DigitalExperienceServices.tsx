@@ -53,7 +53,20 @@ const servicesCards: CarouselCard[] = [
   },
 ];
 
-export default function DigitalExperienceServices() {
+const defaultParagraphs = [
+  "Clearwave is a website design company rooted in Dubai, working across teams in the UK and the US. We design and develop websites, web applications, and mobile applications, alongside e-commerce platforms, UI/UX design, branding, and SEO. Our work focuses on building digital platforms that are scalable, practical, and built to perform over time.",
+  "As we are adept in developing visual and verbal excellence,  we make sure your brand is highlighted with a user-friendly, accessible and adaptive user interface that will make your website relevant in this ever-evolving prospect.",
+];
+
+interface DigitalExperienceServicesProps {
+  cards?: CarouselCard[];
+  paragraphs?: string[];
+}
+
+export default function DigitalExperienceServices({
+  cards = servicesCards,
+  paragraphs = defaultParagraphs,
+}: DigitalExperienceServicesProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -123,14 +136,11 @@ export default function DigitalExperienceServices() {
       <div className="relative z-20 mx-auto">
         {/* Carousel Section */}
         <div ref={carouselRef} className="relative z-20 w-full overflow-hidden py-8">
-          <Carousel cards={servicesCards} speed={60} pauseOnHover={true} />
+          <Carousel cards={cards} speed={60} pauseOnHover={true} />
         </div>
         {/* Text Section */}
         <TextSection
-          paragraphs={[
-            "Clearwave is a website design company rooted in Dubai, working across teams in the UK and the US. We design and develop websites, web applications, and mobile applications, alongside e-commerce platforms, UI/UX design, branding, and SEO. Our work focuses on building digital platforms that are scalable, practical, and built to perform over time.",
-            "As we are adept in developing visual and verbal excellence,  we make sure your brand is highlighted with a user-friendly, accessible and adaptive user interface that will make your website relevant in this ever-evolving prospect."
-          ]}
+          paragraphs={paragraphs}
           className="py-12 md:py-40 text-section-padding w-full max-w-[1330px]"
         />
       </div>

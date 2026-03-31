@@ -101,7 +101,7 @@ export default function ProcessSection({
         {/* Heading */}
         <h2
           ref={headingRef}
-          className={`text-[32px] sm:text-[40px] md:text-[48px] lg:text-[70px] font-bold text-white mb-12 md:mb-16 ${titleClassName}`}
+          className={`text-[32px] sm:text-[40px] md:text-[48px] lg:text-[70px] font-bold text-white mb-12 md:mb-16 leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] ${titleClassName}`}
         >
           {title}
         </h2>
@@ -115,7 +115,7 @@ export default function ProcessSection({
             {steps.map((step, index) => {
               const stepNumberClassName = step.numberClassName || "text-white text-[16px] md:text-[36px] font-[400] mb-2 md:mb-6";
               const stepTitleClassName = step.titleClassName || "text-white text-[16px] md:text-[26px] lg:text-[30px] font-[700] mb-2 md:mb-2";
-              const stepDescriptionClassName = step.descriptionClassName || "text-white text-[14px] md:text-[16px] lg:text-[22.52px] font-[400] leading-relaxed";
+              const stepDescriptionClassName = step.descriptionClassName || "text-white text-[14px] md:text-[16px] lg:text-[22.52px] font-[400] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]";
               const stepContainerClassName = step.className || "";
 
               return (

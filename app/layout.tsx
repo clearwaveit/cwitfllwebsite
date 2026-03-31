@@ -1,13 +1,6 @@
-"use client";
-
-import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/app/components/ui/Header";
-import Footer from "./components/sections/Footer";
-import WhatsAppChat from "./components/ui/WhatsAppChat";
-import WhatsAppButton from "./components/ui/WhatsAppButton";
-import SmoothScrollProvider from "./components/providers/SmoothScrollProvider";
-import { useState } from "react";
+import AppShell from "./components/providers/AppShell";
+import { fetchSiteSettings } from "@/app/lib/site-settings-api";
 
 // export const metadata: Metadata = {
 //   title: "Your Journey - Modern Web Experiences",
@@ -18,22 +11,20 @@ import { useState } from "react";
 //   },
 // };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const siteSettings = await fetchSiteSettings();
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+      </head>
       <body className="antialiased bg-black text-white font-graphik">
-        <SmoothScrollProvider>
-          <Header />
-          <WhatsAppButton onClick={() => setIsChatOpen(!isChatOpen)} />
-          <WhatsAppChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-          {children}
-          {/* <Footer /> */}
-        </SmoothScrollProvider>
+        <AppShell siteSettings={siteSettings}>{children}</AppShell>
       </body>
     </html>
   );

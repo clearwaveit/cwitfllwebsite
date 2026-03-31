@@ -210,7 +210,7 @@ export default function AppStatsSection({
                   >
                     {stat.number}
                   </div>
-                  <div className="text-white text-[14px] md:text-[16px] lg:text-[18px] font-[500] leading-relaxed">
+                  <div className="text-white text-[14px] md:text-[16px] lg:text-[18px] font-[500] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
                     {stat.label}
                   </div>
                 </div>
