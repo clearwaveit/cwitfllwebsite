@@ -10,167 +10,120 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const studios = [
-  {
-    title: "Digital Experience Studio",
-    description:
-      "We design and develop digital experiences that are intuitive, accessible, and performance-driven. Our focus is on creating websites and platforms that balance strong visual identity with usability, speed, and search engine visibility — ensuring long-term relevance in an ever-evolving digital landscape.",
-    video: "/videos/animated_clip_1.mp4",
-    href: "/digital-experience-studio",
-  },
-  {
-    title: "Application Development Studio",
-    description:
-      "We design and develop digital experiences that are intuitive, accessible, and performance-driven. Our focus is on creating websites and platforms that balance strong visual identity with usability, speed, and search engine visibility — ensuring long-term relevance in an ever-evolving digital landscape.",
-    video: "/videos/animated_clip_2.mp4",
-    href: "/application-development-studio",
-  },
-  {
-    title: "Growth & Branding Studio",
-    description:
-      "We design and develop digital experiences that are intuitive, accessible, and performance-driven. Our focus is on creating websites and platforms that balance strong visual identity with usability, speed, and search engine visibility — ensuring long-term relevance in an ever-evolving digital landscape.",
-    video: "/videos/animated_clip_3.mp4",
-    href: "/growth-branding-studio",
-  },
+const DEFAULT_DESCRIPTION = "As we are adept in developing visual and verbal excellence, we make sure your brand is highlighted with a user-friendly, accessible and adaptive user interface that will make your website relevant in this ever-evolving prospect.";
+
+const DEFAULT_STUDIOS = [
+  { title: "Digital Experience Studio", description: DEFAULT_DESCRIPTION, video: "/videos/animated_clip_1.mp4", href: "/digital-experience-studio" },
+  { title: "Application Development Studio", description: DEFAULT_DESCRIPTION, video: "/videos/animated_clip_2.mp4", href: "/application-development-studio" },
+  { title: "Growth & Branding Studio", description: DEFAULT_DESCRIPTION, video: "/videos/animated_clip_3.mp4", href: "/growth-branding-studio" },
 ];
 
-export default function Studios() {
+interface StudioItem {
+  title: string;
+  description: string;
+  video: string;
+  href: string;
+}
+
+interface StudiosProps {
+  studios?: StudioItem[];
+}
+
+const STUDIO_INDICES = [0, 1, 2] as const;
+
+export default function Studios({ studios: studiosProp }: StudiosProps = {}) {
+  const fromCms = studiosProp?.length ? studiosProp.slice(0, 3) : [];
+  // Slot 0 = Digital (clip_1), slot 1 = Application (clip_2), slot 2 = Growth (clip_3). Base = DEFAULT_STUDIOS, overlay CMS per index.
+  const studios: typeof DEFAULT_STUDIOS = [0, 1, 2].map((i) => {
+    const base = DEFAULT_STUDIOS[i];
+    const cms = fromCms[i];
+    if (!cms) return base;
+    const cmsVideo = (cms.video ?? "").trim();
+    const isCmsVideoUrl = cmsVideo.length > 0 && (cmsVideo.startsWith("http") || cmsVideo.startsWith("/"));
+    return {
+      title: (cms.title?.trim()) || base.title,
+      description: (cms.description?.trim()) || base.description,
+      video: isCmsVideoUrl ? cmsVideo : base.video,
+      href: base.href,
+    };
+  }) as typeof DEFAULT_STUDIOS;
   const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const div1Ref = useRef<HTMLDivElement>(null);
-  const div2Ref = useRef<HTMLDivElement>(null);
-  const div3Ref = useRef<HTMLDivElement>(null);
+  const divRefs = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
+
+  const getStudio = (index: number): StudioItem => studios[index] ?? DEFAULT_STUDIOS[index];
+  const getHref = (index: number): string => DEFAULT_STUDIOS[index]?.href ?? "/";
 
   useEffect(() => {
-    if (!sectionRef.current || !div1Ref.current || !div2Ref.current || !div3Ref.current) return;
+    const section = sectionRef.current;
+    if (!section) return;
 
-    // Get video and content elements
-    const video1 = div1Ref.current.querySelector('video');
-    const video2 = div2Ref.current.querySelector('video');
-    const video3 = div3Ref.current.querySelector('video');
+    const container = section.querySelector("[data-studios-container]");
+    if (!container) return;
 
-    const content1 = div1Ref.current.querySelector('.content-wrapper');
-    const content2 = div2Ref.current.querySelector('.content-wrapper');
-    const content3 = div3Ref.current.querySelector('.content-wrapper');
+    const div1Ref = container.querySelector("[data-studio-index='0']") as HTMLDivElement | null;
+    const div2Ref = container.querySelector("[data-studio-index='1']") as HTMLDivElement | null;
+    const div3Ref = container.querySelector("[data-studio-index='2']") as HTMLDivElement | null;
 
-    // Set initial state - all divs hidden except first
-    // Use pointerEvents to allow clicks only on visible studio
-    gsap.set(div1Ref.current, { opacity: 1, pointerEvents: 'auto' });
-    gsap.set([div2Ref.current, div3Ref.current], { opacity: 0, pointerEvents: 'none' });
+    if (!div1Ref || !div2Ref || !div3Ref) return;
 
-    // Set initial video and content scales - start small
-    gsap.set([video1, content1], { scale: 1 });
-    gsap.set([video2, video3, content2, content3], { scale: 0.3 });
+    const video1 = div1Ref.querySelector("video");
+    const video2 = div2Ref.querySelector("video");
+    const video3 = div3Ref.querySelector("video");
+    const content1 = div1Ref.querySelector(".content-wrapper");
+    const content2 = div2Ref.querySelector(".content-wrapper");
+    const content3 = div3Ref.querySelector(".content-wrapper");
+
+    // Stacking: visible card must be on top so content and click match. Use z-index.
+    gsap.set(div1Ref, { opacity: 1, pointerEvents: "auto", visibility: "visible", zIndex: 10 });
+    gsap.set(div2Ref, { opacity: 0, pointerEvents: "none", visibility: "visible", zIndex: 0 });
+    gsap.set(div3Ref, { opacity: 0, pointerEvents: "none", visibility: "visible", zIndex: 0 });
+    gsap.set([video1, content1].filter(Boolean), { scale: 1, opacity: 1, visibility: "visible" });
+    gsap.set([video2, video3, content2, content3].filter(Boolean), { scale: 0.3, opacity: 1, visibility: "visible" });
 
     const viewportHeight = window.innerHeight;
-    // Reduced scroll distance - Studio 3 fade out ke baad scroll khatam
-    // Timeline ends right after Studio 3 fades out
     const endValue = viewportHeight * 2.0;
 
-    // Create a timeline for the scroll animation
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: sectionRef.current,
+        trigger: section,
         start: "top top",
         end: `+=${endValue}px`,
-        scrub: 0.5, // Smooth scrolling
+        scrub: 0.5,
         pin: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
       },
     });
 
-    // Studio 1: Visible at start, fades out and scales down
-    tl.to(div1Ref.current, {
-      opacity: 0,
-      pointerEvents: 'none',
-      duration: 0.5,
-      ease: "power2.inOut",
-      force3D: true,
-    }, 0.3)
-      .to([video1, content1], {
-        scale: 0.3,
-        duration: 0.5,
-        ease: "power2.inOut",
-        force3D: true,
-      }, 0.3)
-      // Studio 2: Fades in AFTER Studio 1 fades out
-      .fromTo(div2Ref.current,
-        { opacity: 0, pointerEvents: 'none', force3D: true },
-        {
-          opacity: 1,
-          pointerEvents: 'auto',
-          duration: 0.5,
-          ease: "power2.inOut",
-          force3D: true,
-        }, 0.8)
-      .fromTo([video2, content2],
-        { scale: 0.3, force3D: true },
-        {
-          scale: 1,
-          duration: 0.5,
-          ease: "power2.inOut",
-          force3D: true,
-        }, 0.8)
-      // Studio 2: Fades out and scales down
-      .to(div2Ref.current, {
-        opacity: 0,
-        pointerEvents: 'none',
-        duration: 0.5,
-        ease: "power2.inOut",
-        force3D: true,
-      }, 1.5)
-      .to([video2, content2], {
-        scale: 0.3,
-        duration: 0.5,
-        ease: "power2.inOut",
-        force3D: true,
-      }, 1.5)
-      // Studio 3: Fades in AFTER Studio 2 fades out
-      .fromTo(div3Ref.current,
-        { opacity: 0, pointerEvents: 'none', force3D: true },
-        {
-          opacity: 1,
-          pointerEvents: 'auto',
-          duration: 0.5,
-          ease: "power2.inOut",
-          force3D: true,
-        }, 2.0)
-      .fromTo([video3, content3],
-        { scale: 0.3, force3D: true },
-        {
-          scale: 1,
-          duration: 0.5,
-          ease: "power2.inOut",
-          force3D: true,
-        }, 2.0)
-      // Studio 3: Stays visible, then fades out and scales down at the end
-      .to(div3Ref.current, {
-        opacity: 0,
-        pointerEvents: 'none',
-        duration: 0.5,
-        ease: "power2.inOut",
-        force3D: true,
-      }, 2.7)
-      .to([video3, content3], {
-        scale: 0.3,
-        duration: 0.5,
-        ease: "power2.inOut",
-        force3D: true,
-      }, 2.7);
+    // Studio 0: fade out, put behind
+    tl.to(div1Ref, { opacity: 0, pointerEvents: "none", zIndex: 0, duration: 0.5, ease: "power2.inOut", force3D: true }, 0.3);
+    tl.to([video1, content1].filter(Boolean), { scale: 0.3, duration: 0.5, ease: "power2.inOut", force3D: true }, 0.3);
+
+    // Studio 1: bring on top, fade in
+    tl.to(div2Ref, { zIndex: 10 }, 0.75);
+    tl.fromTo(div2Ref, { opacity: 0, pointerEvents: "none", force3D: true }, { opacity: 1, pointerEvents: "auto", duration: 0.5, ease: "power2.inOut", force3D: true }, 0.8);
+    tl.fromTo([video2, content2].filter(Boolean), { scale: 0.3, force3D: true }, { scale: 1, duration: 0.5, ease: "power2.inOut", force3D: true }, 0.8);
+    tl.to(div2Ref, { opacity: 0, pointerEvents: "none", zIndex: 0, duration: 0.5, ease: "power2.inOut", force3D: true }, 1.5);
+    tl.to([video2, content2].filter(Boolean), { scale: 0.3, duration: 0.5, ease: "power2.inOut", force3D: true }, 1.5);
+
+    // Studio 2 (index 2): bring on top, fade in – ensure third card visible
+    tl.to(div3Ref, { zIndex: 10 }, 1.95);
+    tl.fromTo(div3Ref, { opacity: 0, pointerEvents: "none", force3D: true }, { opacity: 1, pointerEvents: "auto", duration: 0.5, ease: "power2.inOut", force3D: true }, 2.0);
+    tl.fromTo([video3, content3].filter(Boolean), { scale: 0.3, force3D: true }, { scale: 1, duration: 0.5, ease: "power2.inOut", force3D: true }, 2.0);
+    tl.to(div3Ref, { opacity: 0, pointerEvents: "none", zIndex: 0, duration: 0.5, ease: "power2.inOut", force3D: true }, 2.7);
+    tl.to([video3, content3].filter(Boolean), { scale: 0.3, duration: 0.5, ease: "power2.inOut", force3D: true }, 2.7);
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
 
     return () => {
       tl.kill();
-      const triggers = ScrollTrigger.getAll();
-      triggers.forEach((trigger) => {
-        if (trigger.trigger === sectionRef.current) {
-          trigger.kill();
-        }
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.trigger === section) trigger.kill();
       });
     };
-  }, []);
+  }, [studios.length]);
 
   return (
     <section ref={sectionRef} className="relative bg-black pt-24 overflow-hidden" style={{ minHeight: '100vh' }}>
@@ -193,19 +146,22 @@ export default function Studios() {
       <div className="relative z-1 w-full h-screen flex items-center justify-center">
         <div
           ref={containerRef}
+          data-studios-container
           className="relative w-full h-screen"
         >
-          {studios.map((studio, index) => {
-            const divRef = index === 0 ? div1Ref : index === 1 ? div2Ref : div3Ref;
+          {STUDIO_INDICES.map((index) => {
+            const studio = getStudio(index);
+            const divRef = divRefs[index];
             return (
               <div
                 ref={divRef}
                 key={index}
+                data-studio-index={index}
                 className="absolute top-1/2 left-0 right-0 -translate-y-1/2 w-full"
                 style={{ willChange: 'opacity' }}
               >
-                <div className={`flex flex-col items-start max-w-[1400px] ps-3 pe-3 md:ps-30 md:mt-[-140px] ${index === 1 ? "mx-auto" : index === 2 ? "ml-auto" : ""}`}>
-                  {/* Background Video */}
+                <div className={`relative flex flex-col items-start max-w-[1400px] ps-3 pe-3 md:ps-38 md:mt-[-140px] ${index === 1 ? "mx-auto" : index === 2 ? "ml-auto" : ""}`}>
+                  {/* Video: index 0 top-right (manta), index 1 right (orb), index 2 left (rocket) */}
                   <video
                     src={studio.video}
                     autoPlay
@@ -214,41 +170,48 @@ export default function Studios() {
                     playsInline
                     className={`absolute inset-0 object-cover mx-auto video-responsive-studios video-studio-${index}`}
                     style={{
-                      left: index === 0 ? "-350px" : index === 1 ? "974px" : index === 2 ? "-150px" : "100px",
-                      top: index === 0 ? "-380px" : index === 1 ? "-200px" : index === 2 ? "-150px" : "-150px",
+                      left: index === 0 ? "150px" : index === 1 ? "774px" : index === 2 ? "-650px" : "100px",
+                      top: index === 0 ? "-190px" : index === 1 ? "-100px" : index === 2 ? "-20px" : "-150px",
                       width: index === 0 ? "720px" : index === 1 ? "461px" : index === 2 ? "420px" : "420px",
                       height: index === 0 ? "405px" : index === 1 ? "461px" : index === 2 ? "420px" : "420px",
                       zIndex: -1000,
                     }}
                   />
 
-                  {/* Content */}
-                  <div className={`content-wrapper relative z-20 w-full content-studio-${index === 0 ? "ps-0 lg:ps-[110px] lg:pt-0 content-studio-0" : index === 1 ? "ps-0 lg:ps-50 content-studio-1" : index === 2 ? "ps-0 lg:ps-115 content-studio-2" : "ps-0"}`}>
-                    <h2 className={`text-[30px] md:text-[80px] font-[700] text-white leading-[1.2] sm:leading-[1.3] md:leading-[1.1] lg:leading-[1.05] xl:leading-[1.0] 2xl:leading-[0.95] mb-6 ${index === 0 ? 'studio-heading-0' : index === 1 ? 'studio-heading-1' : 'studio-heading-2'}`}>
+                  {/* Content - all three left-aligned to match DEFAULT_STUDIOS screenshot */}
+                  <div className={`content-wrapper relative z-20 w-full ${index === 0 ? "ps-0 lg:ps-8 lg:pt-0 content-studio-0" : index === 1 ? "ps-0 lg:ps-26 content-studio-1" : index === 2 ? "ps-0 lg:ps-100 content-studio-2" : "ps-0"}`}>
+                    <h2 className={`text-[30px] md:text-[80px] font-[700] text-white leading-[32px] md:leading-[80px] ${index === 0 ? "studio-heading-0" : index === 1 ? "studio-heading-1" : "studio-heading-2"}`}>
                       {index === 0 ? (
-                        <>
-                          Digital<br />
-                          Experience Studio
-                        </>
+                        (() => {
+                          const t = studio.title || DEFAULT_STUDIOS[0].title;
+                          const first = t.split(" ")[0] || "Digital";
+                          const second = t.split(" ").slice(1).join(" ") || "Experience Studio";
+                          return <>{first}<br />{second}</>;
+                        })()
                       ) : index === 1 ? (
-                        <>
-                          Application<br />
-                          Development Studio
-                        </>
+                        (() => {
+                          const t = studio.title || DEFAULT_STUDIOS[1].title;
+                          const first = t.split(" ")[0] || "Application";
+                          const second = t.split(" ").slice(1).join(" ") || "Development Studio";
+                          return <>{first}<br />{second}</>;
+                        })()
                       ) : index === 2 ? (
-                        <>
-                          Growth &<br /> Branding Studio
-                        </>
+                        (() => {
+                          const t = studio.title || DEFAULT_STUDIOS[2].title;
+                          const first = t.startsWith("Growth &") ? "Growth &" : t.split(" ")[0] || "Growth &";
+                          const second = t.startsWith("Growth &") ? t.slice(8).trim() : t.split(" ").slice(1).join(" ") || "Branding Studio";
+                          return <>{first}<br />{second}</>;
+                        })()
                       ) : (
-                        studio.title
+                        studio.title || DEFAULT_STUDIOS[index]?.title || "Studio"
                       )}
                     </h2>
-                    <p className="text-[16px] md:text-[20px] text-white mb-4 md:py-10 max-w-[730px] leading-[1.5] sm:leading-[1.6] md:leading-[1.65] lg:leading-[1.7] xl:leading-[1.65] 2xl:leading-[1.6]">
-                      {studio.description}
+                    <p className="text-[16px] md:text-[18px] text-white py-8 max-w-[730px] leading-relaxed">
+                      {studio.description || DEFAULT_STUDIOS[index]?.description || ""}
                     </p>
                     <CallToActionButton 
                       variant="shiny" 
-                      onClick={() => router.push(studio.href)}
+                      onClick={() => router.push(getHref(index))}
                     />
                   </div>
                 </div>

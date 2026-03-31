@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
-import Image from "next/image";
+import { useRef, useEffect, useState, type CSSProperties } from "react";
+import Image, { type StaticImageData } from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -15,7 +15,7 @@ export interface SliderCard {
   subtitle?: string;
   description?: string;
   marketInfo?: string;
-  image?: any;
+  image?: string | StaticImageData;
   backgroundColor?: string;
   textColor?: string;
 }
@@ -27,6 +27,55 @@ interface HorizontalScrollSliderProps {
   onCardClick?: (card: SliderCard, index: number) => void;
 }
 
+const BACKGROUND_COLOR_MAP: Record<string, string> = {
+  white: "#ffffff",
+  black: "#000000",
+  "bg-white": "#ffffff",
+  "bg-black": "#000000",
+  "bg-zinc-900": "#18181b",
+  "bg-zinc-800": "#27272a",
+  "bg-zinc-200": "#e4e4e7",
+  "bg-zinc-100": "#f4f4f5",
+  "bg-gray-200": "#e5e7eb",
+  "bg-gray-100": "#f3f4f6",
+};
+
+const TEXT_COLOR_MAP: Record<string, string> = {
+  white: "#ffffff",
+  black: "#000000",
+  "text-white": "#ffffff",
+  "text-black": "#000000",
+  "text-zinc-900": "#18181b",
+  "text-zinc-800": "#27272a",
+  "text-gray-900": "#111827",
+  "text-gray-800": "#1f2937",
+};
+
+function extractBracketValue(value: string, prefix: "bg" | "text"): string | undefined {
+  const match = value.match(new RegExp(`^${prefix}-\\[(.+)\\]$`));
+  return match?.[1]?.trim();
+}
+
+function resolveColorValue(raw: string | undefined, kind: "bg" | "text"): string | undefined {
+  const value = raw?.trim();
+  if (!value) return undefined;
+
+  const fromBracket = extractBracketValue(value, kind);
+  if (fromBracket) return fromBracket;
+
+  if (value.startsWith("#") || value.startsWith("rgb") || value.startsWith("hsl")) {
+    return value;
+  }
+
+  const map = kind === "bg" ? BACKGROUND_COLOR_MAP : TEXT_COLOR_MAP;
+  return map[value] || (/^[a-zA-Z]+$/.test(value) ? value : undefined);
+}
+
+function getTextStyles(color: string | undefined, dimmed: boolean = false): CSSProperties | undefined {
+  if (!color) return undefined;
+  return dimmed ? { color, opacity: 0.7 } : { color };
+}
+
 export default function HorizontalScrollSlider({
   cards,
   className = "",
@@ -35,6 +84,7 @@ export default function HorizontalScrollSlider({
 }: HorizontalScrollSliderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const isSingleCard = cards.length === 1;
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -47,27 +97,46 @@ export default function HorizontalScrollSlider({
 
     const container = containerRef.current;
     const slider = sliderRef.current;
+    const firstCard = slider.children[0] as HTMLElement | undefined;
+    const cardWidth = firstCard?.offsetWidth || 436;
 
-    // Calculate the total scroll distance
-    const getScrollAmount = () => {
-      const sliderWidth = slider.scrollWidth;
-      const containerWidth = container.offsetWidth;
-      return -(sliderWidth - containerWidth);
-    };
+    const scrollTween = isSingleCard
+      ? gsap.fromTo(
+          slider,
+          { x: container.offsetWidth },
+          {
+            x: -(cardWidth + 40),
+            ease: "none",
+            scrollTrigger: {
+              trigger: container,
+              start: "center center",
+              end: () => `+=${container.offsetWidth + cardWidth + 80}`,
+              pin: true,
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          }
+        )
+      : (() => {
+          const getScrollAmount = () => {
+            const sliderWidth = slider.scrollWidth;
+            const containerWidth = container.offsetWidth;
+            return -(sliderWidth - containerWidth);
+          };
 
-    // Create the horizontal scroll animation
-    const scrollTween = gsap.to(slider, {
-      x: getScrollAmount,
-      ease: "none",
-      scrollTrigger: {
-        trigger: container,
-        start: "center center",
-        end: () => `+=${Math.abs(getScrollAmount())}`,
-        pin: true,
-        scrub: 1,
-        invalidateOnRefresh: true,
-      },
-    });
+          return gsap.to(slider, {
+            x: getScrollAmount,
+            ease: "none",
+            scrollTrigger: {
+              trigger: container,
+              start: "center center",
+              end: () => `+=${Math.abs(getScrollAmount())}`,
+              pin: true,
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+        })();
 
     return () => {
       scrollTween.kill();
@@ -77,7 +146,7 @@ export default function HorizontalScrollSlider({
         }
       });
     };
-  }, [cards]);
+  }, [cards, isSingleCard]);
 
   // Drag functionality
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -112,7 +181,7 @@ export default function HorizontalScrollSlider({
     // Calculate boundaries
     const sliderWidth = sliderRef.current.scrollWidth;
     const containerWidth = containerRef.current?.offsetWidth || 0;
-    const maxScroll = -(sliderWidth - containerWidth);
+    const maxScroll = Math.min(0, -(sliderWidth - containerWidth));
 
     // Clamp the value
     const clampedX = Math.max(maxScroll, Math.min(0, newX));
@@ -178,7 +247,7 @@ export default function HorizontalScrollSlider({
 
     const sliderWidth = sliderRef.current.scrollWidth;
     const containerWidth = containerRef.current?.offsetWidth || 0;
-    const maxScroll = -(sliderWidth - containerWidth);
+    const maxScroll = Math.min(0, -(sliderWidth - containerWidth));
 
     const clampedX = Math.max(maxScroll, Math.min(0, newX));
 
@@ -207,6 +276,9 @@ export default function HorizontalScrollSlider({
   };
 
   const renderCard = (card: SliderCard, index: number) => {
+    const bgColorValue = resolveColorValue(card.backgroundColor, "bg");
+    const textColorValue = resolveColorValue(card.textColor, "text");
+
     if (card.type === "image" && card.image) {
       return (
         <div
@@ -216,7 +288,10 @@ export default function HorizontalScrollSlider({
           onTouchEnd={(e) => handleCardTap(e, index)}
           className={`flex-shrink-0 rounded-[10px] cursor-pointer will-change-transform ${cardClassName}`}
         >
-          <div className="relative h-[299px] md:h-[499px] w-[236px] md:w-[436px] flex flex-col justify-between border border-[#BFBFBF] rounded-[10px] overflow-hidden">
+          <div
+            className="relative h-[299px] md:h-[499px] w-[236px] md:w-[436px] flex flex-col justify-between border border-[#BFBFBF] rounded-[10px] overflow-hidden"
+            style={bgColorValue ? { backgroundColor: bgColorValue } : undefined}
+          >
             <Image
               src={card.image}
               alt={card.title}
@@ -227,15 +302,30 @@ export default function HorizontalScrollSlider({
             <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/10 to-black/80" />
             {/* Top text section */}
             <div className="relative z-10 p-6 text-white">
-              <h3 className="text-[20px] md:text-[30px] font-bold text-white">{card.title}</h3>
+              <h3
+                className="text-[20px] md:text-[30px] font-bold text-white whitespace-pre-line"
+                style={getTextStyles(textColorValue)}
+              >
+                {card.title}
+              </h3>
               {card.subtitle && (
-                <p className="text-[20px] md:text-[30px] text-white">{card.subtitle}</p>
+                <p
+                  className="text-[20px] md:text-[30px] text-white whitespace-pre-line"
+                  style={getTextStyles(textColorValue)}
+                >
+                  {card.subtitle}
+                </p>
               )}
             </div>
             {/* Bottom text section */}
             {card.description && (
               <div className="relative z-10 p-6 text-white">
-                <p className="text-[14px] md:text-[22px] text-white/70">{card.description}</p>
+                <p
+                  className="text-[14px] md:text-[22px] text-white/70 whitespace-pre-line"
+                  style={getTextStyles(textColorValue, true)}
+                >
+                  {card.description}
+                </p>
               </div>
             )}
           </div>
@@ -252,6 +342,7 @@ export default function HorizontalScrollSlider({
 
     const titleColor = customTextColor || (isWhiteBg || isLightBg ? "text-black" : isDarkBg ? "text-white" : "text-white");
     const descColor = customTextColor ? (customTextColor === "text-black" ? "text-black/70" : "text-white/70") : (isWhiteBg || isLightBg ? "text-black/70" : isDarkBg ? "text-white/70" : "text-white/70");
+    const textCardStyles = bgColorValue ? { backgroundColor: bgColorValue } : undefined;
 
     return (
       <div
@@ -261,25 +352,40 @@ export default function HorizontalScrollSlider({
         onTouchEnd={(e) => handleCardTap(e, index)}
         className={`flex-shrink-0 rounded-[10px] cursor-pointer will-change-transform ${cardClassName}`}
       >
-        <div className={`h-[221px] md:h-[321px] w-[236px] md:w-[436px] p-8 flex flex-col justify-between border border-[#BFBFBF] rounded-[10px] ${bgColor}`}>
+        <div
+          className={`h-[221px] md:h-[321px] w-[236px] md:w-[436px] p-8 flex flex-col justify-between border border-[#BFBFBF] rounded-[10px] ${bgColorValue ? "" : bgColor}`}
+          style={textCardStyles}
+        >
           <div>
-            <h3 className={`text-[20px] md:text-[30px] font-bold mb-1 ${titleColor}`}>
+            <h3
+              className={`text-[20px] md:text-[30px] font-bold mb-1 whitespace-pre-line ${textColorValue ? "" : titleColor}`}
+              style={getTextStyles(textColorValue)}
+            >
               {card.title}
             </h3>
             {card.subtitle && (
-              <p className={`text-[20px] md:text-[30px] mb-2 ${titleColor}`}>
+              <p
+                className={`text-[20px] md:text-[30px] mb-2 whitespace-pre-line ${textColorValue ? "" : titleColor}`}
+                style={getTextStyles(textColorValue)}
+              >
                 {card.subtitle}
               </p>
             )}
           </div>
           <div>
             {card.description && (
-              <p className={`text-[16px] md:text-[22px] ${descColor}`}>
+              <p
+                className={`text-[16px] md:text-[22px] whitespace-pre-line ${textColorValue ? "" : descColor}`}
+                style={getTextStyles(textColorValue, true)}
+              >
                 {card.description}
               </p>
             )}
             {card.marketInfo && (
-              <p className={`text-[16px] md:text-[22px] ${descColor}`}>
+              <p
+                className={`text-[16px] md:text-[22px] whitespace-pre-line ${textColorValue ? "" : descColor}`}
+                style={getTextStyles(textColorValue, true)}
+              >
                 {card.marketInfo}
               </p>
             )}

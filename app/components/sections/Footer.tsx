@@ -9,14 +9,16 @@ import instagramIcon from "@/app/assets/imgs/Instagram.png";
 import twitterIcon from "@/app/assets/imgs/twitter.png";
 import { useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type { FooterSettings } from "@/app/lib/site-settings-api";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function Footer() {
+export default function Footer({ settings }: { settings?: FooterSettings }) {
   const footerRef = useRef<HTMLElement>(null);
   const ctaSectionRef = useRef<HTMLElement>(null);
   const ctaHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -25,15 +27,53 @@ export default function Footer() {
   const linksSectionRef = useRef<HTMLDivElement>(null);
   const linksColumnsRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
+  const footerCtaHeading = settings?.ctaHeading?.trim() || "Get Started now!";
+  const footerCtaParagraph = settings?.ctaParagraph?.trim() || "Request for a free quote, submit your RFP/RFI.";
+  const footerCtaButtonText = settings?.ctaButtonText?.trim() || "Let's Talk";
+  const footerCtaButtonLink = settings?.ctaButtonLink?.trim() || "/contact-us";
+  const navigationLinks = settings?.navigationLinks?.length
+    ? settings.navigationLinks
+    : [
+        { label: "Home", href: "/" },
+        { label: "Services", href: "/services" },
+        { label: "Work", href: "/our-work" },
+        { label: "About", href: "/about-us" },
+        { label: "Contact Us", href: "/contact-us" },
+      ];
+  const serviceLinks = settings?.serviceLinks?.length
+    ? settings.serviceLinks
+    : [
+        { label: "Website design & Development", href: "#" },
+        { label: "AI Automation and Services", href: "#" },
+        { label: "Mobile apps development", href: "#" },
+        { label: "Web apps development", href: "#" },
+        { label: "Branding and Brand strategy", href: "#" },
+      ];
+  const addressLines = settings?.addressLines?.length
+    ? settings.addressLines
+    : ["Trade Center Area", "Sheikh Zayed Road", "Dubai, UAE"];
+  const footerPhone = settings?.phone?.trim() || "+971 4 111 111 1";
+  const linkedinUrl = settings?.linkedinUrl?.trim() || "#";
+  const instagramUrl = settings?.instagramUrl?.trim() || "#";
+  const twitterUrl = settings?.twitterUrl?.trim() || "#";
+  const copyrightLineOne = settings?.copyrightLineOne?.trim() || "CWIT © 2025";
+  const copyrightLineTwo = settings?.copyrightLineTwo?.trim() || "All rights reserved";
+  const privacyLabel = settings?.privacyLabel?.trim() || "Privacy Policy";
+  const privacyLink = settings?.privacyLink?.trim() || "#";
+  const termsLabel = settings?.termsLabel?.trim() || "Terms & Conditions";
+  const termsLink = settings?.termsLink?.trim() || "#";
 
   useEffect(() => {
     if (!footerRef.current || !ctaSectionRef.current) return;
+    const ctaSection = ctaSectionRef.current;
+    const linksSection = linksSectionRef.current;
 
     // Kill existing ScrollTriggers
     ScrollTrigger.getAll().forEach((trigger) => {
       if (
-        trigger.trigger === ctaSectionRef.current ||
-        trigger.trigger === linksSectionRef.current
+        trigger.trigger === ctaSection ||
+        trigger.trigger === linksSection
       ) {
         trigger.kill();
       }
@@ -50,8 +90,7 @@ export default function Footer() {
 
       // Check if element is already in view
       const checkIfInView = () => {
-        if (!ctaSectionRef.current) return false;
-        const rect = ctaSectionRef.current.getBoundingClientRect();
+        const rect = ctaSection.getBoundingClientRect();
         const windowHeight = window.innerHeight;
         return rect.top < windowHeight * 0.8 && rect.bottom > 0;
       };
@@ -59,7 +98,7 @@ export default function Footer() {
       // Create timeline for CTA section
       const ctaTl = gsap.timeline({
         scrollTrigger: {
-          trigger: ctaSectionRef.current,
+          trigger: ctaSection,
           start: "top 80%",
           end: "bottom 20%",
           toggleActions: "play none none reverse",
@@ -102,7 +141,7 @@ export default function Footer() {
 
     // Footer Links Section Animations
     const linksColumns = linksColumnsRef.current;
-    if (linksColumns && linksSectionRef.current) {
+    if (linksColumns && linksSection) {
       const columns = linksColumns.querySelectorAll('.footer-column');
       
       // Reset initial state
@@ -110,8 +149,7 @@ export default function Footer() {
 
       // Check if element is already in view
       const checkIfInView = () => {
-        if (!linksSectionRef.current) return false;
-        const rect = linksSectionRef.current.getBoundingClientRect();
+        const rect = linksSection.getBoundingClientRect();
         const windowHeight = window.innerHeight;
         return rect.top < windowHeight * 0.85 && rect.bottom > 0;
       };
@@ -119,7 +157,7 @@ export default function Footer() {
       // Create timeline for links section
       const linksTl = gsap.timeline({
         scrollTrigger: {
-          trigger: linksSectionRef.current,
+          trigger: linksSection,
           start: "top 85%",
           end: "bottom 20%",
           toggleActions: "play none none reverse",
@@ -155,8 +193,8 @@ export default function Footer() {
       const triggers = ScrollTrigger.getAll();
       triggers.forEach((trigger) => {
         if (
-          trigger.trigger === ctaSectionRef.current ||
-          trigger.trigger === linksSectionRef.current
+          trigger.trigger === ctaSection ||
+          trigger.trigger === linksSection
         ) {
           trigger.kill();
         }
@@ -201,13 +239,18 @@ export default function Footer() {
         {/* CTA Content */}
         <div className="relative md:top-[-150px] z-10 h-full flex flex-col items-center justify-center text-center px-4 footer-cta-content">
           <h2 ref={ctaHeadingRef} className="text-[60px] md:text-[80px] font-[700] leading-[80px] text-white mb-4 footer-heading">
-            Get Started now!
+            {footerCtaHeading}
           </h2>
           <p ref={ctaParagraphRef} className="text-[16px] md:text-[20px] text-white mb-8 max-w-2xl footer-paragraph">
-            Request for a free quote, submit your RFP/RFI.
+            {footerCtaParagraph}
           </p>
           <div ref={ctaButtonRef}>
-            <CallToActionButton variant="shiny" />
+            <CallToActionButton
+              variant="shiny"
+              onClick={() => router.push(footerCtaButtonLink)}
+            >
+              {footerCtaButtonText}
+            </CallToActionButton>
           </div>
         </div>
 
@@ -218,77 +261,40 @@ export default function Footer() {
               {/* Navigation Links */}
               <div className="footer-column flex flex-col items-start">
                 <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
-                  <li>
-                    <a href="/" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      Home
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/services" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      Services
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/our-work" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      Work
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/about-us" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      About
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/contact-us" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      Contact Us
-                    </a>
-                  </li>
+                  {navigationLinks.map((item, index) => (
+                    <li key={`${item.label}-${index}`}>
+                      <a href={item.href} className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
               {/* Service Categories */}
               <div className="footer-column flex flex-col items-start">
                 <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
-                  <li>
-                    <a href="#" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      Website design & Development
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      AI Automation and Services
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      Mobile apps development
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      Web apps development
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      Branding and Brand strategy
-                    </a>
-                  </li>
+                  {serviceLinks.map((item, index) => (
+                    <li key={`${item.label}-${index}`}>
+                      <a href={item.href} className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
               {/* Contact Information */}
               <div className="footer-column flex flex-col justify-center items-start md:items-start lg:items-end footer-contact-info mt-4 sm:mt-0">
                 <ul className="font-graphik-light-weight-300 space-y-1.5 sm:space-y-2 md:space-y-2.5 lg:space-y-3">
-                  <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
-                    Trade Center Area
-                  </li>
-                  <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
-                    Sheikh Zayed Road
-                  </li>
-                  <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] mb-3 sm:mb-3.5 md:mb-4 lg:mb-4.5 xl:mb-5 footer-text">
-                    Dubai, UAE
-                  </li>
+                  {addressLines.map((line, index) => (
+                    <li
+                      key={`${line}-${index}`}
+                      className={`text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text ${index === addressLines.length - 1 ? "mb-3 sm:mb-3.5 md:mb-4 lg:mb-4.5 xl:mb-5" : ""}`}
+                    >
+                      {line}
+                    </li>
+                  ))}
                   <li className="flex items-center gap-1.5 sm:gap-2 md:gap-2.5 text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
                     <Image 
                       src={phoneIcon} 
@@ -297,7 +303,7 @@ export default function Footer() {
                       height={16.66} 
                       className="w-[10px] h-[10px] sm:w-[12px] sm:h-[12px] md:w-[13px] md:h-[13px] lg:w-[15px] lg:h-[15px] xl:w-[17px] xl:h-[17px] 2xl:w-[20px] 2xl:h-[20px] footer-phone-icon" 
                     />
-                    +971 4 111 111 1
+                    {footerPhone}
                   </li>
                 </ul>
 
@@ -305,7 +311,7 @@ export default function Footer() {
                 <div className="mt-4 sm:mt-5 md:mt-6 lg:mt-7 xl:mt-8">
                   <div className="flex justify-start items-start gap-1.5 sm:gap-2 md:gap-2.5 lg:gap-3">
                     <a
-                      href="#"
+                      href={linkedinUrl}
                       className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] md:w-[32px] md:h-[32px] lg:w-[40px] lg:h-[40px] xl:w-[46px] xl:h-[46px] 2xl:w-[50px] 2xl:h-[50px] rounded-full border border-white flex items-center justify-center text-white hover:bg-[#0DFCC1] hover:border-[#0DFCC1] transition-colors footer-social-icon"
                       aria-label="LinkedIn"
                     >
@@ -318,7 +324,7 @@ export default function Footer() {
                       />
                     </a>
                     <a
-                      href="#"
+                      href={instagramUrl}
                       className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] md:w-[32px] md:h-[32px] lg:w-[40px] lg:h-[40px] xl:w-[46px] xl:h-[46px] 2xl:w-[50px] 2xl:h-[50px] rounded-full border border-white flex items-center justify-center text-white hover:bg-[#0DFCC1] hover:border-[#0DFCC1] transition-colors footer-social-icon"
                       aria-label="Instagram"
                     >
@@ -331,7 +337,7 @@ export default function Footer() {
                       />
                     </a>
                     <a
-                      href="#"
+                      href={twitterUrl}
                       className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] md:w-[32px] md:h-[32px] lg:w-[40px] lg:h-[40px] xl:w-[46px] xl:h-[46px] 2xl:w-[50px] 2xl:h-[50px] rounded-full border border-white flex items-center justify-center text-white hover:bg-[#0DFCC1] hover:border-[#0DFCC1] transition-colors footer-social-icon"
                       aria-label="Twitter"
                     >
@@ -351,19 +357,19 @@ export default function Footer() {
               <div className="footer-column flex flex-col justify-start md:justify-start lg:justify-center items-start md:items-start lg:items-end footer-copyright mt-4 sm:mt-0">
                 <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
                   <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
-                    CWIT © 2025
+                    {copyrightLineOne}
                   </li>
                   <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
-                    All rights reserved
+                    {copyrightLineTwo}
                   </li>
                   <li>
-                    <a href="#" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      Privacy Policy
+                    <a href={privacyLink} className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
+                      {privacyLabel}
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      Terms & Conditions
+                    <a href={termsLink} className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
+                      {termsLabel}
                     </a>
                   </li>
                 </ul>

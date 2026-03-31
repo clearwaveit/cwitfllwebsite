@@ -18,7 +18,7 @@ export default function CallToActionButton({
   variant = "outline",
   className = "",
   onClick,
-  children = "CALL TO ACTION",
+  children = "Let's Talk",
   type = "button",
   // href = "/contact-us",
   // href,

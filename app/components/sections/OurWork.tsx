@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import CallToActionButton from "@/app/components/ui/CallToActionButton";
-import ourWorkImg from "@/app/assets/imgs/our_work_img.png";
 import { StaticImageData } from "next/image";
 import { useRef, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -16,7 +16,11 @@ export interface WorkItem {
   title: string;
   description: string;
   image: string | StaticImageData;
+  popupImage?: string | StaticImageData;
   category?: string;
+  websiteUrl?: string;
+  /** Portfolio URL (e.g. /slug). When set, card click navigates here instead of opening modal. */
+  link?: string;
 }
 
 interface OurWorkProps {
@@ -26,6 +30,30 @@ interface OurWorkProps {
   className?: string;
   showCTA?: boolean;
   useNewDesign?: boolean; // Toggle between old and new design
+  cardClickAction?: "navigate" | "modal";
+}
+
+/** Portfolio base path: e.g. /work-details/example */
+const PORTFOLIO_BASE = "/work-details";
+
+function getPortfolioHref(link: string | undefined): string {
+  if (!link?.trim()) return "/our-work";
+  const raw = link.trim();
+  if (raw.startsWith("/work-details/")) return raw;
+  const slug = raw.replace(/^\/+|\/+$/g, "").replace(/^work\//, "").replace(/^work-details\//, "");
+  if (!slug) return "/our-work";
+  return `${PORTFOLIO_BASE}/${slug}`;
+}
+
+function slugifyTitleToHref(title: string | undefined): string {
+  const t = (title ?? "").trim().toLowerCase();
+  if (!t) return "/our-work";
+  const slug = t
+    .replace(/['"]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return slug ? `${PORTFOLIO_BASE}/${slug}` : "/our-work";
 }
 
 export default function OurWork({
@@ -35,15 +63,57 @@ export default function OurWork({
   className = "",
   showCTA = true,
   useNewDesign = true,
+  cardClickAction = "navigate",
 }: OurWorkProps) {
+  const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const [selectedItem, setSelectedItem] = useState<WorkItem | null>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const modalContentRef = useRef<HTMLDivElement>(null);
+  const clickedCardLinkRef = useRef<string | null>(null);
+  const clickedCardIndexRef = useRef<number | null>(null);
+
+  const navigateToItem = (item: WorkItem) => {
+    const href = item.link ? getPortfolioHref(item.link) : slugifyTitleToHref(item.title);
+    router.push(href);
+  };
+
+  /*
+    POPUP/MODAL FUNCTIONALITY (kept for later)
+
+    const [selectedItem, setSelectedItem] = useState<WorkItem | null>(null);
+    const [isImageLoading, setIsImageLoading] = useState(false);
+    const modalRef = useRef<HTMLDivElement>(null);
+    const modalContentRef = useRef<HTMLDivElement>(null);
+    const previousSelectedItemRef = useRef<WorkItem | null>(null);
+
+    useEffect(() => {
+      if (!selectedItem) return;
+      const currentIndex = workItems.findIndex((item) => item === selectedItem);
+      if (currentIndex === -1 || typeof window === "undefined") return;
+
+      const preload = (item: WorkItem | undefined) => {
+        if (!item) return;
+        const img = new window.Image();
+        const src =
+          typeof item.popupImage === "string"
+            ? item.popupImage
+            : typeof item.image === "string"
+              ? item.image
+              : "";
+        if (src) img.src = src;
+      };
+
+      preload(workItems[(currentIndex + 1) % workItems.length]);
+      preload(workItems[(currentIndex - 1 + workItems.length) % workItems.length]);
+    }, [selectedItem, workItems]);
+
+    const openModalItem = (item: WorkItem) => {
+      setIsImageLoading(true);
+      setSelectedItem(item);
+    };
+  */
 
   // Horizontal scroll animation on page scroll - only for new design
   useEffect(() => {
@@ -90,6 +160,11 @@ export default function OurWork({
   // Drag functionality
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!cardsContainerRef.current) return;
+    const card = (e.target as HTMLElement).closest("[data-work-card]");
+    const link = card?.getAttribute("data-link") ?? null;
+    const idx = card?.getAttribute("data-index");
+    clickedCardLinkRef.current = link;
+    clickedCardIndexRef.current = idx != null ? parseInt(idx, 10) : null;
     setIsDragging(true);
     setStartX(e.pageX);
 
@@ -118,16 +193,36 @@ export default function OurWork({
   };
 
   const handleMouseUp = () => {
+    if (cardsContainerRef.current) {
+      const currentX = gsap.getProperty(cardsContainerRef.current, "x") as number;
+      const moved = Math.abs(currentX - scrollLeft) > 3;
+      if (!moved) {
+        if (clickedCardLinkRef.current) {
+          router.push(clickedCardLinkRef.current);
+        } else if (clickedCardIndexRef.current != null && workItems[clickedCardIndexRef.current]) {
+          navigateToItem(workItems[clickedCardIndexRef.current]);
+        }
+      }
+    }
+    clickedCardLinkRef.current = null;
+    clickedCardIndexRef.current = null;
     setIsDragging(false);
   };
 
   const handleMouseLeave = () => {
+    clickedCardLinkRef.current = null;
+    clickedCardIndexRef.current = null;
     setIsDragging(false);
   };
 
   // Touch events for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!cardsContainerRef.current) return;
+    const card = (e.target as HTMLElement).closest("[data-work-card]");
+    const link = card?.getAttribute("data-link") ?? null;
+    const idx = card?.getAttribute("data-index");
+    clickedCardLinkRef.current = link;
+    clickedCardIndexRef.current = idx != null ? parseInt(idx, 10) : null;
     setIsDragging(true);
     setStartX(e.touches[0].pageX);
 
@@ -155,33 +250,96 @@ export default function OurWork({
   };
 
   const handleTouchEnd = () => {
+    if (cardsContainerRef.current) {
+      const currentX = gsap.getProperty(cardsContainerRef.current, "x") as number;
+      const moved = Math.abs(currentX - scrollLeft) > 3;
+      if (!moved) {
+        if (clickedCardLinkRef.current) {
+          router.push(clickedCardLinkRef.current);
+        } else if (clickedCardIndexRef.current != null && workItems[clickedCardIndexRef.current]) {
+          navigateToItem(workItems[clickedCardIndexRef.current]);
+        }
+      }
+    }
+    clickedCardLinkRef.current = null;
+    clickedCardIndexRef.current = null;
     setIsDragging(false);
   };
 
-  // Handle escape key to close modal
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && selectedItem) {
-        setSelectedItem(null);
+  const handleCardSelect = (item: WorkItem) => {
+    navigateToItem(item);
+  };
+
+  /*
+    POPUP/MODAL FUNCTIONALITY (kept for later)
+
+    // Handle escape key to close modal
+    useEffect(() => {
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === "Escape" && selectedItem) {
+          setSelectedItem(null);
+        } else if (e.key === "ArrowLeft" && selectedItem) {
+          const currentIndex = workItems.findIndex((item) => item === selectedItem);
+          const prevIndex = (currentIndex - 1 + workItems.length) % workItems.length;
+          openModalItem(workItems[prevIndex]);
+        } else if (e.key === "ArrowRight" && selectedItem) {
+          const currentIndex = workItems.findIndex((item) => item === selectedItem);
+          const nextIndex = (currentIndex + 1) % workItems.length;
+          openModalItem(workItems[nextIndex]);
+        }
+      };
+      window.addEventListener("keydown", handleEscape);
+      return () => window.removeEventListener("keydown", handleEscape);
+    }, [selectedItem, workItems]);
+
+    // Animate modal
+    useEffect(() => {
+      const previousItem = previousSelectedItemRef.current;
+      const shouldAnimateOpen =
+        !!selectedItem &&
+        !previousItem &&
+        !!modalRef.current &&
+        !!modalContentRef.current;
+
+      if (shouldAnimateOpen && modalRef.current && modalContentRef.current) {
+        gsap.fromTo(modalRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+        gsap.fromTo(
+          modalContentRef.current,
+          { scale: 0.8, opacity: 0, y: 50 },
+          { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }
+        );
+      }
+
+      previousSelectedItemRef.current = selectedItem;
+    }, [selectedItem]);
+
+    const handlePrev = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (!selectedItem) return;
+      const currentIndex = workItems.findIndex((item) => item === selectedItem);
+      const prevIndex = (currentIndex - 1 + workItems.length) % workItems.length;
+      openModalItem(workItems[prevIndex]);
+    };
+
+    const handleNext = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (!selectedItem) return;
+      const currentIndex = workItems.findIndex((item) => item === selectedItem);
+      const nextIndex = (currentIndex + 1) % workItems.length;
+      openModalItem(workItems[nextIndex]);
+    };
+
+    const handleModalAction = () => {
+      if (!selectedItem) return;
+      if (selectedItem.websiteUrl) {
+        window.open(selectedItem.websiteUrl, "_blank", "noopener,noreferrer");
+        return;
+      }
+      if (selectedItem.link) {
+        router.push(getPortfolioHref(selectedItem.link));
       }
     };
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [selectedItem]);
-
-  // Animate modal
-  useEffect(() => {
-    if (selectedItem && modalRef.current && modalContentRef.current) {
-      gsap.fromTo(modalRef.current, 
-        { opacity: 0 },
-        { opacity: 1, duration: 0.3 }
-      );
-      gsap.fromTo(modalContentRef.current,
-        { scale: 0.8, opacity: 0, y: 50 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }
-      );
-    }
-  }, [selectedItem]);
+  */
 
   // NEW DESIGN - Horizontal Scrolling
   if (useNewDesign) {
@@ -209,7 +367,7 @@ export default function OurWork({
             {workItems.map((item, index) => (
               <div
                 key={index}
-                onClick={() => setSelectedItem(item)}
+                onClick={() => handleCardSelect(item)}
                 className="w-full bg-black border border-[#C1C1C1] overflow-hidden flex flex-col cursor-pointer"
               >
                 {/* Category Tags */}
@@ -247,7 +405,7 @@ export default function OurWork({
                     alt={item.title}
                     fill
                     className="object-cover"
-                    unoptimized
+                    unoptimized={typeof item.image === "string"}
                   />
                 </div>
               </div>
@@ -258,7 +416,7 @@ export default function OurWork({
           {showCTA && (
             <div className="mt-8 flex justify-center">
               <CallToActionButton variant={ctaVariant}>
-                CALL TO ACTION
+                Let&apos;s Talk
               </CallToActionButton>
             </div>
           )}
@@ -292,7 +450,7 @@ export default function OurWork({
               </h2>
               {showCTA && (
                 <CallToActionButton variant="shiny">
-                  CALL TO ACTION
+                  Let&apos;s Talk
                 </CallToActionButton>
               )}
             </div>
@@ -302,7 +460,9 @@ export default function OurWork({
               {workItems.map((item, index) => (
                 <div
                   key={index}
-                  onClick={() => setSelectedItem(item)}
+                  data-work-card
+                  data-index={index}
+                  data-link={item.link ? getPortfolioHref(item.link) : slugifyTitleToHref(item.title)}
                   className="flex-shrink-0 w-[380px] lg:w-[480px] xl:w-[604px] h-auto bg-black border border-[#C1C1C1] overflow-hidden flex flex-col our-work-card our-work-responsive-card cursor-pointer"
                 >
                   {/* Category Tags - Top */}
@@ -340,7 +500,7 @@ export default function OurWork({
                       alt={item.title}
                       fill
                       className="object-cover"
-                      unoptimized
+                      unoptimized={typeof item.image === "string"}
                     />
                   </div>
                 </div>
@@ -349,68 +509,102 @@ export default function OurWork({
           </div>
         </div>
 
-        {/* Modal/Popup */}
-        {selectedItem && (
-          <div 
-            ref={modalRef}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-            onClick={() => setSelectedItem(null)}
-          >
-            <div 
-              ref={modalContentRef}
-              className="relative bg-zinc-900 rounded-lg max-w-4xl w-full mx-4 p-8 md:p-12 border border-[#BFBFBF] max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close Button */}
-              <button
-                onClick={() => setSelectedItem(null)}
-                className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors text-2xl font-bold z-10"
-              >
-                ×
-              </button>
+        {/*
+          Modal/Popup (disabled for now; keeping code for later reuse)
 
-              {/* Modal Content */}
-              <div className="space-y-6">
-                {/* Image */}
-                <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
-                  <Image
-                    src={selectedItem.image}
-                    alt={selectedItem.title}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                </div>
-                
-                <div>
-                  {/* Category */}
-                  {selectedItem.category && (
-                    <div className="mb-4">
-                      {selectedItem.category.split('\n').map((cat, idx) => (
-                        <span
-                          key={idx}
-                          className="text-white text-sm md:text-base uppercase tracking-[0.1em] font-[400] block"
-                        >
-                          {cat}
-                        </span>
-                      ))}
+          {selectedItem && (
+            <div
+              ref={modalRef}
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md p-4"
+              onClick={() => setSelectedItem(null)}
+            >
+              <div
+                ref={modalContentRef}
+                className="relative w-full h-full flex flex-col items-center justify-center"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => setSelectedItem(null)}
+                  className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-[110] bg-white/10 hover:bg-white/20 w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/10"
+                >
+                  <span className="text-3xl font-light leading-none pb-1">×</span>
+                </button>
+
+                <button
+                  onClick={handlePrev}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-[110] bg-white/10 hover:bg-white/20 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center backdrop-blur-sm group border border-white/10"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="group-hover:-translate-x-0.5 transition-transform"
+                  >
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+
+                <button
+                  onClick={handleNext}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-[110] bg-white/10 hover:bg-white/20 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center backdrop-blur-sm group border border-white/10"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="group-hover:translate-x-0.5 transition-transform"
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </button>
+
+                <div className="relative w-full h-full max-w-[90vw] max-h-[85vh] flex items-center justify-center">
+                  {isImageLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center z-10">
+                      <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
                     </div>
                   )}
+                  <Image
+                    src={selectedItem.popupImage || selectedItem.image}
+                    alt={selectedItem.title}
+                    fill
+                    className={`object-contain drop-shadow-2xl transition-opacity duration-300 ${
+                      isImageLoading ? "opacity-0" : "opacity-100"
+                    }`}
+                    unoptimized={typeof (selectedItem.popupImage || selectedItem.image) === "string"}
+                    onLoad={() => setIsImageLoading(false)}
+                  />
+                </div>
 
-                  {/* Title */}
-                  <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                    {selectedItem.title}
-                  </h3>
+                <div className="absolute bottom-8 left-0 right-0 flex justify-center px-4">
+                  <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-8 py-4 flex flex-col md:flex-row items-center gap-4 md:gap-8 max-w-3xl">
+                    <div className="flex flex-col md:items-start items-center text-center md:text-left">
+                      <h3 className="text-xl md:text-2xl font-bold text-white">{selectedItem.title}</h3>
+                    </div>
 
-                  {/* Description */}
-                  <p className="text-lg md:text-xl text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]">
-                    {selectedItem.description}
-                  </p>
+                    <div className="flex-shrink-0">
+                      {(selectedItem.websiteUrl || selectedItem.link) && (
+                        <CallToActionButton variant="shiny" onClick={handleModalAction}>
+                          {selectedItem.websiteUrl ? "Visit Website" : "View Project"}
+                        </CallToActionButton>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        */}
       </section>
     );
   }

@@ -19,17 +19,31 @@ export default function BackgroundImageSection({
   overlay = false,
   overlayClassName = "",
 }: BackgroundImageSectionProps) {
+  const isRemoteUrl = typeof backgroundImage === "string";
+
   return (
     <section className={`relative bg-black overflow-hidden isolate ${className} mx-auto my-20`}>
       {/* Background Image */}
       <div className={`absolute inset-0 z-0 w-full h-full max-w-[1920px] pointer-events-none`}>
-        <Image
-          src={backgroundImage}
-          alt={alt}
-          className={`${imageClassName}`}
-          priority
-          unoptimized
-        />
+        {isRemoteUrl ? (
+          <Image
+            src={backgroundImage}
+            alt={alt}
+            fill
+            className={imageClassName || "object-cover"}
+            priority
+            unoptimized
+            sizes="100vw"
+          />
+        ) : (
+          <Image
+            src={backgroundImage}
+            alt={alt}
+            className={`${imageClassName}`}
+            priority
+            unoptimized
+          />
+        )}
       </div>
 
       {/* Optional Overlay */}

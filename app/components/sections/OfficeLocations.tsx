@@ -17,32 +17,33 @@ interface OfficeLocation {
 
 interface OfficeLocationsProps {
   className?: string;
+  offices?: OfficeLocation[];
 }
 
-export default function OfficeLocations({ className = "" }: OfficeLocationsProps) {
+const DEFAULT_OFFICES: OfficeLocation[] = [
+  {
+    city: "Dubai",
+    address: ["World Trade Center area", "Dubai, UAE"],
+    email: "dubai@cwit.ae",
+    phone: "+971 58 8279426",
+  },
+  {
+    city: "London",
+    address: ["East London", "London, UAE"],
+    email: "lonodon@cwit.ae",
+    phone: "+44 33 333 9426",
+  },
+  {
+    city: "New York",
+    address: ["East London", "London, UAE"],
+    email: "lonodon@cwit.ae",
+    phone: "+44 33 333 9426",
+  },
+];
+
+export default function OfficeLocations({ className = "", offices = DEFAULT_OFFICES }: OfficeLocationsProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  const offices: OfficeLocation[] = [
-    {
-      city: "Dubai",
-      address: ["World Trade Center area", "Dubai, UAE"],
-      email: "dubai@cwit.ae",
-      phone: "+971 58 8279426",
-    },
-    {
-      city: "London",
-      address: ["East London", "London, UAE"],
-      email: "lonodon@cwit.ae",
-      phone: "+44 33 333 9426",
-    },
-    {
-      city: "New York",
-      address: ["East London", "London, UAE"],
-      email: "lonodon@cwit.ae",
-      phone: "+44 33 333 9426",
-    },
-  ];
 
   useEffect(() => {
     if (!sectionRef.current) return;

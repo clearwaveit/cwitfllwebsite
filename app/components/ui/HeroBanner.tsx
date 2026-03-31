@@ -39,6 +39,10 @@ interface HeroBannerProps {
   backgroundImage?: StaticImageData | string;
   backgroundImageAlt?: string;
   backgroundImageClassName?: string;
+  /** When no backgroundImage, use this class for background (e.g. rgba) */
+  fallbackBackgroundClassName?: string;
+  /** When no backgroundImage, use this style (e.g. backgroundColor: 'rgba(0,0,0,0.85)') - works even when Tailwind doesn't generate dynamic classes */
+  fallbackBackgroundStyle?: React.CSSProperties;
   // Overlay options (optional)
   showOverlay?: boolean; // Enable solid overlay (default: true when backgroundImage exists)
   overlayClassName?: string;
@@ -71,6 +75,8 @@ export default function HeroBanner({
   backgroundImage,
   backgroundImageAlt = "Banner background",
   backgroundImageClassName = "",
+  fallbackBackgroundClassName,
+  fallbackBackgroundStyle,
   showOverlay = true,
   overlayClassName = "bg-black/40",
   gradientOverlay = false,
@@ -78,8 +84,8 @@ export default function HeroBanner({
   stats,
   statsContainerClassName = "",
   className = "",
-  minHeight = "100vh",
-  height,
+  minHeight = "60vh",
+  height = "60vh",
   contentAlign = "left",
   maxWidth = "",
 }: HeroBannerProps) {
@@ -253,14 +259,14 @@ export default function HeroBanner({
   return (
     <section
       ref={sectionRef}
-      className={`relative w-full overflow-hidden ${className}`}
+      className={`relative w-full min-h-[60vh] md:min-h-screen overflow-hidden ${className}`}
       style={{
         minHeight: height ? undefined : minHeight,
         height: height || undefined,
       }}
     >
-      {/* Background Image (optional) */}
-      {backgroundImage && (
+      {/* Background: image from CMS or fallback (e.g. rgba) */}
+      {backgroundImage ? (
         <div className="absolute inset-0 z-0 w-full h-full">
           <Image
             src={backgroundImage}
@@ -279,12 +285,17 @@ export default function HeroBanner({
             <div
               className={`absolute inset-0 ${gradientOverlayClassName}`}
               style={{
-                background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%)"
+                background: "linear-gradient(to bottom, rgba(117, 113, 113, 0.1) 0%, rgba(119, 118, 118, 0.3) 50%, rgba(100, 99, 99, 0.6) 100%)"
               }}
             />
           )}
         </div>
-      )}
+      ) : fallbackBackgroundClassName || fallbackBackgroundStyle ? (
+        <div
+          className={fallbackBackgroundClassName ? `absolute inset-0 z-0 w-full h-full ${fallbackBackgroundClassName}` : "absolute inset-0 z-0 w-full h-full"}
+          style={fallbackBackgroundStyle}
+        />
+      ) : null}
 
       {/* Content Container - Takes full height with flex layout */}
       <div

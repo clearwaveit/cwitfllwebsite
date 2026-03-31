@@ -4,13 +4,14 @@ import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import ourClientsImg from "@/app/assets/imgs/clients_img_brands.png";
 import Image from "next/image";
-import TextSection from "@/app/components/ui/TextSection";
 
-const clients = [
-  { logo: ourClientsImg }
-];
+interface OurClientsProps {
+  logoSrc?: string;
+}
 
-export default function OurClients() {
+export default function OurClients({ logoSrc }: OurClientsProps = {}) {
+  const logoSource = logoSrc?.trim() ? logoSrc : ourClientsImg;
+  const clients = [{ logo: logoSource }];
   const carouselTrackRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<gsap.core.Tween | null>(null);
   const [imagesLoaded, setImagesLoaded] = useState(false);
@@ -93,7 +94,7 @@ export default function OurClients() {
                   width={1464}
                   height={234}
                   className="w-full h-auto object-contain"
-                  unoptimized
+                  unoptimized={typeof client.logo === "string"}
                   onLoad={handleImageLoad}
                 />
               </div>
@@ -110,7 +111,7 @@ export default function OurClients() {
                   width={1464}
                   height={234}
                   className="w-full h-auto object-contain"
-                  unoptimized
+                  unoptimized={typeof client.logo === "string"}
                 />
               </div>
             ))}

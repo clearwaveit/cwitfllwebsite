@@ -2,77 +2,125 @@ import Hero from "@/app/components/sections/Hero";
 import Showcase from "@/app/components/sections/Showcase";
 import Studios from "@/app/components/sections/Studios";
 import GenAI from "@/app/components/sections/GenAI";
-import OurWork, { WorkItem } from "@/app/components/sections/OurWork";
-import ourWorkImg from "@/app/assets/imgs/our_work_img.png";
+import HomeOurWork from "@/app/components/sections/HomeOurWork";
 import OurClients from "@/app/components/sections/OurClients";
 import Blogs from "@/app/components/sections/blogs";
 import Accordion from "@/app/components/sections/Accordion";
 import TextSection from "@/app/components/ui/TextSection";
 import maskGroupImg from "@/app/assets/imgs/Mask group.png";
 import Image from "next/image";
+import { fetchHomePage, getHomePageFields } from "@/app/lib/home-api";
+import {
+  normalizeHero,
+  normalizeShowcase,
+  normalizeIntro,
+  normalizeStudios,
+  normalizeGenai,
+  normalizeOurWork,
+  normalizeOurClients,
+  normalizeBlogs,
+  normalizeAccordion,
+} from "@/app/lib/home-normalize";
+import { fetchLatestBlogPosts, mapPostsToBlogCards } from "@/app/lib/blog-api";
 
-export default function Home() {
-  const defaultWorkItems: WorkItem[] = [
-    {
-      title: "The Oxford Institute",
-      description: "70% increased in digital interaction of potential students looking for information",
-      image: ourWorkImg,
-      category: "EDUCATION\nTECH\nWEBSITE",
-    },
-    {
-      title: "The Oxford Institute",
-      description: "70% increased in digital interaction of potential students looking for information",
-      image: ourWorkImg,
-      category: "EDUCATION\nTECH\nWEBSITE",
-    },
-    {
-      title: "The Oxford Institute",
-      description: "70% increased in digital interaction of potential students looking for information",
-      image: ourWorkImg,
-      category: "EDUCATION\nTECH\nWEBSITE",
-    },
-    {
-      title: "The Oxford Institute",
-      description: "70% increased in digital interaction of potential students looking for information",
-      image: ourWorkImg,
-      category: "EDUCATION\nTECH\nWEBSITE",
-    },
-  ];
-  // const ministryPara = (<><p className="text-[12px] md:text-[30px]">MINISTRY OF PUBLIC SECURITY <br /> MINISTRY OF FOREIGN AFFAIRS <br /> MINISTRY OF CULTURE SPORTS AND TOURISM <br /> VINGROUP BIM GROUP PETROLIMEX VIETINBANK <br /> VIETCOMBANK TECHCOMBANK VPBANK MB TPBANK SHB <br /> HDBANK MSB PJICO VIETTEL VNG VTC FPT VINAPHONE <br /> SAMSUNG LG VIETNAM AIRLINES BAMBOO AIRWAYS SONY <br /> OPPO HYUNDAI SABECO VINACONEX AND MORE...</p></>);
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+function hasSelectedBlogs(fields: ReturnType<typeof getHomePageFields> | null): boolean {
+  const fromHomePage = (fields?.homeBlogsSelectedPosts as { nodes?: unknown[] } | null | undefined)?.nodes;
+  if (Array.isArray(fromHomePage) && fromHomePage.filter(Boolean).length > 0) return true;
+  const overrides = fields?.homeBlogsSectionOverrides;
+  const selectedNodes = (overrides?.homeBlogsSelectedPosts as { nodes?: unknown[] } | null | undefined)?.nodes;
+  if (Array.isArray(selectedNodes) && selectedNodes.filter(Boolean).length > 0) return true;
+  const cardOverrides = overrides?.perBlogCardOverrides;
+  return Array.isArray(cardOverrides) && cardOverrides.filter(Boolean).length > 0;
+}
+
+export default async function Home() {
+  let fields: ReturnType<typeof getHomePageFields> = null;
+  try {
+    const res = await fetchHomePage();
+    fields = res.data ? getHomePageFields(res.data) : null;
+  } catch {
+    fields = null;
+  }
+
+  let fallbackLatestPosts: { category: string; title: string; description: string; image?: string; link?: string }[] | undefined;
+  if (!hasSelectedBlogs(fields)) {
+    try {
+      const latestRes = await fetchLatestBlogPosts(6);
+      const nodes = latestRes.data?.posts?.nodes ?? [];
+      fallbackLatestPosts = mapPostsToBlogCards(nodes).slice(0, 6);
+    } catch {
+      fallbackLatestPosts = undefined;
+    }
+  }
+
+  let heroProps: ReturnType<typeof normalizeHero>;
+  let showcaseProps: ReturnType<typeof normalizeShowcase>;
+  let introProps: ReturnType<typeof normalizeIntro>;
+  let studiosProps: ReturnType<typeof normalizeStudios>;
+  let genaiProps: ReturnType<typeof normalizeGenai>;
+  let ourWorkProps: ReturnType<typeof normalizeOurWork>;
+  let ourClientsProps: ReturnType<typeof normalizeOurClients>;
+  let blogsProps: ReturnType<typeof normalizeBlogs>;
+  let accordionProps: ReturnType<typeof normalizeAccordion>;
+
+  try {
+    const f = fields ?? null;
+    heroProps = normalizeHero(f);
+    showcaseProps = normalizeShowcase(f);
+    introProps = normalizeIntro(f);
+    studiosProps = normalizeStudios(f);
+    genaiProps = normalizeGenai(f);
+    ourWorkProps = normalizeOurWork(f);
+    ourClientsProps = normalizeOurClients(f);
+    blogsProps = normalizeBlogs(f, { fallbackLatestPosts });
+    accordionProps = normalizeAccordion(f);
+  } catch {
+    const f = null;
+    heroProps = normalizeHero(f);
+    showcaseProps = normalizeShowcase(f);
+    introProps = normalizeIntro(f);
+    studiosProps = normalizeStudios(f);
+    genaiProps = normalizeGenai(f);
+    ourWorkProps = normalizeOurWork(f);
+    ourClientsProps = normalizeOurClients(f);
+    blogsProps = normalizeBlogs(f, { fallbackLatestPosts });
+    accordionProps = normalizeAccordion(f);
+  }
+
+  const introBgSrc = introProps.backgroundImageSrc;
+
   return (
     <main className="min-h-screen">
-      <Hero />
-      <Showcase />
+      <Hero {...heroProps} />
+      <Showcase {...showcaseProps} />
       <div className="relative">
         <div
           className="absolute right-0 z-50 pointer-events-none"
-          style={{ top: "-300px" }}
+          style={{ top: "-200px" }}
         >
           <Image
-            src={maskGroupImg}
+            src={introBgSrc || maskGroupImg}
             alt="Background"
             className="w-auto h-auto"
-            unoptimized
+            unoptimized={!!introBgSrc}
+            width={800}
+            height={600}
           />
         </div>
         <TextSection
-          paragraphs={[
-            "Clearwave is a website design company rooted in Dubai, working across teams in the UK and the US. We design and develop websites, web applications, and mobile applications, alongside e-commerce platforms, UI/UX design, branding, and SEO. Our work focuses on building digital platforms that are scalable, practical, and built to perform over time."]}
-          className="relative z-10 container mx-auto md:my-50 my-20 md:px-[50px] px-4 global-section-padding"
+          paragraphs={introProps.paragraphs}
+          className="relative z-10 container mx-auto md:my-30 my-20 md:px-0 px-4 global-section-padding"
         />
       </div>
-      <Studios />
-      <GenAI />
-      <OurWork
-        title="OUR WORK"
-        workItems={defaultWorkItems}
-        ctaVariant="outline"
-        className="bg-black"
-        showCTA={true}
-      />
-      <OurClients />
-      <Blogs />
-      <Accordion />
+      <Studios {...studiosProps} />
+      <GenAI {...genaiProps} />
+      <HomeOurWork {...ourWorkProps} />
+      <OurClients {...ourClientsProps} />
+      <Blogs {...blogsProps} />
+      <Accordion {...accordionProps} />
     </main>
   );
 }

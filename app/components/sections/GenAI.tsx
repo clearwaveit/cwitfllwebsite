@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CallToActionButton from "@/app/components/ui/CallToActionButton";
@@ -9,11 +10,58 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function GenAI() {
+const DEFAULT_GENAI_VIDEO = "/videos/animated_gen_ai_clip_2.mp4";
+const DEFAULT_GENAI_HEADING = "Redefining Businesses\nwith AI-as-a-Service";
+const DEFAULT_GENAI_PARAGRAPH = "Clearwave integrates AI into digital platforms to enable automation, intelligent workflows, and smarter digital experiences. From AI chat systems to custom integrations, our focus is on applying AI where it creates real value.";
+
+function splitGenAiHeading(value: string): string[] {
+  const explicitLines = value
+    .replace(/<br\s*\/?>/gi, "\n")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (explicitLines.length > 1) return explicitLines;
+
+  const words = value.trim().replace(/\s+/g, " ").split(" ").filter(Boolean);
+  if (words.length < 3) return explicitLines;
+
+  return [words.slice(0, 2).join(" "), words.slice(2).join(" ")];
+}
+
+interface GenAIProps {
+  heading?: string;
+  paragraph?: string;
+  videoSrc?: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
+export default function GenAI({ heading, paragraph, videoSrc, ctaText, ctaLink }: GenAIProps = {}) {
+  const router = useRouter();
+  const src = videoSrc?.trim() || DEFAULT_GENAI_VIDEO;
+  const headingText = heading?.trim() || DEFAULT_GENAI_HEADING;
+  const paragraphText = paragraph?.trim() || DEFAULT_GENAI_PARAGRAPH;
+  const headingLines = splitGenAiHeading(headingText);
+  const paragraphLines = paragraphText
+    .replace(/<br\s*\/?>/gi, "\n")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
+
+  const handleCtaClick = () => {
+    const link = ctaLink?.trim();
+    if (!link) return;
+    if (/^https?:\/\//i.test(link)) {
+      window.location.assign(link);
+      return;
+    }
+    router.push(link);
+  };
 
   // Video playback synced with scroll progress
   useEffect(() => {
@@ -251,20 +299,20 @@ export default function GenAI() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative bg-black pt-0 pb-24 overflow-hidden">
-      <div className="relative z-10 container-fluid mx-auto">
-        <div className="space-y-0 h-full">
+    <section ref={sectionRef} className="relative bg-black pt-0 pb-12 md:pb-24 overflow-hidden gen-ai-section w-full">
+      <div className="relative z-10 container-fluid mx-auto gen-ai-inner w-full max-w-full">
+        <div className="space-y-0 h-full w-full">
           {/* Main Content Div */}
-          <div className="relative flex flex-col items-center h-full min-h-[300px] sm:min-h-[400px] md:min-h-[600px] lg:min-h-[700px] xl:min-h-[800px] justify-center overflow-hidden">
+          <div className="relative flex flex-col items-center h-full min-h-[100vh] min-h-[100dvh] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px] xl:min-h-[700px] justify-center overflow-hidden gen-ai-container w-full">
             {/* Background Video */}
             <video
               ref={videoRef}
-              src="/videos/animated_gen_ai_clip_2.mp4"
+              src={src}
               muted
               playsInline
               loop={false}
               preload="auto"
-              className="absolute inset-0 object-cover z-0 w-full h-full video-responsive-gen-ai"
+              className="absolute inset-0 z-0 video-responsive-gen-ai"
               style={{
                 width: '100%',
                 height: '100%',
@@ -284,19 +332,27 @@ export default function GenAI() {
             />
 
             {/* Content */}
-            <div className="relative z-20 w-full flex flex-col items-center text-center gap-8 sm:gap-10 md:gap-12 lg:gap-14 pt-100 sm:pt-100 md:pt-100 lg:pt-140 xl:pt-180 2xl:pt-200">
+            <div className="relative z-20 w-full flex flex-col items-center text-center gap-4 sm:gap-4 md:gap-4 lg:gap-6 xl:gap-8 pt-140 sm:pt-170 md:pt-170 lg:pt-170 xl:pt-170 2xl:pt-200 gen-ai-content">
               <h2
                 ref={headingRef}
-                className="text-[20px] sm:text-[28px] md:text-[32px] lg:text-[45px] xl:text-[55px] 2xl:text-[60px] font-[400] text-white leading-[1.3] sm:leading-[1.25] md:leading-[1.25] lg:leading-[1.22] xl:leading-[1.18] 2xl:leading-[1.16]"
+                className="text-[18px] sm:text-[22px] md:text-[24px] lg:text-[28px] xl:text-[38px] 2xl:text-[42px] font-[400] text-white leading-tight sm:leading-[30px] md:leading-[34px] lg:leading-[46px] xl:leading-[56px] 2xl:leading-[60px]"
               >
-                Redefining Businesses<br />
-                with AI-as-a-Service
+                {headingLines.map((line, i) => (
+                  <span key={i}>{line}{i < headingLines.length - 1 && <br />}</span>
+                ))}
               </h2>
-              {/* <p className="text-[14px] md:text-[20px] text-white mb-8 max-w-2xl md:px-0 px-12 leading-relaxed">
-                Every transformation begins with guidance. Our AI-as-a-Service offering leads businesses into the new era of intelligence — where automation, data, and decision-making converge into seamless, future-ready systems.
-              </p> */}
+              <p className="text-[14px] md:text-[20px] text-white max-w-3xl md:px-0 px-12 leading-relaxed">
+                {paragraphLines.map((line, i) => (
+                  <span key={i}>{line}{i < paragraphLines.length - 1 && <br />}</span>
+                ))}
+              </p>
               <div ref={buttonRef}>
-                <CallToActionButton variant="shiny" />
+                <CallToActionButton
+                  variant="shiny"
+                  onClick={ctaLink?.trim() ? handleCtaClick : undefined}
+                >
+                  {ctaText?.trim() || "Let's Talk"}
+                </CallToActionButton>
               </div>
             </div>
           </div>

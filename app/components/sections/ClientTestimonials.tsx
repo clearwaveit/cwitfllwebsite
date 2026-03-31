@@ -2,26 +2,36 @@
 
 import { useState, useEffect } from 'react';
 
-interface Testimonial {
+export interface Testimonial {
   text: string;
   rating: number; // Number of stars (1-5)
 }
 
-export default function ClientTestimonials() {
-  const testimonials: Testimonial[] = [
-    {
-      text: "The website delivered by Digital Gravity worked wonders for our business. Thanks to them, we were able to showcase our portfolio to a wider audience. We will be looking forward to another collaboration in the future. Highly recommended.",
-      rating: 4,
-    },
-    {
-      text: "Outstanding work! The team at Digital Gravity transformed our online presence completely. Their attention to detail and creative approach exceeded our expectations. The website is not just beautiful but also highly functional.",
-      rating: 5,
-    },
-    {
-      text: "Professional, efficient, and creative. Digital Gravity delivered exactly what we needed and more. The website has significantly improved our customer engagement and business growth. Truly impressed with their expertise.",
-      rating: 5,
-    },
-  ];
+const DEFAULT_TITLE = "What Our Client Say";
+const DEFAULT_TESTIMONIALS: Testimonial[] = [
+  {
+    text: "The website delivered by Digital Gravity worked wonders for our business. Thanks to them, we were able to showcase our portfolio to a wider audience. We will be looking forward to another collaboration in the future. Highly recommended.",
+    rating: 4,
+  },
+  {
+    text: "Outstanding work! The team at Digital Gravity transformed our online presence completely. Their attention to detail and creative approach exceeded our expectations. The website is not just beautiful but also highly functional.",
+    rating: 5,
+  },
+  {
+    text: "Professional, efficient, and creative. Digital Gravity delivered exactly what we needed and more. The website has significantly improved our customer engagement and business growth. Truly impressed with their expertise.",
+    rating: 5,
+  },
+];
+
+interface ClientTestimonialsProps {
+  title?: string;
+  testimonials?: Testimonial[];
+}
+
+export default function ClientTestimonials({
+  title = DEFAULT_TITLE,
+  testimonials = DEFAULT_TESTIMONIALS,
+}: ClientTestimonialsProps) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -66,7 +76,7 @@ export default function ClientTestimonials() {
         <div className="flex items-center justify-center gap-3 mb-8 md:mb-12">
           <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#9333ea]"></div>
           <h2 className="text-[14px] sm:text-[16px] md:text-[20px] lg:text-[24px] xl:text-[28px] 2xl:text-[32px] min-[1440px]:text-[36px] min-[1920px]:text-[40px] font-[350] text-white text-center">
-            What Our Client Say
+            {title}
           </h2>
         </div>
 

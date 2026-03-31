@@ -72,7 +72,7 @@ export default function PageBanner({
         <div className={`${maxWidth} mx-auto page-banner-content-container`}>
           <h1
             ref={headingRef}
-            className="text-[40px] md:text-[60px] lg:text-[72px] xl:text-[84px] 2xl:text-[90px] min-[1440px]:text-[93px] min-[1920px]:text-[96px] font-[700] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] page-banner-title"
+            className="text-[36px] md:text-[60px] lg:text-[72px] xl:text-[84px] 2xl:text-[96px] min-[1440px]:text-[93px] min-[1920px]:text-[96px] font-[700] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] page-banner-title"
           >
             {title}
           </h1>

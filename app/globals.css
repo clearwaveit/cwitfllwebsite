@@ -250,25 +250,129 @@ body {
   padding-top: 30px !important;
 }
 
-/* GenAI Video Responsive Styles - iOS/Mobile Fix */
+/* Studios section baseline responsiveness */
+.video-responsive-studios {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover !important;
+}
+
+@media (max-width: 767px) {
+  .video-responsive-studios {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .content-studio-0,
+  .content-studio-1,
+  .content-studio-2 {
+    max-width: 100% !important;
+  }
+}
+
+/* GenAI Video Responsive - scales with viewport width & height */
 .video-responsive-gen-ai {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
   width: 100% !important;
   height: 100% !important;
+  min-width: 100% !important;
+  min-height: 0 !important;
   object-fit: cover !important;
+  object-position: center !important;
 }
 
-/* Ensure video container has proper height on mobile */
-@media (max-width: 767px) {
+/* Mobile only: GenAI section fills viewport width and height */
+@media (max-width: 639px) {
+  .gen-ai-section {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .gen-ai-section .gen-ai-inner {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .gen-ai-section .gen-ai-container {
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
+  /* Constrain video to viewport on mobile - no overflow */
   .video-responsive-gen-ai {
-    min-height: 300px !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    min-width: 0 !important;
+    min-height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .video-responsive-gen-ai {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 45vh !important;
+  }
+}
+
+@media (max-height: 899px) {
+  .video-responsive-gen-ai {
+    min-height: 0 !important;
+    max-height: 100vh !important;
+  }
+}
+
+/* MacBook Air 13 and laptop range */
+@media (min-width: 1024px) and (max-width: 1600px) {
+  .video-responsive-gen-ai {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100vh !important;
+  }
+}
+
+@media (min-width: 1601px) {
+  .video-responsive-gen-ai {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100vh !important;
+  }
+}
+
+/* Short viewport: let section grow with content */
+@media (max-height: 800px) {
+  .gen-ai-container {
+    max-height: none !important;
   }
 }
 
@@ -317,7 +421,7 @@ body {
 
   .blogs-section {
     width: 370.34px !important;
-    height: 380px !important;
+    /* height: 380px !important; */
   }
 
   .blogs-section-image {
@@ -372,7 +476,7 @@ body {
 @media (min-width: 1280px) and (max-width: 1439px) {
   .blogs-section {
     width: 350.34px !important;
-    height: 380px !important;
+    /* height: 380px !important; */
   }
 
   .blogs-section-image {
@@ -476,7 +580,7 @@ body {
 @media (min-width: 1440px) and (max-width: 1600px) {
   .blogs-section {
     width: 370.34px !important;
-    height: 380px !important;
+    /* height: 380px !important; */
   }
 
   .blogs-section-image {
@@ -499,27 +603,40 @@ body {
   }
 
   .video-studio-0 {
-    left: 20px !important;
+    /* left: 20px !important;
     top: -300px !important;
     width: 500px !important;
     height: 300px !important;
+    min-height: 300px !important; */
+    width: 460px !important;
+    height: 300px !important;
     min-height: 300px !important;
+    top: -134px !important;
+    left: -120px !important;
   }
 
   .video-studio-1 {
-    left: 680px !important;
-    /* top: -120px !important; */
+    /* left: 680px !important;
     top: -240px !important;
     width: 350px !important;
     height: 300px !important;
+    min-height: 300px !important; */
+    width: 370px !important;
+    height: 350px !important;
     min-height: 300px !important;
+    top: -120px !important;
+    left: 546px !important;
   }
 
   .video-studio-2 {
-    right: 640px !important;
+    /* right: 640px !important;
+    width: 320px !important;
+    height: 350px !important;
+    min-height: 320px !important; */
     width: 320px !important;
     height: 350px !important;
     min-height: 320px !important;
+    right: -50px !important;
   }
 
   .education-section {
@@ -645,48 +762,75 @@ body {
   }
 
   .video-studio-0 {
-    top: -250px !important;
+    /* top: -250px !important;
     left: 0 !important;
     width: 400px !important;
     height: 250px !important;
+    min-height: 250px !important; */
+    width: 400px !important;
+    height: 250px !important;
     min-height: 250px !important;
+    top: -340px !important;
+    left: -70px !important;
   }
 
   .video-studio-1 {
-    top: -100px !important;
+    /* top: -100px !important;
     left: 250px !important;
     width: 250px !important;
     height: 250px !important;
-    min-height: 250px !important;
-  }
-
-  .video-studio-2 {
-    top: -80px !important;
-    right: 320px !important;
+    min-height: 250px !important; */
     width: 250px !important;
     height: 250px !important;
     min-height: 250px !important;
+    top: -270px !important;
+    left: 246px !important;
+  }
+
+  .video-studio-2 {
+    /* top: -80px !important;
+    right: 320px !important;
+    width: 250px !important;
+    height: 250px !important;
+    min-height: 250px !important; */
+    width: 250px !important;
+    height: 250px !important;
+    min-height: 250px !important;
+    top: -200px !important;
+    right: -230px !important;
   }
 
   .content-studio-0 {
-    position: absolute !important;
+    /* position: absolute !important;
     top: -70px !important;
     padding-left: 90px !important;
+    padding-right: 240px !important; */
+    padding-left: 20px !important;
     padding-right: 240px !important;
+    position: absolute !important;
+    top: -200px !important;
   }
 
   .content-studio-1 {
-    position: absolute !important;
+    /* position: absolute !important;
     top: -70px !important;
     padding-left: 90px !important;
-    padding-right: 240px !important;
+    padding-right: 240px !important; */
+    padding-left: 100px !important;
+    padding-right: 100px !important;
+    position: absolute !important;
+    top: -200px !important;
   }
 
   .content-studio-2 {
-    position: absolute !important;
+    /* position: absolute !important;
     top: -70px !important;
     padding-left: 250px !important;
-    padding-right: 90px !important;
+    padding-right: 90px !important; */
+    padding-left: 310px !important;
+    padding-right: 50px !important;
+    position: absolute !important;
+    top: -200px !important;
   }
 
   .content-studio-0 p {
@@ -703,7 +847,7 @@ body {
 }
 
 /* Tablet adjustments (375px - 575px) */
-@media (min-width: 375px) and (max-width: 575px) {
+@media (min-width: 360px) and (max-width: 575px) {
   .contact-form-container {
     width: 100% !important;
     max-width: 100% !important;
@@ -747,7 +891,7 @@ body {
 
   .video-studio-2 {
     top: -200px !important;
-    right: -200px !important;
+    left: 90px !important;
     width: 250px !important;
     height: 200px !important;
     min-height: 200px !important;
@@ -776,7 +920,7 @@ body {
 
   .blogs-section {
     width: 370.34px !important;
-    height: 380px !important;
+    /* height: 380px !important; */
   }
 
   .blogs-section-image {
@@ -799,27 +943,46 @@ body {
   }
 
   .video-studio-0 {
-    top: -300px !important;
+    /* top: -300px !important;
     left: 0 !important;
     width: 500px !important;
     height: 300px !important;
+    min-height: 300px !important; */
+    width: 460px !important;
+    height: 300px !important;
     min-height: 300px !important;
+    top: -134px !important;
+    left: -120px !important;
   }
 
   .video-studio-1 {
-    top: -240px !important;
+    /* top: -240px !important;
     left: 680px !important;
     width: 350px !important;
     height: 300px !important;
-    min-height: 300px !important;
+    min-height: 300px !important; */
+    width: 370px !important;
+    height: 300px !important;
+    min-height: 324px !important;
+    top: -60px !important;
+    left: 440px !important;
   }
 
   .video-studio-2 {
-    top: -150px !important;
+    /* top: -150px !important;
     right: 400px !important;
     width: 320px !important;
     height: 320px !important;
+    min-height: 320px !important; */
+    width: 320px !important;
+    height: 350px !important;
     min-height: 320px !important;
+    right: 0 !important;
+  }
+
+  .content-studio-1 {
+    padding-top: 30px !important;
+    padding-left: 100px !important;
   }
 
   .education-section {
@@ -844,7 +1007,7 @@ body {
   }
 
   .global-section-padding {
-    padding: 0 160px !important;
+    padding: 0 100px !important;
   }
 
   .digital-experience-banner-video {
@@ -1223,7 +1386,7 @@ body {
 
   .blogs-card {
     width: 100% !important;
-    max-width: 300px !important;
+    /* max-width: 300px !important; */
   }
 
   .blogs-card-content {
@@ -1415,7 +1578,7 @@ body {
 
   .blogs-card {
     width: 100% !important;
-    max-width: 380px !important;
+    /* max-width: 380px !important; */
   }
 
   .blogs-card-content {
@@ -1596,17 +1759,17 @@ body {
     height: 800px !important;
   }
 
-  .blogs-cards-grid {
+  /* .blogs-cards-grid {
     gap: 32px !important;
-  }
+  } */
 
-  .blogs-card {
+  /* .blogs-card {
     width: 453.34px !important;
-  }
+  } */
 
-  .blogs-card-content {
+  /* .blogs-card-content {
     width: 453.34px !important;
-  }
+  } */
 
   .our-work-card {
     width: 604px !important;
@@ -1663,13 +1826,94 @@ body {
 }
 
 /* 1440px screen - medium sizes */
-@media (min-width: 1440px) and (max-width: 1919px) {
+@media (min-width: 1440px) and (max-width: 1919px) and (min-height: 585px) and (max-height: 830px) {
   .ui-ux-heading {
     font-size: 80px !important;
   }
 
   .ui-ux-item {
     font-size: 20px !important;
+  }
+
+  .stay-section {
+    top: -280px !important;
+    padding: 0 160px !important;
+  }
+}
+
+/* 1280px screen - smaller sizes */
+@media (min-width: 1280px) and (max-width: 1439px) and (min-height: 585px) and (max-height: 830px) {
+  .stay-section {
+    top: -240px !important;
+    padding: 0 100px !important;
+  }
+
+  .stay-section-text {
+    top: 500px !important;
+    padding: 0 100px !important;
+  }
+}
+
+/* 1024px screen - medium sizes */
+@media (min-width: 1024px) and (max-width: 1279px) and (min-height: 585px) and (max-height: 830px) {
+  .stay-section {
+    top: -280px !important;
+    padding: 0 100px !important;
+  }
+
+  .stay-section-text {
+    top: 400px !important;
+    padding: 0 100px !important;
+  }
+}
+
+/* 768px screen - smaller sizes */
+@media (min-width: 768px) and (max-width: 1023px) and (min-height: 585px) and (max-height: 830px) {
+  .stay-section {
+    top: -340px !important;
+    padding: 0 100px !important;
+  }
+
+  .stay-section-text {
+    top: 200px !important;
+    padding: 0 100px !important;
+  }
+}
+
+/* Education Section Responsive Styles */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .education-section {
+    padding: 100px !important;
+  }
+
+  .education-section h2 {
+    font-size: 36px !important;
+  }
+
+  .education-section p {
+    font-size: 16px !important;
+  }
+
+  .education-section ul li {
+    font-size: 16px !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .education-section {
+    padding: 100px !important;
+  }
+
+  .education-section h2 {
+    font-size: 24px !important;
+  }
+
+  .education-section p {
+    font-size: 14px !important;
+  }
+
+  .education-section ul li {
+    font-size: 14px !important;
   }
 }
 
@@ -2180,53 +2424,77 @@ body {
 
 @media (min-width: 1720px) and (max-width: 1919px) {
   .video-studio-0 {
-    left: 0 !important;
+    /* left: 0 !important;
     top: -300px !important;
     width: 450px !important;
     height: 300px !important;
+    min-height: 300px !important; */
+    height: 300px !important;
     min-height: 300px !important;
+    top: -150px !important;
+    left: 0 !important;
   }
 
   .video-studio-1 {
-    left: 546px !important;
-    /* top: -120px !important; */
+    /* left: 546px !important;
     top: -320px !important;
     width: 350px !important;
     height: 450px !important;
-    min-height: 350px !important;
+    min-height: 350px !important; */
+    height: 450px !important;
+    min-height: 300px !important;
+    top: -120px !important;
+    left: 546px !important;
   }
 
   .video-studio-2 {
-    right: 440px !important;
+    /* right: 440px !important;
+    width: 320px !important;
+    height: 350px !important;
+    min-height: 320px !important; */
     width: 320px !important;
     height: 350px !important;
     min-height: 320px !important;
+    right: 0 !important;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
   .video-studio-0 {
-    left: 0 !important;
+    /* left: 0 !important;
     top: -340px !important;
     width: 450px !important;
     height: 300px !important;
+    min-height: 300px !important; */
+    width: 450px !important;
+    height: 300px !important;
     min-height: 300px !important;
+    top: -150px !important;
+    left: 0 !important;
   }
 
   .video-studio-1 {
-    left: 346px !important;
-    /* top: -120px !important; */
+    /* left: 346px !important;
     top: -220px !important;
     width: 350px !important;
     height: 300px !important;
+    min-height: 300px !important; */
+    width: 350px !important;
+    height: 300px !important;
     min-height: 300px !important;
+    top: -70px !important;
+    left: 446px !important;
   }
 
   .video-studio-2 {
-    right: 300px !important;
+    /* right: 300px !important;
     width: 320px !important;
     height: 300px !important;
-    min-height: 300px !important;
+    min-height: 300px !important; */
+    width: 320px !important;
+    height: 350px !important;
+    min-height: 320px !important;
+    right: -100px !important;
   }
 
   .content-studio-2 {
@@ -2446,6 +2714,10 @@ body {
     line-height: 50px !important;
   }
 
+  .text-section-padding {
+    padding: 100px;
+  }
+
   .studio-heading-0 {
     font-size: 50px !important;
     line-height: 60px !important;
@@ -2462,27 +2734,40 @@ body {
   }
 
   .video-studio-0 {
-    left: 0 !important;
+    /* left: 0 !important;
     top: -300px !important;
     width: 450px !important;
     height: 300px !important;
+    min-height: 300px !important; */
+    width: 400px !important;
+    height: 300px !important;
     min-height: 300px !important;
+    top: -150px !important;
+    left: 0 !important;
   }
 
   .video-studio-1 {
-    left: 546px !important;
-    /* top: -120px !important; */
+    /* left: 546px !important;
     top: -280px !important;
     width: 350px !important;
     height: 450px !important;
+    min-height: 350px !important; */
+    width: 350px !important;
+    height: 350px !important;
     min-height: 350px !important;
+    top: -120px !important;
+    left: 546px !important;
   }
 
   .video-studio-2 {
-    right: 640px !important;
+    /* right: 640px !important;
     width: 320px !important;
     height: 300px !important;
-    min-height: 300px !important;
+    min-height: 300px !important; */
+    width: 320px !important;
+    height: 350px !important;
+    min-height: 320px !important;
+    right: 0 !important;
   }
 
   .content-studio-0 {
@@ -2518,7 +2803,7 @@ body {
   }
 
   .global-section-padding {
-    padding: 0 154px !important;
+    padding: 0 30px !important;
   }
 
   .accordion-heading {
@@ -2592,6 +2877,43 @@ body {
   .showcase-heading {
     font-size: 48px !important;
     line-height: 60px !important;
+  }
+
+  .video-studio-0 {
+    width: 560px !important;
+    height: 300px !important;
+    min-height: 300px !important;
+    top: -134px !important;
+    left: -86px !important;
+  }
+
+  .video-studio-1 {
+    width: 350px !important;
+    height: 350px !important;
+    min-height: 300px !important;
+    top: -80px !important;
+    left: 446px !important;
+  }
+
+  .video-studio-2 {
+    width: 320px !important;
+    height: 350px !important;
+    min-height: 320px !important;
+    right: 0 !important;
+  }
+
+  .content-studio-0 {
+    padding-top: 30px !important;
+    padding-left: 0 !important;
+  }
+
+  .content-studio-1 {
+    padding-top: 30px !important;
+    padding-left: 120px !important;
+  }
+
+  .content-studio-2 {
+    padding-right: 20px !important;
   }
 
   .studio-heading-0 {

@@ -463,6 +463,7 @@ export default function DigitalExperienceBanner({
           height={2200}
           className="object-contain"
           priority
+          unoptimized
           style={{
             width: '100%',
             height: '100%',
@@ -489,6 +490,7 @@ export default function DigitalExperienceBanner({
           height={2200}
           className="object-cover w-full h-full"
           priority
+          unoptimized
           style={{
             width: '100%',
             height: '100%',

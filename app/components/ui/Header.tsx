@@ -7,30 +7,22 @@ import { useRouter, usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CallToActionButton from "./CallToActionButton";
-import flutterApp1Banner1 from "@/app/assets/imgs/flutter_app_1_banner_1.png";
 import OfficeLocations from "../sections/OfficeLocations";
+import type { HeaderMenuItem, HeaderSettings } from "@/app/lib/site-settings-api";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-interface MenuItem {
-  label: string;
-  href: string;
-  submenu?: { label: string; href: string }[];
-}
-
-export default function Header() {
+export default function Header({ settings }: { settings?: HeaderSettings }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [activeButtonRef, setActiveButtonRef] = useState<React.RefObject<HTMLButtonElement> | null>(null);
-  const [activeButtonType, setActiveButtonType] = useState<'header' | 'center' | null>(null);
+  const [activeButtonType, setActiveButtonType] = useState<"header" | "center" | null>(null);
   const [hoveredServiceIndex, setHoveredServiceIndex] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuContentRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const menuInnerRef = useRef<HTMLDivElement>(null);
   const centerButtonRef = useRef<HTMLButtonElement>(null);
   const centerButtonIconRef = useRef<HTMLDivElement>(null);
@@ -41,6 +33,66 @@ export default function Header() {
   const officeLocationsRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
+  const menuItems: HeaderMenuItem[] = settings?.menuItems?.length
+    ? settings.menuItems
+    : [
+        { label: "Home", href: "/" },
+        {
+          label: "Services",
+          href: "#",
+          submenu: [
+            { label: "Digital experience studio", href: "/digital-experience-studio" },
+            { label: "Application Development Studio", href: "/application-development-studio" },
+            { label: "Growth Branding Studio", href: "/growth-branding-studio" },
+          ],
+        },
+        { label: "About Us", href: "#" },
+        { label: "Our Work", href: "/our-work" },
+        { label: "Blogs", href: "/blogs" },
+        { label: "Contact Us", href: "/contact-us" },
+      ];
+  const logoSrc = settings?.logoSrc?.trim() || "/imgs/cwit_logo.svg";
+  const logoAlt = settings?.logoAlt?.trim() || "CWIT Logo";
+  const headerCtaText = settings?.ctaText?.trim() || "Let's Talk";
+  const headerCtaLink = settings?.ctaLink?.trim() || "/contact-us";
+  const officeLocations = settings?.officeLocations;
+
+  function animateMenuContent() {
+    const renderedMenuItems = menuItemsRef.current.filter(Boolean);
+    if (renderedMenuItems.length > 0) {
+      gsap.set(renderedMenuItems, { opacity: 0, y: 50, scale: 0.95 });
+      gsap.to(renderedMenuItems, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        ease: "power3.out",
+        stagger: 0.15,
+      });
+    }
+
+    if (ctaButtonRef.current) {
+      gsap.set(ctaButtonRef.current, { opacity: 0, y: 30 });
+      gsap.to(ctaButtonRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        delay: renderedMenuItems.length * 0.15 + 0.2,
+      });
+    }
+
+    if (officeLocationsRef.current) {
+      gsap.set(officeLocationsRef.current, { opacity: 0, x: 50 });
+      gsap.to(officeLocationsRef.current, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        delay: 0.3,
+      });
+    }
+  }
 
   /* ================= HEADER SHOW / HIDE ================= */
   useEffect(() => {
@@ -202,47 +254,6 @@ export default function Header() {
     }
   }, [isMenuOpen, isClosing]);
 
-  // Animate menu content (menu items, CTA button, OfficeLocations)
-  const animateMenuContent = () => {
-    // Animate menu items
-    const menuItems = menuItemsRef.current.filter(Boolean);
-    if (menuItems.length > 0) {
-      gsap.set(menuItems, { opacity: 0, y: 50, scale: 0.95 });
-      gsap.to(menuItems, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.8,
-        ease: "power3.out",
-        stagger: 0.15,
-      });
-    }
-
-    // Animate CTA button
-    if (ctaButtonRef.current) {
-      gsap.set(ctaButtonRef.current, { opacity: 0, y: 30 });
-      gsap.to(ctaButtonRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        delay: menuItems.length * 0.15 + 0.2,
-      });
-    }
-
-    // Animate OfficeLocations
-    if (officeLocationsRef.current) {
-      gsap.set(officeLocationsRef.current, { opacity: 0, x: 50 });
-      gsap.to(officeLocationsRef.current, {
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        delay: 0.3,
-      });
-    }
-  };
-
   // Center button entrance animation on page load/route change
   useEffect(() => {
     if (!centerButtonRef.current || !centerButtonIconRef.current || !centerButtonTextRef.current) return;
@@ -269,8 +280,6 @@ export default function Header() {
     const paddingRight = 10; // 0.625rem = pe-2.5
     const paddingTop = 4; // 0.25rem = py-1
     const paddingBottom = 4; // 0.25rem = py-1
-    const gap = 8; // gap-2
-    const textWidth = 0; // text not visible yet
     const initialWidth = iconSize + paddingLeft + paddingRight;
     const initialHeight = iconSize + paddingTop + paddingBottom;
 
@@ -332,14 +341,10 @@ export default function Header() {
     };
   }, [pathname]);
 
-  const toggleMenu = (
-    buttonRef?: React.RefObject<HTMLButtonElement | null>,
-    buttonType?: "header" | "center"
-  ) => {
+  const toggleMenu = (buttonType?: "header" | "center") => {
     if (isMenuOpen) {
       setIsClosing(true);
     } else {
-      if (buttonRef?.current) setActiveButtonRef(buttonRef as React.RefObject<HTMLButtonElement>);
       if (buttonType) setActiveButtonType(buttonType);
       setIsMenuOpen(true);
     }
@@ -375,39 +380,24 @@ export default function Header() {
     return pathname.startsWith(href);
   };
 
-  const menuItems: MenuItem[] = [
-    { label: "Home", href: "/" },
-    { 
-      label: "Services", 
-      href: "#",
-      submenu: [
-        { label: "Digital experience studio", href: "/digital-experience-studio" },
-        { label: "Application Development Studio", href: "/application-development-studio" },
-        { label: "Growth Branding Studio", href: "/growth-branding-studio" },
-      ]
-    },
-    { label: "About Us", href: "#" },
-    { label: "Our Work", href: "/our-work" },
-    { label: "Contact Us", href: "/contact-us" },
-  ];
-
   return (
     <>
       <header ref={headerRef} className={`fixed top-4 left-0 right-0 bg-transparent transition-all ${isMenuOpen ? 'z-[55]' : 'z-30'}`}>
         <div className="container-fluid mx-auto px-4 sm:px-6 lg:px-16">
-          <div className="flex h-[48px] sm:h-[56px] md:h-[64px] lg:h-[72px] xl:h-[80px] 2xl:h-[88px] items-center justify-between">
+          <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center">
-              <a href="/" className={`relative w-auto transition-all ${isMenuOpen ? 'h-[32px] sm:h-[36px] md:h-[40px] lg:h-[48px]' : 'h-[32px] sm:h-[40px] md:h-[56px] lg:h-[64px] xl:h-[72px] 2xl:h-[80px]'}`}>
+              <Link href="/" className="relative h-12 w-auto">
                 <Image
-                  src="/imgs/cwit_logo_1.png"
-                  alt="CWIT Logo"
+                  src={logoSrc}
+                  alt={logoAlt}
                   width={100}
                   height={100}
-                  className={`w-auto h-auto object-contain transition-all ${isMenuOpen ? 'h-[32px] sm:h-[36px] md:h-[40px] lg:h-[48px] min-w-[72px] sm:min-w-[81px] md:min-w-[90px] lg:min-w-[108px]' : 'h-[32px] sm:h-[40px] md:h-[56px] lg:h-[64px] xl:h-[72px] 2xl:h-[80px] min-w-[72px] sm:min-w-[90px] md:min-w-[110px] lg:min-w-[127px] xl:min-w-[140px] 2xl:min-w-[160px]'}`}
+                  className="h-[32px] md:h-[56px] min-w-[74px] md:min-w-[112px] w-auto object-contain"
                   priority
+                  unoptimized={typeof logoSrc === "string" && logoSrc.startsWith("http")}
                 />
-              </a>
+              </Link>
             </div>
 
             {/* Right side - Menu Button */}
@@ -490,10 +480,23 @@ export default function Header() {
                   variant="shiny"
                   size="small"
                   onClick={() => {
-                    router.push('/contact-us');
+                    router.push(headerCtaLink);
                   }}
-                  className="font-[300]"
-                />
+                  className="inline-flex md:hidden"
+                >
+                  {headerCtaText}
+                </CallToActionButton>
+              )}
+              {!isMenuOpen && (
+                <CallToActionButton
+                  variant="shiny"
+                  onClick={() => {
+                    router.push(headerCtaLink);
+                  }}
+                  className="hidden md:inline-flex"
+                >
+                  {headerCtaText}
+                </CallToActionButton>
               )}
             </div>
           </div>
@@ -504,7 +507,6 @@ export default function Header() {
       <div
         ref={overlayRef}
         onClick={() => {
-          setActiveButtonRef(null);
           setActiveButtonType(null);
           setIsClosing(true);
         }}
@@ -600,7 +602,6 @@ export default function Header() {
                           href={item.href}
                           onClick={(e) => {
                             e.preventDefault();
-                            setActiveButtonRef(null);
                             setActiveButtonType(null);
                             setIsClosing(true);
                             // Wait for animation to complete before navigating
@@ -629,7 +630,7 @@ export default function Header() {
                           data-submenu-index={index}
                           onMouseEnter={() => setHoveredServiceIndex(index)}
                           onMouseLeave={() => setHoveredServiceIndex(null)}
-                          className={`absolute top-[-20] left-[156px] min-w-[200px] sm:min-w-[250px] md:min-w-[300px] lg:min-w-[350px] xl:min-w-[400px] 2xl:min-w-[430px] bg-[#2C2C2C] rounded-[15px] p-4 sm:p-5 md:p-6 lg:p-7 xl:p-8 2xl:p-20 shadow-2xl ${
+                          className={`absolute top-[10px] left-[156px] min-w-[200px] sm:min-w-[250px] md:min-w-[300px] lg:min-w-[350px] xl:min-w-[400px] 2xl:min-w-[430px] bg-[#2C2C2C] rounded-[15px] p-4 sm:p-5 md:p-6 lg:p-7 xl:p-8 2xl:p-20 shadow-2xl ${
                             isHovered
                               ? "z-50 visible"
                               : "invisible pointer-events-none"
@@ -656,7 +657,6 @@ export default function Header() {
                                     href={subItem.href}
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      setActiveButtonRef(null);
                                       setActiveButtonType(null);
                                       setIsClosing(true);
                                       // Wait for animation to complete before navigating
@@ -687,15 +687,16 @@ export default function Header() {
                   variant="shiny"
                   size="small"
                   onClick={() => {
-                    setActiveButtonRef(null);
                     setActiveButtonType(null);
                     setIsClosing(true);
                     // Wait for animation to complete before navigating
                     setTimeout(() => {
-                      router.push('/contact-us');
+                      router.push(headerCtaLink);
                     }, 900); // Match animation duration
                   }}
-                />
+                >
+                  {headerCtaText}
+                </CallToActionButton>
               </div>
             </nav>
 
@@ -712,7 +713,7 @@ export default function Header() {
                   unoptimized
                 />
               </div> */}
-              <OfficeLocations />
+              <OfficeLocations offices={officeLocations} />
             </div>
           </div>
         </div>
@@ -721,7 +722,7 @@ export default function Header() {
       {/* Toggle Button - Center Bottom (Same position as WhatsApp) */}
       <button
         ref={centerButtonRef}
-        onClick={() => toggleMenu(centerButtonRef, 'center')}
+        onClick={() => toggleMenu("center")}
         data-menu-open={isMenuOpen}
         className={`fixed left-1/2 -translate-x-1/2 flex justify-center items-center gap-2 rounded-full bg-[#FFFFFF] hover:bg-[#ffffff] group menu-toggle-btn hover:cursor-pointer ${isMenuOpen && activeButtonType === 'center'
           ? 'ps-3 pe-2 py-0.5 gap-1.5 z-[55]'

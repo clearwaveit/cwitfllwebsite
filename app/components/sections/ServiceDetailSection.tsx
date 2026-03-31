@@ -12,6 +12,7 @@ interface ServiceDetailSectionProps {
   };
   graphicImage: string | StaticImageData;
   graphicAlt?: string;
+  videoSrc?: string;
   imagePosition?: "left" | "right";
   className?: string;
   buttonText?: string;
@@ -22,6 +23,7 @@ export default function ServiceDetailSection({
   service,
   graphicImage,
   graphicAlt = "Service graphic",
+  videoSrc,
   imagePosition = "right",
   className = "",
   buttonText = "Read More",
@@ -46,12 +48,12 @@ export default function ServiceDetailSection({
   const textContent = (
     <div className="flex flex-col space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7 xl:space-y-8">
       {/* Main Heading */}
-      <h2 className="text-[20px] sm:text-[28px] md:text-[35px] lg:text-[45px] xl:text-[50px] 2xl:text-[60px] min-[1440px]:text-[70px] min-[1920px]:text-[80px] font-[700] text-white leading-[32px] sm:leading-[38px] md:leading-[55px] lg:leading-[60px] xl:leading-[70px] 2xl:leading-[75px] min-[1440px]:leading-[80px] min-[1920px]:leading-[88px]">
+      <h2 className="text-[20px] sm:text-[28px] md:text-[35px] lg:text-[40px] xl:text-[42px] 2xl:text-[60px] min-[1440px]:text-[70px] min-[1920px]:text-[80px] font-[700] text-white leading-[32px] sm:leading-[38px] md:leading-[55px] lg:leading-[60px] xl:leading-[70px] 2xl:leading-[75px] min-[1440px]:leading-[80px] min-[1920px]:leading-[88px]">
         {service?.title}
       </h2>
 
       {/* Description Paragraph */}
-      <p className="text-[14px] sm:text-[15px] md:text-[18px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[500] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
+      <p className="text-[14px] sm:text-[15px] md:text-[18px] lg:text-[14px] xl:text-[16px] 2xl:text-[20px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[500] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
         {service?.description}
       </p>
 
@@ -59,7 +61,7 @@ export default function ServiceDetailSection({
       <div className="flex flex-col space-y-0">
         {service?.services.map((serviceItem, index) => (
           <div key={index}>
-            <p className="text-[16px] sm:text-[18px] md:text-[22px] lg:text-[24px] xl:text-[26px] 2xl:text-[28px] min-[1440px]:text-[29px] min-[1920px]:text-[30px] font-[500] text-white leading-[1.4] sm:leading-[1.5] md:leading-[1.6] lg:leading-[1.55] xl:leading-[1.5] 2xl:leading-[1.45] py-3 sm:py-3.5 md:py-4 lg:py-4.5 xl:py-5">
+            <p className="text-[16px] sm:text-[18px] md:text-[22px] lg:text-[20px] xl:text-[22px] 2xl:text-[28px] min-[1440px]:text-[29px] min-[1920px]:text-[30px] font-[500] text-white leading-[1.4] sm:leading-[1.5] md:leading-[1.6] lg:leading-[1.55] xl:leading-[1.5] 2xl:leading-[1.45] py-3 sm:py-3.5 md:py-4 lg:py-4.5 xl:py-5">
               {serviceItem}
             </p>
             {index < service.services.length - 1 && (
@@ -84,14 +86,24 @@ export default function ServiceDetailSection({
   const graphicContent = (
     <div className="flex items-center justify-center lg:justify-end h-full w-full pointer-events-none overflow-visible">
       <div className="relative w-full h-full min-h-[250px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] xl:min-h-[600px] 2xl:min-h-[700px] overflow-visible">
-        <video
-          src="/videos/animated_gen_ai_clip.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="object-cover w-full h-full rounded-lg service-detail-video"
-        />
+        {videoSrc ? (
+          <video
+            src={videoSrc}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="object-cover w-full h-full rounded-lg service-detail-video"
+          />
+        ) : (
+          <Image
+            src={graphicImage}
+            alt={graphicAlt}
+            fill
+            className="object-cover w-full h-full rounded-lg"
+            unoptimized={typeof graphicImage === "string"}
+          />
+        )}
       </div>
     </div>
   );
@@ -126,4 +138,3 @@ export default function ServiceDetailSection({
     </section>
   );
 }
-
