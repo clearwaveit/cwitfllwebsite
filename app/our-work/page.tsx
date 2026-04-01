@@ -49,6 +49,33 @@ const DEFAULT_DESCRIPTION = DEFAULT_CARD?.description ?? "";
 
 const PORTFOLIO_BASE = "/work-details";
 
+function getCategoryLines(category: string | undefined): string[] {
+  if (!category?.trim()) return [];
+
+  const normalized = category
+    .replace(/&lt;br\s*\/?&gt;/gi, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/&#10;|&#x0*a;/gi, "\n")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>\s*<p>/gi, "\n")
+    .replace(/<\/?(p|div|span)\b[^>]*>/gi, "");
+
+  const lines = normalized
+    .split(/\r?\n/)
+    .map((line) => line.replace(/<[^>]+>/g, "").trim())
+    .filter(Boolean);
+
+  if (lines.length > 1) return lines;
+
+  const words = (lines[0] ?? "").split(/\s+/).filter(Boolean);
+  if (words.length > 1 && words.length <= 3) {
+    return [words[0], words.slice(1).join(" ")].filter(Boolean);
+  }
+
+  return lines;
+}
+
 type PortfolioListNode = {
   databaseId?: number | null;
   slug?: string | null;
@@ -395,7 +422,7 @@ export default function OurWorkPage() {
                 >
                   {item.category && (
                     <div className="flex-col pt-4 lg:pt-10 px-5 lg:px-8 pb-40 flex">
-                      {item.category.split("\n").map((cat: string, idx: number) => (
+                      {getCategoryLines(item.category).map((cat: string, idx: number) => (
                         <span
                           key={idx}
                           className="text-white text-[14px] lg:text-[20px] xl:text-[20px] uppercase tracking-[0.1em] font-[400]"
