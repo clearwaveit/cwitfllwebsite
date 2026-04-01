@@ -15,10 +15,40 @@ interface GoogleMapSectionProps {
   className?: string;
 }
 
+type GoogleMapsMarkerLike = {
+  setMap: (map: object | null) => void;
+  getPosition?: () => { toJSON?: () => { lat: number; lng: number } } | null;
+  addListener: (eventName: string, handler: () => void) => void;
+};
+
+type GoogleMapsNamespace = {
+  maps?: {
+    Map: new (element: HTMLElement, options: object) => {
+      fitBounds: (bounds: object, padding?: object) => void;
+      setCenter: (coords: { lat: number; lng: number }) => void;
+      setZoom: (zoom: number) => void;
+    };
+    Marker: new (options: object) => GoogleMapsMarkerLike;
+    InfoWindow: new (options: { content: string }) => {
+      open: (map?: object, anchor?: object) => void;
+      close: () => void;
+    };
+    LatLngBounds: new () => {
+      extend: (latLng: object) => void;
+    };
+    LatLng: new (lat: number, lng: number) => object;
+    Size: new (width: number, height: number) => object;
+    Point: new (x: number, y: number) => object;
+    Animation: {
+      DROP: object;
+    };
+  };
+};
+
 declare global {
   interface Window {
-    google: any;
-    initMap: () => void;
+    google?: GoogleMapsNamespace;
+    initMap?: () => void;
   }
 }
 
@@ -28,8 +58,8 @@ export default function GoogleMapSection({
   className = "",
 }: GoogleMapSectionProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const markersRef = useRef<any[]>([]);
+  const mapInstanceRef = useRef<object | null>(null);
+  const markersRef = useRef<GoogleMapsMarkerLike[]>([]);
   
   // Get API key from prop or environment variable (for client components, use NEXT_PUBLIC_ prefix)
   const googleMapsApiKey = apiKey || (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '') || '';
@@ -232,7 +262,7 @@ export default function GoogleMapSection({
         markersRef.current.forEach((marker) => marker.setMap(null));
       }
       if (window.initMap) {
-        window.initMap = undefined as any;
+        window.initMap = undefined;
       }
     };
   }, [mapLocations, googleMapsApiKey]);

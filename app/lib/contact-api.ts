@@ -6,13 +6,12 @@
 const GRAPHQL_ENDPOINT =
   process.env.NEXT_PUBLIC_WP_GRAPHQL_URL || "http://cwitmain.local/graphql";
 
-// -----------------------------------------------------------------------------
-// GraphQL Query
-// -----------------------------------------------------------------------------
+export const CONTACT_PAGE_URI =
+  process.env.NEXT_PUBLIC_CONTACT_PAGE_URI || "/contact-us/";
 
-export const GET_CONTACT_PAGE = `
-  query GetContactPage($id: ID!) {
-    page(id: $id, idType: DATABASE_ID) {
+const CONTACT_PAGE_BASE_QUERY = `
+  query GetContactPage($id: ID!, $idType: PageIdType!) {
+    page(id: $id, idType: $idType) {
       title
       slug
       contactPage {
@@ -27,9 +26,7 @@ export const GET_CONTACT_PAGE = `
           }
         }
         contactFormSettings {
-          recipientEmail
-          submitButtonText
-          successMessage
+          __CONTACT_FORM_SETTINGS_FIELDS__
         }
         contactMapLocations {
           name
@@ -48,6 +45,92 @@ export const GET_CONTACT_PAGE = `
 `;
 
 // -----------------------------------------------------------------------------
+// GraphQL Query
+// -----------------------------------------------------------------------------
+const DEFAULT_CONTACT_FORM_SETTING_FIELDS = [
+  "recipientEmail",
+  "submitButtonText",
+  "successMessage",
+];
+
+let contactFormSettingsFieldsPromise: Promise<string[]> | null = null;
+
+type GraphQLFieldTypeRef = {
+  name?: string | null;
+  kind?: string | null;
+  ofType?: GraphQLFieldTypeRef | null;
+};
+
+function unwrapGraphQLType(type: GraphQLFieldTypeRef | null | undefined): GraphQLFieldTypeRef | null {
+  let current = type ?? null;
+  while (current?.ofType) current = current.ofType;
+  return current;
+}
+
+async function fetchContactFormSettingsFields(): Promise<string[]> {
+  if (contactFormSettingsFieldsPromise) return contactFormSettingsFieldsPromise;
+
+  contactFormSettingsFieldsPromise = (async () => {
+    try {
+      const introspectionQuery = `
+        {
+          __type(name: "ContactPageContactFormSettings") {
+            fields {
+              name
+              type {
+                name
+                kind
+                ofType {
+                  name
+                  kind
+                  ofType {
+                    name
+                    kind
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      const res = await fetch(GRAPHQL_ENDPOINT, {
+        method: "POST",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: introspectionQuery }),
+      });
+      const json = await res.json();
+      const fields = (json?.data?.__type?.fields ?? []) as Array<{
+        name?: string | null;
+        type?: GraphQLFieldTypeRef | null;
+      }>;
+
+      const scalarFields = fields
+        .filter((field) => {
+          const leaf = unwrapGraphQLType(field.type);
+          return !!field.name && leaf?.kind === "SCALAR";
+        })
+        .map((field) => field.name?.trim())
+        .filter((name): name is string => !!name);
+
+      return scalarFields.length ? scalarFields : DEFAULT_CONTACT_FORM_SETTING_FIELDS;
+    } catch {
+      return DEFAULT_CONTACT_FORM_SETTING_FIELDS;
+    }
+  })();
+
+  return contactFormSettingsFieldsPromise;
+}
+
+function buildContactPageQuery(contactFormSettingFields: string[]): string {
+  const selection = contactFormSettingFields.length
+    ? contactFormSettingFields.join("\n")
+    : DEFAULT_CONTACT_FORM_SETTING_FIELDS.join("\n");
+  return CONTACT_PAGE_BASE_QUERY.replace("__CONTACT_FORM_SETTINGS_FIELDS__", selection);
+}
+
+// -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
 
@@ -61,6 +144,7 @@ export type ContactFormSettings = {
   recipientEmail?: string | null;
   submitButtonText?: string | null;
   successMessage?: string | null;
+  [key: string]: unknown;
 };
 
 export type ContactMapLocation = {
@@ -94,21 +178,32 @@ export type GraphQLContactResponse = {
   errors?: Array<{ message: string }> | null;
 };
 
+type ContactPageIdType = "DATABASE_ID" | "URI";
+
 // -----------------------------------------------------------------------------
 // Fetch
 // -----------------------------------------------------------------------------
 
-export async function fetchContactPage(id: number | string): Promise<GraphQLContactResponse> {
+export async function fetchContactPage(
+  id: number | string,
+  idType: ContactPageIdType = "URI"
+): Promise<GraphQLContactResponse> {
+  const contactFormSettingsFields = await fetchContactFormSettingsFields();
+  const query = buildContactPageQuery(contactFormSettingsFields);
   const res = await fetch(GRAPHQL_ENDPOINT, {
     method: "POST",
     cache: "no-store",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      query: GET_CONTACT_PAGE,
-      variables: { id: String(id) },
+      query,
+      variables: { id: String(id), idType },
     }),
   });
   return (await res.json()) as GraphQLContactResponse;
+}
+
+export async function fetchDefaultContactPage(): Promise<GraphQLContactResponse> {
+  return fetchContactPage(CONTACT_PAGE_URI, "URI");
 }
 
 /** Extract contactPage fields from response */
