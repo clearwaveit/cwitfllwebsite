@@ -93,7 +93,6 @@ const defaultServices = [
   },
 ];
 
-
 const defaultWorkItems: WorkItem[] = [
   { title: "The Oxford Institute", description: "70% increased in digital interaction of potential students looking for information", image: ourWorkImg, category: "EDUCATION\nTECH\nWEBSITE" },
   { title: "The Oxford Institute", description: "70% increased in digital interaction of potential students looking for information", image: ourWorkImg, category: "EDUCATION\nTECH\nWEBSITE" },
