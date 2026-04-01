@@ -4,6 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CallToActionButton from "./CallToActionButton";
+import {
+  DEFAULT_CONTACT_FORM_FIELDS,
+  DEFAULT_CONTACT_SUBMIT_BUTTON_TEXT,
+  DEFAULT_CONTACT_SUCCESS_MESSAGE,
+} from "@/app/lib/contact-form-config";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -11,11 +16,37 @@ if (typeof window !== "undefined") {
 
 interface ContactFormProps {
   className?: string;
+  submitButtonText?: string;
+  successMessage?: string;
+  fields?: ContactFormFieldConfig[];
 }
 
-export default function ContactForm({ className = "" }: ContactFormProps) {
+type ContactFieldName = "fullName" | "email" | "phone" | "company" | "message";
+
+export type ContactFormFieldConfig = {
+  name: ContactFieldName;
+  placeholder: string;
+  required?: boolean;
+};
+
+function withRequiredIndicator(text: string | undefined, required: boolean | undefined): string | undefined {
+  if (!text) return text;
+
+  const normalizedText = text.replace(/\s*\*+\s*$/, "").trim();
+  if (!normalizedText) return normalizedText;
+
+  return required ? `${normalizedText} *` : normalizedText;
+}
+
+export default function ContactForm({
+  className = "",
+  submitButtonText = DEFAULT_CONTACT_SUBMIT_BUTTON_TEXT,
+  successMessage = DEFAULT_CONTACT_SUCCESS_MESSAGE,
+  fields,
+}: ContactFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRefs = useRef<(HTMLInputElement | HTMLTextAreaElement | HTMLDivElement | null)[]>([]);
+  const visibleFields = fields?.length ? fields : DEFAULT_CONTACT_FORM_FIELDS;
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -33,6 +64,7 @@ export default function ContactForm({ className = "" }: ContactFormProps) {
   const [errors, setErrors] = useState<{
     fullName?: string;
     email?: string;
+    phone?: string;
     company?: string;
     message?: string;
   }>({});
@@ -86,21 +118,27 @@ export default function ContactForm({ className = "" }: ContactFormProps) {
   const validateForm = () => {
     const newErrors: typeof errors = {};
 
-    if (!formData.fullName.trim()) {
+    const fieldMap = new Map(visibleFields.map((field) => [field.name, field]));
+
+    if (fieldMap.get("fullName")?.required && !formData.fullName.trim()) {
       newErrors.fullName = "Name is required";
     }
 
-    if (!formData.email.trim()) {
+    if (fieldMap.get("email")?.required && !formData.email.trim()) {
       newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    } else if (fieldMap.has("email") && formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email";
     }
 
-    if (!formData.company.trim()) {
+    if (fieldMap.get("phone")?.required && !formData.phone.trim()) {
+      newErrors.phone = "Phone is required";
+    }
+
+    if (fieldMap.get("company")?.required && !formData.company.trim()) {
       newErrors.company = "Company is required";
     }
 
-    if (!formData.message.trim()) {
+    if (fieldMap.get("message")?.required && !formData.message.trim()) {
       newErrors.message = "Message is required";
     }
 
@@ -132,7 +170,7 @@ export default function ContactForm({ className = "" }: ContactFormProps) {
       if (response.ok) {
         setSubmitStatus({
           type: "success",
-          message: "Thank you! Your message has been sent successfully.",
+          message: successMessage,
         });
         setFormData({
           fullName: "",
@@ -175,79 +213,61 @@ export default function ContactForm({ className = "" }: ContactFormProps) {
       onSubmit={handleSubmit}
       className={`grid grid-cols-1 gap-5 md:gap-6 lg:grid-cols-2 xl:grid-cols-1 ${className}`}
     >
-      {/* Name Input */}
-      <div>
-        <input
-          ref={(el) => { inputRefs.current[0] = el; }}
-          type="text"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleInputChange}
-          placeholder="Tell us your name! *"
-          className={`w-full h-[42px] md:h-[62px] px-4 py-4 md:px-6 md:py-4 rounded-full bg-[#1a1a1a52] text-white placeholder:text-white placeholder:text-[16px] md:placeholder:text-[20px] border focus:outline-none transition-colors text-sm md:text-base ${errors.fullName ? "border-red-500" : "border-[#4E4E4E] focus:border-[#00d4aa]"}`}
-          disabled={isSubmitting}
-        />
-        {errors.fullName && <p className="text-red-500 text-xs mt-1 ml-4">{errors.fullName}</p>}
-      </div>
+      {visibleFields.map((field, index) => {
+        const placeholderText = withRequiredIndicator(field.placeholder, field.required) || "";
 
-      {/* Email Input */}
-      <div>
-        <input
-          ref={(el) => { inputRefs.current[1] = el; }}
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          placeholder="Your email *"
-          className={`w-full h-[42px] md:h-[62px] px-4 py-4 md:px-6 md:py-4 rounded-full bg-[#1a1a1a52] text-white placeholder:text-white placeholder:text-[16px] md:placeholder:text-[20px] border focus:outline-none transition-colors text-sm md:text-base ${errors.email ? "border-red-500" : "border-[#4E4E4E] focus:border-[#00d4aa]"}`}
-          disabled={isSubmitting}
-        />
-        {errors.email && <p className="text-red-500 text-xs mt-1 ml-4">{errors.email}</p>}
-      </div>
+        if (field.name === "message") {
+          return (
+            <div key={field.name} className="lg:col-span-2 xl:col-span-1">
+              <textarea
+                ref={(el) => { inputRefs.current[index] = el; }}
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
+                placeholder={placeholderText}
+                rows={4}
+                className={`w-full h-[130px] md:h-[190px] px-4 py-4 md:px-6 md:py-4 rounded-[30px] bg-[#1a1a1a52] text-white placeholder:text-white placeholder:text-[16px] md:placeholder:text-[20px] border focus:outline-none transition-colors resize-none text-sm md:text-base ${errors.message ? "border-red-500" : "border-[#4E4E4E] focus:border-[#00d4aa]"}`}
+                disabled={isSubmitting}
+              />
+              {errors.message && <p className="text-red-500 text-xs mt-1 ml-4">{errors.message}</p>}
+            </div>
+          );
+        }
 
-      {/* Phone Input */}
-      <div>
-        <input
-          ref={(el) => { inputRefs.current[2] = el; }}
-          type="tel"
-          name="phone"
-          value={formData.phone}
-          onChange={handleInputChange}
-          placeholder="Your phone"
-          className="w-full h-[42px] md:h-[62px] px-4 py-4 md:px-6 md:py-4 rounded-full bg-[#1a1a1a52] text-white placeholder:text-white placeholder:text-[16px] md:placeholder:text-[20px] border border-[#4E4E4E] focus:outline-none focus:border-[#00d4aa] transition-colors text-sm md:text-base"
-          disabled={isSubmitting}
-        />
-      </div>
+        const inputType =
+          field.name === "email" ? "email" :
+          field.name === "phone" ? "tel" :
+          "text";
+        const value = formData[field.name];
+        const error = errors[field.name as keyof typeof errors];
+        const needsValidationStyle =
+          field.name === "fullName" ||
+          field.name === "email" ||
+          field.name === "phone" ||
+          field.name === "company";
 
-      {/* Company Input */}
-      <div>
-        <input
-          ref={(el) => { inputRefs.current[3] = el; }}
-          type="text"
-          name="company"
-          value={formData.company}
-          onChange={handleInputChange}
-          placeholder="Your Company *"
-          className={`w-full h-[42px] md:h-[62px] px-4 py-4 md:px-6 md:py-4 rounded-full bg-[#1a1a1a52] text-white placeholder:text-white placeholder:text-[16px] md:placeholder:text-[20px] border focus:outline-none transition-colors text-sm md:text-base ${errors.company ? "border-red-500" : "border-[#4E4E4E] focus:border-[#00d4aa]"}`}
-          disabled={isSubmitting}
-        />
-        {errors.company && <p className="text-red-500 text-xs mt-1 ml-4">{errors.company}</p>}
-      </div>
-
-      {/* Message Textarea */}
-      <div className="lg:col-span-2 xl:col-span-1">
-        <textarea
-          ref={(el) => { inputRefs.current[4] = el; }}
-          name="message"
-          value={formData.message}
-          onChange={handleInputChange}
-          placeholder="What is your requirement? *"
-          rows={4}
-          className={`w-full h-[130px] md:h-[190px] px-4 py-4 md:px-6 md:py-4 rounded-[30px] bg-[#1a1a1a52] text-white placeholder:text-white placeholder:text-[16px] md:placeholder:text-[20px] border focus:outline-none transition-colors resize-none text-sm md:text-base ${errors.message ? "border-red-500" : "border-[#4E4E4E] focus:border-[#00d4aa]"}`}
-          disabled={isSubmitting}
-        />
-        {errors.message && <p className="text-red-500 text-xs mt-1 ml-4">{errors.message}</p>}
-      </div>
+        return (
+          <div key={field.name}>
+            <input
+              ref={(el) => { inputRefs.current[index] = el; }}
+              type={inputType}
+              name={field.name}
+              value={value}
+              onChange={handleInputChange}
+              placeholder={placeholderText}
+              className={`w-full h-[42px] md:h-[62px] px-4 py-4 md:px-6 md:py-4 rounded-full bg-[#1a1a1a52] text-white placeholder:text-white placeholder:text-[16px] md:placeholder:text-[20px] border focus:outline-none transition-colors text-sm md:text-base ${
+                needsValidationStyle
+                  ? error
+                    ? "border-red-500"
+                    : "border-[#4E4E4E] focus:border-[#00d4aa]"
+                  : "border-[#4E4E4E] focus:border-[#00d4aa]"
+              }`}
+              disabled={isSubmitting}
+            />
+            {error && <p className="text-red-500 text-xs mt-1 ml-4">{error}</p>}
+          </div>
+        );
+      })}
 
       {/* Radio Buttons */}
       {/* <div className="flex gap-4 md:gap-6 flex-wrap">
@@ -294,9 +314,9 @@ export default function ContactForm({ className = "" }: ContactFormProps) {
       )}
 
       {/* Submit Button */}
-      <div ref={(el) => { inputRefs.current[5] = el; }} className="mt-2 md:mt-4 lg:col-span-2 xl:col-span-1">
+      <div ref={(el) => { inputRefs.current[visibleFields.length] = el; }} className="mt-2 md:mt-4 lg:col-span-2 xl:col-span-1">
         <CallToActionButton type="submit" variant="shiny" disabled={isSubmitting}>
-          {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
+          {isSubmitting ? "SENDING..." : submitButtonText}
         </CallToActionButton>
       </div>
     </form>
