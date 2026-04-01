@@ -40,7 +40,7 @@ export function adminContactTemplate({
                         <tr><td style="font-weight:bold;">Full Name</td><td>${fullName}</td></tr>
                         <tr><td style="font-weight:bold;">Email</td><td>${email}</td></tr>
                         <tr><td style="font-weight:bold;">Phone</td><td>${phone || 'Not provided'}</td></tr>
-                        <tr><td style="font-weight:bold;">Full Name</td><td>${company}</td></tr>
+                        <tr><td style="font-weight:bold;">Company</td><td>${company || 'Not provided'}</td></tr>
                       </table>
                       <div style="background:#f7f9f9; border-left:4px solid #2e3620ff; padding:16px;">
                         <p style="font-weight:bold;">Message</p>
