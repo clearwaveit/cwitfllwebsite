@@ -276,7 +276,7 @@ export type StudioServiceDetail = {
   title?: string | null;
   description?: string | null;
   bulletPoints?: Array<{ text?: string | null } | null> | null;
-  image?: { node?: { sourceUrl?: string; altText?: string | null } } | null;
+  image?: { node?: { sourceUrl?: string; mediaItemUrl?: string; altText?: string | null } } | null;
   video?: { node?: { mediaItemUrl?: string; sourceUrl?: string } } | null;
   buttonText?: string | null;
   buttonLink?: string | null;

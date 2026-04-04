@@ -14,12 +14,17 @@ export default function WhatsAppButton({
   showOnDesktop = true, 
   showOnMobile = true 
 }: WhatsAppButtonProps) {
+  const handleClick = () => {
+    // Dubai number: +971 58 8279426
+    // Cleaned number for URL: 971588279426
+    window.open("https://wa.me/971588279426", "_blank");
+  };
   return (
     <>
       {/* WhatsApp Button - Fixed Position (Desktop) */}
       {showOnDesktop && (
         <button
-          onClick={onClick}
+          onClick={handleClick}
           className="fixed hidden md:block right-[70px] bottom-[70px] z-30 cursor-pointer hover:scale-110 transition-transform duration-300 whatsapp-button"
           style={{
             zIndex: 30,
@@ -38,7 +43,7 @@ export default function WhatsAppButton({
       {/* WhatsApp Button - Fixed Position (Mobile) */}
       {showOnMobile && (
         <button
-          onClick={onClick}
+          onClick={handleClick}
           className="fixed md:hidden right-[15px] bottom-[50px] z-30 cursor-pointer hover:scale-110 transition-transform duration-300"
           style={{
             zIndex: 30,
