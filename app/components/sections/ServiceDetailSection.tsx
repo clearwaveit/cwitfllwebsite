@@ -93,14 +93,14 @@ export default function ServiceDetailSection({
             loop
             muted
             playsInline
-            className="object-cover w-full h-full rounded-lg service-detail-video"
+            className="!object-contain sm:!object-contain md:!object-contain lg:!object-contain xl:!object-cover 2xl:!object-cover w-full h-full rounded-lg service-detail-video"
           />
         ) : (
           <Image
             src={graphicImage}
             alt={graphicAlt}
             fill
-            className="object-cover w-full h-full rounded-lg"
+            className="!object-contain sm:!object-contain md:!object-contain lg:!object-contain xl:!object-cover 2xl:!object-cover w-full h-full rounded-lg"
             unoptimized={typeof graphicImage === "string"}
           />
         )}
