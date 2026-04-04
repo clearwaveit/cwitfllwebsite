@@ -12,9 +12,6 @@ function resolve(url: string | undefined | null): string | undefined {
   return resolveImageUrl(url ?? undefined) ?? undefined;
 }
 
-function getMediaUrl(node: { node?: { sourceUrl?: string } } | null | undefined): string | undefined {
-  return resolve(node?.node?.sourceUrl);
-}
 
 /** Resolve studio video URL from ACF/GraphQL – supports node.sourceUrl, mediaItemUrl, link, url, or plain string */
 function getStudioVideoUrl(raw: unknown): string | undefined {
@@ -82,6 +79,7 @@ export type HomeStudiosProps = {
 
 export type HomeGenaiProps = {
   heading?: string;
+  paragraph?: string;
   videoSrc?: string;
   ctaText?: string;
   ctaLink?: string;
@@ -320,7 +318,8 @@ export function normalizeGenai(fields: HomePageFields | null): HomeGenaiProps {
   const s = fields.homeGenaiSection;
   return {
     heading: s.heading?.trim() || undefined,
-    videoSrc: getMediaUrl(s.video as { node?: { sourceUrl?: string } }),
+    paragraph: s.paragraph?.trim() || undefined,
+    videoSrc: resolve(s.video?.node?.sourceUrl) ?? resolve(s.video?.node?.mediaItemUrl),
     ctaText: s.ctaText?.trim(),
     ctaLink: s.ctaLink?.trim(),
   };

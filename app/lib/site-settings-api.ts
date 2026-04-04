@@ -377,10 +377,10 @@ export async function fetchSiteSettings(): Promise<SiteSettings> {
       body: JSON.stringify({ query: GET_SITE_SETTINGS_FLAT }),
     });
     const flatJson = (await flatRes.json()) as SiteSettingsResponse;
+    const flatRaw = flatJson.data?.headerFooterSettings;
     const flatFields =
-      flatJson.data?.headerFooterSettings &&
-      !("headerFooterSettings" in flatJson.data.headerFooterSettings)
-        ? flatJson.data.headerFooterSettings
+      flatRaw && !("headerFooterFields" in flatRaw)
+        ? (flatRaw as SiteSettingsFields)
         : null;
 
     if (!flatJson.errors?.length && flatFields) {
