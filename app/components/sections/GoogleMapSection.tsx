@@ -113,17 +113,18 @@ export default function GoogleMapSection({
 
     // Initialize map function
     window.initMap = () => {
-      if (!mapRef.current || !window.google || !window.google.maps) {
+      if (!mapRef.current || !window.google?.maps) {
         console.error("Google Maps API not loaded or map container not found");
         return;
       }
+      const googleMaps = window.google!.maps!;
 
       // Calculate center point to show all locations
       const centerLat = mapLocations.reduce((sum, loc) => sum + loc.latitude, 0) / mapLocations.length;
       const centerLng = mapLocations.reduce((sum, loc) => sum + loc.longitude, 0) / mapLocations.length;
 
       // Create map
-      const map = new window.google.maps.Map(mapRef.current, {
+      const map = new googleMaps.Map(mapRef.current, {
         center: { lat: centerLat, lng: centerLng },
         zoom: 2, // Start with lower zoom to see all markers
         styles: [
@@ -161,7 +162,7 @@ export default function GoogleMapSection({
       console.log(`Creating ${mapLocations.length} markers for locations:`, mapLocations.map(l => l.name));
 
       // Create bounds object to fit all markers
-      const bounds = new window.google.maps.LatLngBounds();
+      const bounds = new googleMaps.LatLngBounds();
 
       // Add markers for each location with different colors
       mapLocations.forEach((location, index) => {
@@ -178,15 +179,15 @@ export default function GoogleMapSection({
               <circle cx="20" cy="14" r="6" fill="#FFFFFF"/>
             </svg>
           `)}`,
-          scaledSize: new window.google.maps.Size(40, 40),
-          anchor: new window.google.maps.Point(20, 40),
+          scaledSize: new googleMaps.Size(40, 40),
+          anchor: new googleMaps.Point(20, 40),
         };
 
-        const marker = new window.google.maps.Marker({
+        const marker = new googleMaps.Marker({
           position: { lat: location.latitude, lng: location.longitude },
           map: map,
           title: location.name,
-          animation: window.google.maps.Animation.DROP,
+          animation: googleMaps.Animation.DROP,
           icon: pinIcon, // Use custom colored icon
           label: {
             text: (index + 1).toString(),
@@ -197,10 +198,10 @@ export default function GoogleMapSection({
         });
 
         // Add position to bounds
-        bounds.extend(new window.google.maps.LatLng(location.latitude, location.longitude));
+        bounds.extend(new googleMaps.LatLng(location.latitude, location.longitude));
 
         // Create info window for hover
-        const infoWindow = new window.google.maps.InfoWindow({
+        const infoWindow = new googleMaps.InfoWindow({
           content: `
             <div style="padding: 8px; color: #000;">
               <h3 style="margin: 0 0 4px 0; font-weight: bold; font-size: 16px;">${location.name}</h3>
@@ -243,7 +244,7 @@ export default function GoogleMapSection({
       console.log(`Successfully added ${markersRef.current.length} markers to the map`);
       console.log(`Markers:`, markersRef.current.map((m, i) => ({
         name: mapLocations[i].name,
-        position: m.getPosition()?.toJSON()
+        position: (m.getPosition as () => { toJSON?: () => unknown } | null | undefined)?.()?.toJSON?.()
       })));
     };
 
