@@ -107,9 +107,11 @@ const HOME_PAGE_FIELDS_FRAGMENT = `
   }
   homeGenaiSection {
     heading
+    paragraph
     video {
       node {
         sourceUrl
+        mediaItemUrl
       }
     }
     ctaText
@@ -249,9 +251,11 @@ const HOME_PAGE_FIELDS_FRAGMENT_LEGACY = `
   }
   homeGenaiSection {
     heading
+    paragraph
     video {
       node {
         sourceUrl
+        mediaItemUrl
       }
     }
     ctaText
@@ -581,7 +585,7 @@ const GET_HOME_PAGE_BY_URI_LEGACY = `
         showcaseHeadline
         showcaseCards { cardType title subtitle description image { node { sourceUrl altText } } backgroundClass textColorClass }
         homeStudios { title description video { node { sourceUrl mediaItemUrl } } link }
-        homeGenaiSection { heading video { node { sourceUrl } } ctaText ctaLink }
+        homeGenaiSection { heading paragraph video { node { sourceUrl mediaItemUrl } } ctaText ctaLink }
         ourWorkTitle
         featurePortfolioHome { nodes { ... on Portfolio { databaseId slug title uri excerpt portfolioDetails { backgroundImage { node { sourceUrl } } } } } }
         clientsLogo { node { sourceUrl altText } }
@@ -1490,7 +1494,8 @@ export type HomeStudio = {
 
 export type HomeGenaiSection = {
   heading?: string | null;
-  video?: { node?: { sourceUrl?: string } } | null;
+  paragraph?: string | null;
+  video?: { node?: { sourceUrl?: string; mediaItemUrl?: string } } | null;
   ctaText?: string | null;
   ctaLink?: string | null;
 };
