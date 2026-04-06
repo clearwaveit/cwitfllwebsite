@@ -184,6 +184,7 @@ export default function EcommerceAppPage() {
         ctaVariant="outline"
         className="bg-black"
         showCTA={true}
+        ctaLabel="Let's Talk"
       />
       <BusinessFeaturesSection
         title={businessFeaturesTitle}

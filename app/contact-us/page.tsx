@@ -1,8 +1,7 @@
-import DigitalExperienceBanner from "@/app/components/sections/DigitalExperienceBanner"
+import DigitalExperienceBanner from "@/app/components/sections/DigitalExperienceBanner";
 import Accordion from "../components/sections/Accordion";
 import ContactForm from "../components/ui/ContactForm";
 import GoogleMapSection from "../components/sections/GoogleMapSection";
-import vectorBg from "@/app/assets/imgs/Mask group (1).png";
 import { fetchDefaultContactPage, getContactPageFields } from "@/app/lib/contact-api";
 import {
   buildContactFormFields,
@@ -25,18 +24,17 @@ export default async function ContactUsPage() {
     console.error("Failed to fetch Contact Us page data:", error);
   }
 
-  const bannerTitle = fields?.contactBanner?.bannerTitle || "Contact Us";
-  const bannerDescription = fields?.contactBanner?.bannerDescription || "Digital Experiences That Inspire and Perform";
+  const bannerTitle = fields?.contactBanner?.bannerTitle?.trim() || "";
+  const bannerDescription = fields?.contactBanner?.bannerDescription?.trim() || "";
   const bannerBgUrl = fields?.contactBanner?.bannerBackgroundImage?.node?.sourceUrl;
   const formSettings = (fields?.contactFormSettings ?? undefined) as Record<string, unknown> | undefined;
   const formFields = buildContactFormFields(formSettings);
   const formSubmitButtonText =
     trimString(fields?.contactFormSettings?.submitButtonText) || DEFAULT_CONTACT_SUBMIT_BUTTON_TEXT;
   const formSuccessMessage =
-    trimString(fields?.contactFormSettings?.successMessage) ||
-    DEFAULT_CONTACT_SUCCESS_MESSAGE;
+    trimString(fields?.contactFormSettings?.successMessage) || DEFAULT_CONTACT_SUCCESS_MESSAGE;
 
-  const accordionTitle = fields?.contactAccordionTitle || "FAQ's";
+  const accordionTitle = fields?.contactAccordionTitle?.trim() || "";
   const accordionItems = fields?.contactAccordionItems?.length
     ? fields.contactAccordionItems.map((item, i) => ({
         id: i + 1,
@@ -45,7 +43,6 @@ export default async function ContactUsPage() {
       }))
     : undefined;
 
-  // Map locations from CMS
   const locations = fields?.contactMapLocations?.length
     ? fields.contactMapLocations
         .map((loc) => {
@@ -63,15 +60,18 @@ export default async function ContactUsPage() {
         .filter((loc): loc is { name: string; address: string; latitude: number; longitude: number } => !!loc)
     : undefined;
 
+  const resolvedBannerBg = bannerBgUrl ? resolveImageUrl(bannerBgUrl) : undefined;
+
   return (
     <main className="min-h-screen">
       <DigitalExperienceBanner
         title={<>{bannerTitle}</>}
-        description={bannerDescription}
-        backgroundImage={{
-          src: bannerBgUrl ? resolveImageUrl(bannerBgUrl)! : vectorBg.src,
-          alt: "Background",
-        }}
+        description={bannerDescription || undefined}
+        backgroundImage={
+          resolvedBannerBg
+            ? { src: resolvedBannerBg, alt: "Background" }
+            : undefined
+        }
         contactForm={
           <ContactForm
             fields={formFields}
@@ -81,7 +81,9 @@ export default async function ContactUsPage() {
         }
       />
       <GoogleMapSection locations={locations && locations.length > 0 ? locations : undefined} />
-      <Accordion title={accordionTitle} items={accordionItems} />
+      {accordionItems && accordionItems.length > 0 ? (
+        <Accordion title={accordionTitle} items={accordionItems} />
+      ) : null}
     </main>
   );
 }

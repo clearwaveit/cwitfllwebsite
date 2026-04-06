@@ -3,16 +3,11 @@
 import { useGSAP } from "@/app/hooks/useGSAP";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-const DEFAULT_HERO_VIDEO_DESKTOP_WEBM = "/videos/bannervideo.webm";
-const DEFAULT_HERO_VIDEO_DESKTOP_MP4 = "/videos/bannervideo.mp4";
-const DEFAULT_HERO_VIDEO_MOBILE_MP4 = "/videos/Mainmobile.mp4";
-const DEFAULT_HERO_POSTER = "/imgs/hero_img_1.png";
 
 const HERO_VIDEO_LG_MIN = "(min-width: 1024px)";
 
@@ -42,16 +37,15 @@ export default function Hero({
   const mobileCmsVideo = videoSrcMobile?.trim() || "";
   const mobileCmsPoster = imageSrcMobile?.trim() || "";
   const mobileVideoPlayback =
-    mobileCmsVideo || customVideoSrc || DEFAULT_HERO_VIDEO_MOBILE_MP4;
+    mobileCmsVideo || customVideoSrc || "";
   const hasMobileCustomUpload = !!(mobileCmsVideo || customVideoSrc);
-  const mobilePosterEffective = mobileCmsPoster || cmsPoster || DEFAULT_HERO_POSTER;
+  const mobilePosterEffective = mobileCmsPoster || cmsPoster || "";
   /** Mobile full-bleed image when there is no video source on mobile (no mobile upload, no desktop video) */
   const useImageMobile =
     !mobileCmsVideo &&
     !customVideoSrc &&
     !!(mobileCmsPoster || (useImageDesktop && cmsPoster));
 
-  const [desktopFallback, setDesktopFallback] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -193,27 +187,14 @@ export default function Hero({
         ) : (
           <video
             ref={videoRef}
+            src={hasCustomVideo ? customVideoSrc : undefined}
             loop
             muted
             playsInline
             preload="auto"
-            poster={cmsPoster || DEFAULT_HERO_POSTER}
+            poster={cmsPoster || ""}
             className="hero-bg-media hidden lg:block w-full h-full object-cover"
-            onError={() => {
-              if (!hasCustomVideo) setDesktopFallback(true);
-            }}
-          >
-            {hasCustomVideo ? (
-              <source src={customVideoSrc} type="video/mp4" />
-            ) : desktopFallback ? (
-              <source src={DEFAULT_HERO_VIDEO_MOBILE_MP4} type="video/mp4" />
-            ) : (
-              <>
-                <source src={DEFAULT_HERO_VIDEO_DESKTOP_WEBM} type="video/webm" />
-                <source src={DEFAULT_HERO_VIDEO_DESKTOP_MP4} type="video/mp4" />
-              </>
-            )}
-          </video>
+          />
         )}
 
         {useImageMobile ? (
@@ -231,15 +212,14 @@ export default function Hero({
                 : "m-default"
             }
             ref={mobileVideoRef}
+            src={mobileVideoPlayback || undefined}
             loop
             muted
             playsInline
             preload="auto"
             poster={mobilePosterEffective}
             className="hero-bg-media lg:hidden w-full h-full object-cover"
-          >
-            <source src={mobileVideoPlayback} type="video/mp4" />
-          </video>
+          />
         )}
       </div>
 

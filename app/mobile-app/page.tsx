@@ -182,6 +182,7 @@ export default function MobileAppPage() {
         ctaVariant="outline"
         className="bg-black"
         showCTA={true}
+        ctaLabel="Let's Talk"
       />
       <TechnologiesSection
         title={technologiesTitle}

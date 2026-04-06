@@ -1,19 +1,6 @@
 import Image from "next/image";
 import vectorBg from "@/app/assets/imgs/Mask group (1).png";
 
-const DEFAULT_INDUSTRY_TITLE = "Education";
-const DEFAULT_INDUSTRY_DESC = "Industry";
-const DEFAULT_PROJECT_TYPE = "Website Design & Development";
-const DEFAULT_YEAR = "2020";
-const DEFAULT_SERVICES_TITLE = "Services";
-const DEFAULT_SERVICES = [
-  "UX Design",
-  "Visual Design",
-  "Frontend Development",
-  "Content Strategy",
-  "Systems Integration",
-];
-
 interface EducationProps {
   backgroundImageSrc?: string;
   industryTitle?: string;
@@ -26,12 +13,12 @@ interface EducationProps {
 
 export default function Education({
   backgroundImageSrc,
-  industryTitle = DEFAULT_INDUSTRY_TITLE,
-  industryDescription = DEFAULT_INDUSTRY_DESC,
-  projectTypeTitle = DEFAULT_PROJECT_TYPE,
-  projectYear = DEFAULT_YEAR,
-  servicesTitle = DEFAULT_SERVICES_TITLE,
-  services = DEFAULT_SERVICES,
+  industryTitle = "",
+  industryDescription = "",
+  projectTypeTitle = "",
+  projectYear = "",
+  servicesTitle = "",
+  services = [],
 }: EducationProps) {
   const bgSrc = backgroundImageSrc || vectorBg.src;
   return (

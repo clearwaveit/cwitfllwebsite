@@ -2,10 +2,6 @@ import Image from "next/image";
 import laptopMaskImg from "@/app/assets/imgs/Mockup.png";
 import TextSection from "../ui/TextSection";
 
-const DEFAULT_PARAGRAPHS = [
-  "Bloom Holding is a top-notch corporate giant making marks in various industries in the UAE. It was founded in 2007 with the aim of delivering world-class services to the people of UAE. They have launched numerous successful projects with an attractive return on investment while also contributing to the economy and betterment of the UAE.",
-];
-
 interface StayProps {
   imageSrc?: string;
   paragraphs?: string[];
@@ -13,8 +9,9 @@ interface StayProps {
 
 export default function Stay({
   imageSrc,
-  paragraphs = DEFAULT_PARAGRAPHS,
+  paragraphs = [],
 }: StayProps) {
+  if (paragraphs.length === 0) return null;
   const src = imageSrc || laptopMaskImg.src;
   return (
     <section className="min-h-[60vh] md:min-h-screen max-w-[1494px] w-full mx-auto relative">

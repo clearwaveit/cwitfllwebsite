@@ -1,17 +1,5 @@
 import TextSection from "../ui/TextSection";
 
-const DEFAULT_TITLE = "What we delivered";
-const DEFAULT_DESCRIPTION =
-  "In response to the request made by Bloom Holding, we made an attractive website for them. Our developers created a strong and efficient strategy to cater to this project. We came up with different ideas for the layout and implemented the best one for it. All the pictures and videos used for their website were carefully selected by our team to enhance the look of the website.";
-const DEFAULT_DELIVERABLES = [
-  "Amazing Design",
-  "Optimized Site Speed",
-  "Advanced Security",
-  "Engaging Content",
-  "Responsive Website",
-  "Accessibility Measures",
-];
-
 interface WhatWeDeliveredProps {
   title?: string;
   description?: string;
@@ -19,10 +7,11 @@ interface WhatWeDeliveredProps {
 }
 
 export default function WhatWeDelivered({
-  title = DEFAULT_TITLE,
-  description = DEFAULT_DESCRIPTION,
-  deliverables = DEFAULT_DELIVERABLES,
+  title = "",
+  description = "",
+  deliverables = [],
 }: WhatWeDeliveredProps) {
+  if (deliverables.length === 0) return null;
   return (
     <section className="w-full mx-auto relative py-20 px-4 lg:px-0">
       <div className="max-w-[1494px] mx-auto whatwedeliver-section px-10 sm:px-10 md:px-10">

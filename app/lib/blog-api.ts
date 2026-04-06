@@ -299,7 +299,7 @@ export async function fetchBlogDetailBySlug(slug: string): Promise<BlogDetailIte
     .filter((t) => t.text && t.rating > 0);
 
   return {
-    title: trimOrUndefined(post.title) ?? "Blog",
+    title: trimOrUndefined(post.title) ?? "",
     slug: post.slug,
     badge: trimOrUndefined(details?.badge),
     heroImage: heroImage ?? undefined,
@@ -463,7 +463,7 @@ function mapBlogCardsRepeater(cards: Array<BlogCard | null> | null | undefined):
   return cards
     .filter(Boolean)
     .map((c) => ({
-      category: c!.category?.trim() || "Blog",
+      category: c!.category?.trim() || "",
       title: c!.title?.trim() || "",
       description: c!.description?.trim() || "",
       image: resolveImageUrl(c!.image?.node?.sourceUrl ?? c!.image?.node?.mediaItemUrl ?? undefined),
@@ -475,13 +475,11 @@ function mapBlogCardsRepeater(cards: Array<BlogCard | null> | null | undefined):
 }
 
 /**
- * Resolve Blog page listing:
- * 1. If blogPage.blogCards repeater has entries → use those (admin manually entered cards)
- * 2. Else → show fallback (latest posts / default)
+ * Blog listing page: only `blogPage` repeater and hero/section strings from CMS (no latest-posts or static defaults).
  */
 export function resolveBlogPageListing(
   blogPage: BlogPageData | null | undefined,
-  fallbackItems: BlogCardItem[]
+  _fallbackItems?: BlogCardItem[]
 ): {
   items: BlogCardItem[];
   sectionTitle: string;
@@ -490,15 +488,15 @@ export function resolveBlogPageListing(
   heroTitle: string;
   heroDescription: string;
 } {
-  const sectionTitle = blogPage?.blogSectionTitle?.trim() || "Latest Blogs and Insights";
+  const sectionTitle = blogPage?.blogSectionTitle?.trim() || "";
   const sectionSubtitle = blogPage?.blogSectionSubtitle?.trim() || undefined;
   const sectionDescription = blogPage?.blogSectionDescription?.trim() || undefined;
-  const heroTitle = blogPage?.heroTitle?.trim() || "Blogs";
-  const heroDescription = blogPage?.heroDescription?.trim() || "Latest updates, insights and stories";
+  const heroTitle = blogPage?.heroTitle?.trim() || "";
+  const heroDescription = blogPage?.heroDescription?.trim() || "";
 
   const repeaterItems = mapBlogCardsRepeater(blogPage?.blogCards);
   return {
-    items: repeaterItems.length > 0 ? repeaterItems : fallbackItems,
+    items: repeaterItems,
     sectionTitle,
     sectionSubtitle,
     sectionDescription,
@@ -514,7 +512,7 @@ export function mapPostsToBlogCards(
     .filter(Boolean)
     .map((post) => {
       const category =
-        post?.categories?.nodes?.find((c) => c?.name?.trim())?.name?.trim() || "Blog";
+        post?.categories?.nodes?.find((c) => c?.name?.trim())?.name?.trim() || "";
       const title = post?.title?.trim() ?? "";
       const description = stripHtmlToText(post?.excerpt) ?? "";
       const image = resolveImageUrl(

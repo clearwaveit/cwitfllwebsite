@@ -11,67 +11,25 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const servicesCards: CarouselCard[] = [
-  {
-    type: "text",
-    title: "UI/UX Design",
-    description: "add value to your digital presence",
-    marketInfo: "Across UAE, UK & US markets",
-    backgroundColor: "bg-zinc-900",
-    textColor: "text-white",
-  },
-  {
-    type: "text",
-    title: "Ecommerce Solutions",
-    description: "Smart integrations in web & mobile solutions",
-    backgroundColor: "bg-[#E3E3E3]",
-    textColor: "text-black",
-  },
-  {
-    type: "text",
-    title: "Website Development",
-    subtitle: "of Digital Excellence",
-    marketInfo: "Across UAE, UK & US markets",
-    backgroundColor: "bg-black",
-    textColor: "text-white",
-  },
-  {
-    type: "text",
-    title: "CMS & Integrations",
-    subtitle: "Automation",
-    description: "Smart integrations in web & mobile solutions",
-    backgroundColor: "bg-[#E3E3E3]",
-    textColor: "text-black",
-  },
-  {
-    type: "text",
-    title: "AI-Driven",
-    subtitle: "Automation",
-    description: "Smart integrations in web & mobile solutions",
-    backgroundColor: "bg-zinc-100",
-    textColor: "text-black",
-  },
-];
-
-const defaultParagraphs = [
-  "Clearwave is a website design company rooted in Dubai, working across teams in the UK and the US. We design and develop websites, web applications, and mobile applications, alongside e-commerce platforms, UI/UX design, branding, and SEO. Our work focuses on building digital platforms that are scalable, practical, and built to perform over time.",
-  "As we are adept in developing visual and verbal excellence,  we make sure your brand is highlighted with a user-friendly, accessible and adaptive user interface that will make your website relevant in this ever-evolving prospect.",
-];
-
 interface DigitalExperienceServicesProps {
   cards?: CarouselCard[];
   paragraphs?: string[];
 }
 
 export default function DigitalExperienceServices({
-  cards = servicesCards,
-  paragraphs = defaultParagraphs,
+  cards,
+  paragraphs,
 }: DigitalExperienceServicesProps) {
+  const displayCards = cards ?? [];
+  const displayParagraphs = paragraphs ?? [];
+  if (!displayCards.length && !displayParagraphs.length) {
+    return null;
+  }
+
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  // Animate heading on scroll
   useGSAP(
     () => {
       if (!headingRef.current) return;
@@ -99,7 +57,6 @@ export default function DigitalExperienceServices({
     []
   );
 
-  // Animate carousel on scroll
   useGSAP(
     () => {
       if (!carouselRef.current) return;
@@ -134,17 +91,18 @@ export default function DigitalExperienceServices({
       className="relative bg-black overflow-hidden isolate"
     >
       <div className="relative z-20 mx-auto">
-        {/* Carousel Section */}
-        <div ref={carouselRef} className="relative z-20 w-full overflow-hidden py-8">
-          <Carousel cards={cards} speed={60} pauseOnHover={true} />
-        </div>
-        {/* Text Section */}
-        <TextSection
-          paragraphs={paragraphs}
-          className="py-12 md:py-40 text-section-padding w-full max-w-[1330px]"
-        />
+        {displayCards.length > 0 ? (
+          <div ref={carouselRef} className="relative z-20 w-full overflow-hidden py-8">
+            <Carousel cards={displayCards} speed={60} pauseOnHover={true} />
+          </div>
+        ) : null}
+        {displayParagraphs.length > 0 ? (
+          <TextSection
+            paragraphs={displayParagraphs}
+            className="py-12 md:py-40 text-section-padding w-full max-w-[1330px]"
+          />
+        ) : null}
       </div>
     </section>
   );
 }
-

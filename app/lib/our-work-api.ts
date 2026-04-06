@@ -27,6 +27,17 @@ export function resolveImageUrl(url: string | undefined | null): string | undefi
   return trimmed.startsWith("/") ? `${origin}${trimmed}` : `${origin}/${trimmed}`;
 }
 
+/**
+ * Same resolution rules as {@link resolveImageUrl}, for `<video src>`.
+ * Use for direct file URLs (MP4/WebM), including third-party CDNs such as
+ * Cloudflare Stream download links, e.g.
+ * `https://customer-….cloudflarestream.com/{uid}/downloads/default.mp4`.
+ * YouTube/Vimeo page URLs are not supported here — those need an iframe embed.
+ */
+export function resolveVideoUrl(url: string | undefined | null): string | undefined {
+  return resolveImageUrl(url);
+}
+
 // -----------------------------------------------------------------------------
 // Our Work Listing Page (page by URI)
 // -----------------------------------------------------------------------------

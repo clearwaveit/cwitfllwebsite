@@ -3,7 +3,7 @@
  * Resolves image/media URLs and maps to component prop shapes.
  */
 
-import { resolveImageUrl } from "@/app/lib/our-work-api";
+import { resolveImageUrl, resolveVideoUrl } from "@/app/lib/our-work-api";
 import type { HomePageFields } from "@/app/lib/home-api";
 import type { SliderCard } from "@/app/components/ui/HorizontalScrollSlider";
 import type { AccordionItem } from "@/app/components/sections/Accordion";
@@ -12,13 +12,16 @@ function resolve(url: string | undefined | null): string | undefined {
   return resolveImageUrl(url ?? undefined) ?? undefined;
 }
 
+function resolveVideo(url: string | undefined | null): string | undefined {
+  return resolveVideoUrl(url ?? undefined) ?? undefined;
+}
 
-/** Resolve studio video URL from ACF/GraphQL – supports node.sourceUrl, mediaItemUrl, link, url, or plain string */
+/** Resolve studio video URL from ACF/GraphQL – supports node.sourceUrl, mediaItemUrl, link, url, or plain string (incl. Cloudflare Stream MP4 links). */
 function getStudioVideoUrl(raw: unknown): string | undefined {
   if (raw == null) return undefined;
   if (typeof raw === "string") {
     const u = raw.trim();
-    return u ? (resolve(u) ?? u) : undefined;
+    return u ? (resolveVideo(u) ?? u) : undefined;
   }
   if (typeof raw !== "object") return undefined;
   const o = raw as Record<string, unknown>;
@@ -32,7 +35,7 @@ function getStudioVideoUrl(raw: unknown): string | undefined {
     (o.url as string)?.trim() ||
     (o.link as string)?.trim();
   if (!url) return undefined;
-  return resolve(url) ?? url;
+  return resolveVideo(url) ?? url;
 }
 
 function getImageUrl(node: { node?: { sourceUrl?: string; altText?: string | null } } | null | undefined): string | undefined {
@@ -71,6 +74,8 @@ export type HomeStudioItem = {
   description: string;
   video: string;
   href: string;
+  /** CTA label from CMS */
+  buttonText?: string;
 };
 
 export type HomeStudiosProps = {
@@ -131,10 +136,7 @@ export type HomeAccordionProps = {
 // Defaults (used when CMS has no data)
 // -----------------------------------------------------------------------------
 
-const DEFAULT_INTRO_PARAGRAPHS = [
-  "Clearwave is a digital studio working across teams in Dubai, the UK, and the US, focused on building practical, high-quality digital products.",
-  "Our work spans websites, web applications, mobile platforms, e-commerce systems, branding, and search optimisation. Alongside development, we support integrations, infrastructure, and AI-enabled automation to ensure platforms are scalable, secure, and built for long-term performance.",
-];
+// No default intro paragraphs – CMS-only content
 
 // -----------------------------------------------------------------------------
 // Normalizers
@@ -144,8 +146,10 @@ export function normalizeHero(fields: HomePageFields | null): HomeHeroProps {
   if (!fields?.homeHeroSection) return {};
   const s = fields.homeHeroSection;
   /* getStudioVideoUrl supports MediaItem { node } and plain URL strings (ACF “Return: File URL”) */
-  const videoUrl = getStudioVideoUrl(s.heroVideo);
-  const mobileVideoUrl = getStudioVideoUrl(s.heroVideoMobile);
+  const videoUrl =
+    getStudioVideoUrl(s.heroVideoUrl) ?? getStudioVideoUrl(s.heroVideo);
+  const mobileVideoUrl =
+    getStudioVideoUrl(s.heroVideoMobileUrl) ?? getStudioVideoUrl(s.heroVideoMobile);
   const imageUrl = getStudioVideoUrl(s.heroImage ?? s.heroimage);
   const mobileImageUrl = getStudioVideoUrl(s.heroImageMobile);
   return {
@@ -219,7 +223,7 @@ export function normalizeShowcase(fields: HomePageFields | null): HomeShowcasePr
 
 export function normalizeIntro(fields: HomePageFields | null): HomeIntroProps {
   if (!fields?.homeIntroSection) {
-    return { paragraphs: DEFAULT_INTRO_PARAGRAPHS };
+    return { paragraphs: [] };
   }
   const s = (Array.isArray(fields.homeIntroSection)
     ? fields.homeIntroSection.find(Boolean)
@@ -228,7 +232,7 @@ export function normalizeIntro(fields: HomePageFields | null): HomeIntroProps {
       introBackgroundImage?: { node?: { sourceUrl?: string; altText?: string | null } } | null;
     } | null | undefined;
   if (!s) {
-    return { paragraphs: DEFAULT_INTRO_PARAGRAPHS };
+    return { paragraphs: [] };
   }
   const html = s.introParagraph?.trim();
   const paragraphs = html
@@ -250,36 +254,12 @@ export function normalizeIntro(fields: HomePageFields | null): HomeIntroProps {
           .map((value) => value.replace(/[ \t]+/g, " ").replace(/\s*\n\s*/g, " ").trim())
           .filter(Boolean);
       })()
-    : DEFAULT_INTRO_PARAGRAPHS;
+    : [];
   const backgroundImageSrc = getImageUrl(s.introBackgroundImage as { node?: { sourceUrl?: string; altText?: string | null } });
   return { paragraphs, backgroundImageSrc };
 }
 
-const DEFAULT_STUDIOS: HomeStudioItem[] = [
-  {
-    title: "Digital Experience Studio",
-    description:
-      "We design digital experiences that are clear, intuitive, and built around real user behaviour. Our focus is on creating websites and digital interfaces that combine strong visual identity with usability, speed, and accessibility.",
-    video: "/videos/animated_clip_1.mp4",
-    href: "/digital-experience-studio",
-  },
-  {
-    title: "Application Development Studio",
-    description:
-      "We build reliable digital platforms that support real business workflows. Our engineering teams develop scalable web applications, mobile applications, and integrated systems that can grow with the needs of your organisation.",
-    video: "/videos/animated_clip_2.mp4",
-    href: "/application-development-studio",
-  },
-  {
-    title: "Growth & Branding Studio",
-    description:
-      "Beyond building platforms, we help businesses grow through stronger digital visibility and brand clarity. Our work focuses on aligning branding, marketing, and search performance so digital platforms generate measurable results.",
-    video: "/videos/animated_clip_3.mp4",
-    href: "/growth-branding-studio",
-  },
-];
-
-const DEFAULT_STUDIO_VIDEOS = ["/videos/animated_clip_1.mp4", "/videos/animated_clip_2.mp4", "/videos/animated_clip_3.mp4"] as const;
+// No default studios or videos – CMS-only content
 
 function toStudioList(raw: unknown): HomeStudioItem[] {
   const list = Array.isArray(raw)
@@ -287,17 +267,25 @@ function toStudioList(raw: unknown): HomeStudioItem[] {
     : raw && typeof raw === "object" && Array.isArray((raw as { nodes?: unknown[] }).nodes)
       ? (raw as { nodes: unknown[] }).nodes
       : [];
-  return list.slice(0, 3).map((s, index) => {
+  return list.slice(0, 3).map((s) => {
     const item = s as Record<string, unknown> | null | undefined;
     const link = (item?.link as string)?.trim();
-    const href = link?.startsWith("http") ? link : link?.startsWith("/") ? link : `/${link || ""}`;
-    const defaultVideo = DEFAULT_STUDIO_VIDEOS[index] ?? DEFAULT_STUDIO_VIDEOS[0];
-    const videoUrl = getStudioVideoUrl(item?.video);
+    const hrefFromCms =
+      link && (link.startsWith("http") || link.startsWith("/"))
+        ? link
+        : link
+          ? `/${link.replace(/^\/+/, "")}`
+          : "";
+    const href = hrefFromCms;
+    const videoUrl =
+      getStudioVideoUrl(item?.videoUrl) ?? getStudioVideoUrl(item?.video) ?? "";
+    const buttonText = (item?.buttonText as string)?.trim() || undefined;
     return {
       title: (item?.title as string)?.trim() ?? "",
       description: (item?.description as string)?.trim() ?? "",
-      video: videoUrl && videoUrl.length > 0 ? videoUrl : defaultVideo,
-      href: href || "#",
+      video: videoUrl || "",
+      href,
+      buttonText,
     };
   });
 }
@@ -306,20 +294,22 @@ export function normalizeStudios(fields: HomePageFields | null): HomeStudiosProp
   try {
     const raw = fields?.homeStudios;
     const studios = toStudioList(raw);
-    if (!studios.length) return { studios: DEFAULT_STUDIOS };
+    if (!studios.length) return { studios: [] };
     return { studios };
   } catch {
-    return { studios: DEFAULT_STUDIOS };
+    return { studios: [] };
   }
 }
 
 export function normalizeGenai(fields: HomePageFields | null): HomeGenaiProps {
   if (!fields?.homeGenaiSection) return {};
   const s = fields.homeGenaiSection;
+  const videoSrc =
+    getStudioVideoUrl(s.genaiVideoUrl) ?? getStudioVideoUrl(s.video);
   return {
     heading: s.heading?.trim() || undefined,
     paragraph: s.paragraph?.trim() || undefined,
-    videoSrc: resolve(s.video?.node?.sourceUrl) ?? resolve(s.video?.node?.mediaItemUrl),
+    videoSrc,
     ctaText: s.ctaText?.trim(),
     ctaLink: s.ctaLink?.trim(),
   };
@@ -342,7 +332,7 @@ function toHomeOurWorkItems(raw: unknown): HomeOurWorkItem[] {
     const details = node?.portfolioDetails as Record<string, unknown> | null | undefined;
     const imgNode = (details?.backgroundImage ?? details?.heroBackgroundImage) as { node?: { sourceUrl?: string } } | null | undefined;
     const image = resolve(imgNode?.node?.sourceUrl) ?? "";
-    const link = slug ? `/work-details/${slug}` : undefined;
+    const link = slug ? `/portfolio/${slug}` : undefined;
     return { title, description: excerpt || undefined, image, link };
   }).filter((item) => item.title || item.image);
 }
@@ -532,14 +522,14 @@ export function normalizeOurWork(fields: HomePageFields | null): HomeOurWorkProp
         : null) ?? null;
 
     const portfolioSlug = portfolio.slug?.trim();
-    const link = portfolioSlug ? `/work-details/${portfolioSlug}` : undefined;
+    const link = portfolioSlug ? `/portfolio/${portfolioSlug}` : undefined;
 
     const portfolioListing = portfolio.homePortfolioListing;
     const ownCards = (portfolioListing?.portfolioListingCards ?? []).filter(Boolean);
 
-    const baseSubtitle = portfolioListing?.portfolioListingSubtitle?.trim() || globalSubtitle || "EDUCATION\nTECH\nWEBSITE";
-    const baseTitle = portfolio.title?.trim() || "The Oxford Institute";
-    const baseDescription = portfolio.excerpt?.trim() || "70% increased in digital interaction of potential students looking for information";
+    const baseSubtitle = portfolioListing?.portfolioListingSubtitle?.trim() || globalSubtitle || "";
+    const baseTitle = portfolio.title?.trim() || "";
+    const baseDescription = portfolio.excerpt?.trim() || "";
     const baseImage =
       resolve(
         portfolio.portfolioDetails?.backgroundImage?.node?.sourceUrl ??
@@ -610,12 +600,12 @@ export function normalizeOurWork(fields: HomePageFields | null): HomeOurWorkProp
         cardImage?: NormalizedMediaNode;
       };
       return {
-        subtitle: c.cardSubtitle?.trim() || globalSubtitle || "EDUCATION\nTECH\nWEBSITE",
-        title: c.cardTitle?.trim() || globalTitle || "The Oxford Institute",
+        subtitle: c.cardSubtitle?.trim() || globalSubtitle || "",
+        title: c.cardTitle?.trim() || globalTitle || "",
         description:
           c.cardDescription?.trim() ||
           globalDescription ||
-          "70% increased in digital interaction of potential students looking for information",
+          "",
         image: getImageFromNode(c.cardImage) || "",
       };
     });
@@ -633,11 +623,7 @@ export function normalizeOurClients(fields: HomePageFields | null): HomeOurClien
   return { logoSrc: url };
 }
 
-const DEFAULT_BLOGS: HomeBlogItem[] = [
-  { category: "Blog", title: "LuLu Group International", description: "Lulu Group is a diversified conglomerate with business entities worldwide and contributes highly to the Gulf's economic status." },
-  { category: "Insight", title: "Joyalukkas Exchange", description: "Joyalukkas Exchange is a well-known foreign exchange offering a range of financial services in the UAE, Kuwait and Oman." },
-  { category: "Blog", title: "Unicoin DCX", description: "Unicoin DCX is a cryptocurrency exchange that uses blockchain technology to let you send, receive and trade across the platform." },
-];
+// No default blogs – CMS-only content
 
 function stripHtmlToText(value: string | undefined | null): string {
   if (!value) return "";
@@ -719,7 +705,7 @@ function buildPerBlogCardsFromOverrides(raw: unknown): HomeBlogItem[] {
     const fallbackTitle = trimOrUndefined(post?.title as string | null | undefined);
     const slug = trimOrUndefined(post?.slug as string | null | undefined);
 
-    const category = trimOrUndefined(r.cardSubtitle as string | null | undefined) || "Blog";
+    const category = trimOrUndefined(r.cardSubtitle as string | null | undefined) || "";
     const title = trimOrUndefined(r.cardTitle as string | null | undefined) || fallbackTitle || "";
     const description = trimOrUndefined(r.cardDescription as string | null | undefined) || "";
     // cardImage can be flat { sourceUrl } or nested { node: { sourceUrl } }
@@ -750,28 +736,16 @@ function trimOrUndefined(value: string | null | undefined): string | undefined {
   return v ? v : undefined;
 }
 
-/** Options for Home page blogs section. When homeBlogsSelectedPosts is empty, use fallback (e.g. latest posts). */
-export type NormalizeBlogsOptions = {
-  /** When Selected Blogs is empty, use these (e.g. latest 3–6 posts). Home page only; /blog keeps its own listing. */
-  fallbackLatestPosts?: HomeBlogItem[];
-};
-
 /**
- * Home page Blogs section: source is only homeBlogsSelectedPosts.
- * - If homeBlogsSelectedPosts has nodes → show only those (title, excerpt, image, link from GraphQL).
- * - If empty → use fallbackLatestPosts (e.g. latest 3–6) or DEFAULT_BLOGS.
- * Blog page (/blog) is unchanged and uses its own listing.
+ * Home page Blogs section from CMS fields only (no latest-posts or other front-end fallbacks).
  */
-export function normalizeBlogs(
-  fields: HomePageFields | null,
-  options?: NormalizeBlogsOptions
-): HomeBlogsProps {
+export function normalizeBlogs(fields: HomePageFields | null): HomeBlogsProps {
   const overrides = fields?.homeBlogsSectionOverrides;
   const sectionSubtitle = overrides?.homeBlogsSectionSubtitle?.trim() || undefined;
   const sectionTitleOverride = overrides?.homeBlogsSectionTitle?.trim();
   const sectionDescription = overrides?.homeBlogsSectionDescription?.trim() || undefined;
   const sectionTitle = sectionTitleOverride || fields?.blogsSectionTitle?.trim();
-  const defaultTitle = sectionTitle || "Latest Blogs and Insights";
+  const defaultTitle = sectionTitle || "";
 
   try {
     // homeBlogs repeater: manual per-card content (category, title, description, image, link)
@@ -811,7 +785,7 @@ export function normalizeBlogs(
         const perCard = postId ? cardOverridesMap.get(postId) : undefined;
 
         const categories = (post.categories as { nodes?: Array<{ name?: string | null } | null> | null } | null | undefined)?.nodes ?? [];
-        const postCategory = categories.find((c) => c?.name?.trim())?.name?.trim() || "Blog";
+        const postCategory = categories.find((c) => c?.name?.trim())?.name?.trim() || "";
         const postTitle = String(post.title ?? "").trim();
         const postExcerpt = stripHtmlToText(String(post.excerpt ?? ""));
         const featured = post.featuredImage as {
@@ -826,7 +800,7 @@ export function normalizeBlogs(
         return {
           category: repeaterCategory ?? perCard?.category ?? postCategory,
           title: repeaterTitle ?? perCard?.title ?? postTitle,
-          description: repeaterDescription ?? perCard?.description ?? (postExcerpt || DEFAULT_BLOGS[index % DEFAULT_BLOGS.length]?.description || ""),
+          description: repeaterDescription ?? perCard?.description ?? (postExcerpt || ""),
           image: repeaterImage ?? perCard?.image ?? postImage,
           link: repeaterLink ?? postLink,
           buttonText: repeaterButtonText ?? perCard?.buttonText,
@@ -849,7 +823,7 @@ export function normalizeBlogs(
         .map((entry) => {
           const e = entry as { category?: string | null; title?: string | null; description?: string | null; image?: { node?: { sourceUrl?: string; altText?: string | null } } | null; link?: string | null; buttonText?: string | null; buttonLink?: string | null };
           return {
-            category: e.category?.trim() || "Blog",
+            category: e.category?.trim() || "",
             title: e.title?.trim() || "",
             description: e.description?.trim() || "",
             image: resolve(e.image?.node?.sourceUrl ?? undefined),
@@ -878,28 +852,18 @@ export function normalizeBlogs(
       };
     }
 
-    const fallback = options?.fallbackLatestPosts;
-    if (fallback?.length) {
-      return {
-        sectionSubtitle,
-        sectionTitle: defaultTitle,
-        sectionDescription,
-        items: fallback,
-      };
-    }
-
     return {
       sectionSubtitle,
       sectionTitle: defaultTitle,
       sectionDescription,
-      items: DEFAULT_BLOGS,
+      items: [],
     };
   } catch {
     return {
       sectionSubtitle,
       sectionTitle: defaultTitle,
       sectionDescription,
-      items: DEFAULT_BLOGS,
+      items: [],
     };
   }
 }
@@ -909,17 +873,19 @@ export function normalizeAccordion(fields: HomePageFields | null): HomeAccordion
   try {
     const raw = fields?.accordionItems;
     const list = Array.isArray(raw) ? raw : [];
-    if (!list.length) return { title: title || "FAQ's" };
-    const items: AccordionItem[] = list.map((a, i) => {
-      const item = a as { faqTitle?: string; faqContent?: string } | null | undefined;
-      return {
-        id: i + 1,
-        title: item?.faqTitle?.trim() ?? "",
-        content: item?.faqContent?.trim() ?? "",
-      };
-    });
-    return { title: title || "FAQ's", items };
+    if (!list.length) return { title: title || undefined, items: undefined };
+    const items: AccordionItem[] = list
+      .map((a) => {
+        const item = a as { faqTitle?: string; faqContent?: string } | null | undefined;
+        const t = item?.faqTitle?.trim() ?? "";
+        const c = item?.faqContent?.trim() ?? "";
+        if (!t && !c) return null;
+        return { title: t, content: c };
+      })
+      .filter((x): x is { title: string; content: string } => x != null)
+      .map((x, i) => ({ id: i + 1, ...x }));
+    return { title: title || undefined, items: items.length ? items : undefined };
   } catch {
-    return { title: title || "FAQ's" };
+    return { title: title || undefined, items: undefined };
   }
 }

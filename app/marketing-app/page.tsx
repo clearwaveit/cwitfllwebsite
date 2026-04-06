@@ -175,6 +175,7 @@ export default function MarketingAppPage() {
         ctaVariant="outline"
         className="bg-black"
         showCTA={true}
+        ctaLabel="Let's Talk"
       />
       <AppStartToEnd
         title={title_4}
