@@ -468,7 +468,7 @@ export function buildStudioOurWorkItems(fields: StudioPageFields | null): Studio
       resolveImageUrl(portfolio.portfolioDetails?.backgroundImage?.node?.sourceUrl) ||
       resolveImageUrl(portfolio.featuredImage?.node?.sourceUrl) ||
       "";
-    const link = portfolio.slug?.trim() ? `/work-details/${portfolio.slug.trim()}` : undefined;
+    const link = portfolio.slug?.trim() ? `/portfolio/${portfolio.slug.trim()}` : undefined;
 
     const mainCategory = matchedOverride?.portfolioSubtitle?.trim() || undefined;
     const mainTitle = matchedOverride?.portfolioTitle?.trim() || baseTitle;

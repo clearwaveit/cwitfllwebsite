@@ -152,6 +152,7 @@ export default function SecurityAppPage() {
         ctaVariant="outline"
         className="bg-black"
         showCTA={true}
+        ctaLabel="Let's Talk"
       />
       <MobileAppStats />
       <ClientTestimonials />

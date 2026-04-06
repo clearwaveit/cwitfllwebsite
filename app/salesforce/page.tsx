@@ -148,6 +148,7 @@ export default function SalesforcePage() {
         ctaVariant="outline"
         className="bg-black"
         showCTA={true}
+        ctaLabel="Let's Talk"
       />
       <AppWhyOpt
         title={title_3}

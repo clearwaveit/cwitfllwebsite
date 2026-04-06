@@ -9,49 +9,6 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const defaultAccordionItems = [
-  {
-    id: 1,
-    title: "What strategies do you use for optimising website speed and performance?",
-    content: "We focus on clean development practices, efficient hosting infrastructure, and performance optimisation techniques such as caching, CDN usage, and Core Web Vitals improvements. The goal is to ensure websites load quickly, remain stable under traffic, and deliver a smooth experience across devices.",
-  },
-  {
-    id: 2,
-    title: "How do you ensure data security and privacy for websites operating in Dubai?",
-    content: "We follow modern security practices including secure infrastructure, encrypted communication, access control policies, and regular monitoring. For businesses operating in the UAE, we also consider regional regulatory expectations and best practices around data protection.",
-  },
-  {
-    id: 3,
-    title: "Can you build multilingual websites, including Arabic and English?",
-    content: "Yes. We regularly build multilingual websites with proper language architecture, right-to-left layout support, and SEO considerations for Arabic and English content.",
-  },
-  {
-    id: 4,
-    title: "How do you approach SEO for businesses in the MENA region?",
-    content: "Our approach combines technical SEO, content optimisation, and regional search behaviour analysis. This includes localisation strategies, Arabic keyword targeting, and structured site architecture that helps search engines understand and rank the website effectively.",
-  },
-  {
-    id: 5,
-    title: "Do you provide post-launch support and maintenance?",
-    content: "Yes. After launch we provide ongoing support that can include performance monitoring, updates, infrastructure maintenance, SEO optimisation, and feature improvements as the platform evolves.",
-  },
-  {
-    id: 6,
-    title: "Can you build websites for industries like real estate or tourism?",
-    content: "Yes. We have experience designing platforms for industries that require high-volume content, property listings, booking systems, and search-driven discovery such as real estate, hospitality, and tourism.",
-  },
-  {
-    id: 7,
-    title: "How do you develop e-commerce platforms?",
-    content: "We build scalable e-commerce platforms that support product management, payment integrations, inventory systems, and performance optimisation. Each platform is designed around the business model and expected traffic.",
-  },
-  {
-    id: 8,
-    title: "How do you prepare websites for high traffic periods?",
-    content: "We architect systems to handle scale through cloud infrastructure, caching strategies, load balancing, and performance monitoring. This ensures platforms remain stable during peak traffic periods.",
-  },
-];
-
 export interface AccordionItem {
   id: number;
   title: string;
@@ -59,14 +16,15 @@ export interface AccordionItem {
 }
 
 interface AccordionProps {
-  /** Section heading. Default: "FAQ's" */
+  /** Section heading */
   title?: string;
-  /** FAQ items from CMS. When provided, overrides default items. */
+  /** FAQ items from CMS */
   items?: AccordionItem[];
 }
 
-export default function Accordion({ title = "FAQ's", items }: AccordionProps) {
-  const accordionItems = items && items.length > 0 ? items : defaultAccordionItems;
+export default function Accordion({ title = "", items }: AccordionProps) {
+  if (!items?.length) return null;
+  const accordionItems = items;
   const firstItemId = accordionItems[0]?.id ?? 1;
   const [openItems, setOpenItems] = useState<number[]>([firstItemId]); // First item expanded by default
   const sectionRef = useRef<HTMLElement>(null);

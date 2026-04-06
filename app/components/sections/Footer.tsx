@@ -28,41 +28,27 @@ export default function Footer({ settings }: { settings?: FooterSettings }) {
   const linksColumnsRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
-  const footerCtaHeading = settings?.ctaHeading?.trim() || "Get Started now!";
-  const footerCtaParagraph = settings?.ctaParagraph?.trim() || "Request for a free quote, submit your RFP/RFI.";
-  const footerCtaButtonText = settings?.ctaButtonText?.trim() || "Let's Talk";
-  const footerCtaButtonLink = settings?.ctaButtonLink?.trim() || "/contact-us";
-  const navigationLinks = settings?.navigationLinks?.length
-    ? settings.navigationLinks
-    : [
-        { label: "Home", href: "/" },
-        { label: "Services", href: "/services" },
-        { label: "Work", href: "/our-work" },
-        { label: "About", href: "/about-us" },
-        { label: "Contact Us", href: "/contact-us" },
-      ];
-  const serviceLinks = settings?.serviceLinks?.length
-    ? settings.serviceLinks
-    : [
-        { label: "Website design & Development", href: "#" },
-        { label: "AI Automation and Services", href: "#" },
-        { label: "Mobile apps development", href: "#" },
-        { label: "Web apps development", href: "#" },
-        { label: "Branding and Brand strategy", href: "#" },
-      ];
-  const addressLines = settings?.addressLines?.length
-    ? settings.addressLines
-    : ["Trade Center Area", "Sheikh Zayed Road", "Dubai, UAE"];
-  const footerPhone = settings?.phone?.trim() || "+971 4 111 111 1";
-  const linkedinUrl = settings?.linkedinUrl?.trim() || "#";
-  const instagramUrl = settings?.instagramUrl?.trim() || "#";
-  const twitterUrl = settings?.twitterUrl?.trim() || "#";
-  const copyrightLineOne = settings?.copyrightLineOne?.trim() || "CWIT © 2025";
-  const copyrightLineTwo = settings?.copyrightLineTwo?.trim() || "All rights reserved";
-  const privacyLabel = settings?.privacyLabel?.trim() || "Privacy Policy";
-  const privacyLink = settings?.privacyLink?.trim() || "#";
-  const termsLabel = settings?.termsLabel?.trim() || "Terms & Conditions";
-  const termsLink = settings?.termsLink?.trim() || "#";
+  const footerCtaHeading = settings?.ctaHeading?.trim() ?? "";
+  const footerCtaParagraph = settings?.ctaParagraph?.trim() ?? "";
+  const footerCtaButtonText = settings?.ctaButtonText?.trim() ?? "";
+  const footerCtaButtonLink = settings?.ctaButtonLink?.trim() ?? "";
+  const navigationLinks = settings?.navigationLinks ?? [];
+  const serviceLinks = settings?.serviceLinks ?? [];
+  const addressLines = settings?.addressLines ?? [];
+  const footerPhone = settings?.phone?.trim() ?? "";
+  const linkedinUrl = settings?.linkedinUrl?.trim() ?? "";
+  const instagramUrl = settings?.instagramUrl?.trim() ?? "";
+  const twitterUrl = settings?.twitterUrl?.trim() ?? "";
+  const copyrightLineOne = settings?.copyrightLineOne?.trim() ?? "";
+  const copyrightLineTwo = settings?.copyrightLineTwo?.trim() ?? "";
+  const privacyLabel = settings?.privacyLabel?.trim() ?? "";
+  const privacyLink = settings?.privacyLink?.trim() ?? "";
+  const termsLabel = settings?.termsLabel?.trim() ?? "";
+  const termsLink = settings?.termsLink?.trim() ?? "";
+
+  const showFooterCta =
+    !!(footerCtaHeading || footerCtaParagraph || (footerCtaButtonText && footerCtaButtonLink));
+  const isHttp = (u: string) => /^https?:\/\//i.test(u.trim());
 
   useEffect(() => {
     if (!footerRef.current || !ctaSectionRef.current) return;
@@ -238,20 +224,30 @@ export default function Footer({ settings }: { settings?: FooterSettings }) {
 
         {/* CTA Content */}
         <div className="relative md:top-[-150px] z-10 h-full flex flex-col items-center justify-center text-center px-4 footer-cta-content">
-          <h2 ref={ctaHeadingRef} className="text-[60px] md:text-[80px] font-[700] leading-[80px] text-white mb-4 footer-heading">
-            {footerCtaHeading}
-          </h2>
-          <p ref={ctaParagraphRef} className="text-[16px] md:text-[20px] text-white mb-8 max-w-2xl footer-paragraph">
-            {footerCtaParagraph}
-          </p>
-          <div ref={ctaButtonRef}>
-            <CallToActionButton
-              variant="shiny"
-              onClick={() => router.push(footerCtaButtonLink)}
-            >
-              {footerCtaButtonText}
-            </CallToActionButton>
-          </div>
+          {showFooterCta && (
+            <>
+              {footerCtaHeading ? (
+                <h2 ref={ctaHeadingRef} className="text-[60px] md:text-[80px] font-[700] leading-[80px] text-white mb-4 footer-heading">
+                  {footerCtaHeading}
+                </h2>
+              ) : null}
+              {footerCtaParagraph ? (
+                <p ref={ctaParagraphRef} className="text-[16px] md:text-[20px] text-white mb-8 max-w-2xl footer-paragraph">
+                  {footerCtaParagraph}
+                </p>
+              ) : null}
+              {footerCtaButtonText && footerCtaButtonLink ? (
+                <div ref={ctaButtonRef}>
+                  <CallToActionButton
+                    variant="shiny"
+                    onClick={() => router.push(footerCtaButtonLink)}
+                  >
+                    {footerCtaButtonText}
+                  </CallToActionButton>
+                </div>
+              ) : null}
+            </>
+          )}
         </div>
 
         {/* Footer Links Section - Overlay on Vector */}
@@ -259,32 +255,59 @@ export default function Footer({ settings }: { settings?: FooterSettings }) {
           <div className="flex justify-center items-center mx-auto footer-links-container global-section-padding px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
             <div ref={linksColumnsRef} className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 lg:gap-10 xl:gap-12 2xl:gap-14 footer-links-grid w-full">
               {/* Navigation Links */}
-              <div className="footer-column flex flex-col items-start">
-                <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
-                  {navigationLinks.map((item, index) => (
-                    <li key={`${item.label}-${index}`}>
-                      <a href={item.href} className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                        {item.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {navigationLinks.length > 0 ? (
+                <div className="footer-column flex flex-col items-start">
+                  <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
+                    {navigationLinks.map((item, index) => (
+                      <li key={`${item.label}-${index}`}>
+                        {item.href?.trim() ? (
+                          <a
+                            href={item.href.trim()}
+                            className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link"
+                          >
+                            {item.label}
+                          </a>
+                        ) : (
+                          <span className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-link">
+                            {item.label}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
 
               {/* Service Categories */}
-              <div className="footer-column flex flex-col items-start">
-                <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
-                  {serviceLinks.map((item, index) => (
-                    <li key={`${item.label}-${index}`}>
-                      <a href={item.href} className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                        {item.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {serviceLinks.length > 0 ? (
+                <div className="footer-column flex flex-col items-start">
+                  <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
+                    {serviceLinks.map((item, index) => (
+                      <li key={`${item.label}-${index}`}>
+                        {item.href?.trim() ? (
+                          <a
+                            href={item.href.trim()}
+                            className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link"
+                          >
+                            {item.label}
+                          </a>
+                        ) : (
+                          <span className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-link">
+                            {item.label}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
 
               {/* Contact Information */}
+              {(addressLines.length > 0 ||
+                footerPhone ||
+                isHttp(linkedinUrl) ||
+                isHttp(instagramUrl) ||
+                isHttp(twitterUrl)) ? (
               <div className="footer-column flex flex-col justify-center items-start md:items-start lg:items-end footer-contact-info mt-4 sm:mt-0">
                 <ul className="font-graphik-light-weight-300 space-y-1.5 sm:space-y-2 md:space-y-2.5 lg:space-y-3">
                   {addressLines.map((line, index) => (
@@ -295,85 +318,109 @@ export default function Footer({ settings }: { settings?: FooterSettings }) {
                       {line}
                     </li>
                   ))}
-                  <li className="flex items-center gap-1.5 sm:gap-2 md:gap-2.5 text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
-                    <Image 
-                      src={phoneIcon} 
-                      alt="Phone" 
-                      width={16.66} 
-                      height={16.66} 
-                      className="w-[10px] h-[10px] sm:w-[12px] sm:h-[12px] md:w-[13px] md:h-[13px] lg:w-[15px] lg:h-[15px] xl:w-[17px] xl:h-[17px] 2xl:w-[20px] 2xl:h-[20px] footer-phone-icon" 
-                    />
-                    {footerPhone}
-                  </li>
+                  {footerPhone ? (
+                    <li className="flex items-center gap-1.5 sm:gap-2 md:gap-2.5 text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
+                      <Image
+                        src={phoneIcon}
+                        alt="Phone"
+                        width={16.66}
+                        height={16.66}
+                        className="w-[10px] h-[10px] sm:w-[12px] sm:h-[12px] md:w-[13px] md:h-[13px] lg:w-[15px] lg:h-[15px] xl:w-[17px] xl:h-[17px] 2xl:w-[20px] 2xl:h-[20px] footer-phone-icon"
+                      />
+                      {footerPhone}
+                    </li>
+                  ) : null}
                 </ul>
 
                 {/* Social Media Icons */}
-                <div className="mt-4 sm:mt-5 md:mt-6 lg:mt-7 xl:mt-8">
-                  <div className="flex justify-start items-start gap-1.5 sm:gap-2 md:gap-2.5 lg:gap-3">
-                    <a
-                      href={linkedinUrl}
-                      className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] md:w-[32px] md:h-[32px] lg:w-[40px] lg:h-[40px] xl:w-[46px] xl:h-[46px] 2xl:w-[50px] 2xl:h-[50px] rounded-full border border-white flex items-center justify-center text-white hover:bg-[#0DFCC1] hover:border-[#0DFCC1] transition-colors footer-social-icon"
-                      aria-label="LinkedIn"
-                    >
-                      <Image 
-                        src={linkedinIcon} 
-                        alt="LinkedIn" 
-                        width={17} 
-                        height={15} 
-                        className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] md:w-[11px] md:h-[11px] lg:w-[13px] lg:h-[13px] xl:w-[15px] xl:h-[15px] 2xl:w-[17px] 2xl:h-[15px] footer-social-icon-img" 
-                      />
-                    </a>
-                    <a
-                      href={instagramUrl}
-                      className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] md:w-[32px] md:h-[32px] lg:w-[40px] lg:h-[40px] xl:w-[46px] xl:h-[46px] 2xl:w-[50px] 2xl:h-[50px] rounded-full border border-white flex items-center justify-center text-white hover:bg-[#0DFCC1] hover:border-[#0DFCC1] transition-colors footer-social-icon"
-                      aria-label="Instagram"
-                    >
-                      <Image 
-                        src={instagramIcon} 
-                        alt="Instagram" 
-                        width={17} 
-                        height={15} 
-                        className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] md:w-[11px] md:h-[11px] lg:w-[13px] lg:h-[13px] xl:w-[15px] xl:h-[15px] 2xl:w-[17px] 2xl:h-[15px] footer-social-icon-img" 
-                      />
-                    </a>
-                    <a
-                      href={twitterUrl}
-                      className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] md:w-[32px] md:h-[32px] lg:w-[40px] lg:h-[40px] xl:w-[46px] xl:h-[46px] 2xl:w-[50px] 2xl:h-[50px] rounded-full border border-white flex items-center justify-center text-white hover:bg-[#0DFCC1] hover:border-[#0DFCC1] transition-colors footer-social-icon"
-                      aria-label="Twitter"
-                    >
-                      <Image 
-                        src={twitterIcon} 
-                        alt="Twitter" 
-                        width={17} 
-                        height={15} 
-                        className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] md:w-[11px] md:h-[11px] lg:w-[13px] lg:h-[13px] xl:w-[15px] xl:h-[15px] 2xl:w-[17px] 2xl:h-[15px] footer-social-icon-img" 
-                      />
-                    </a>
+                {(isHttp(linkedinUrl) || isHttp(instagramUrl) || isHttp(twitterUrl)) ? (
+                  <div className="mt-4 sm:mt-5 md:mt-6 lg:mt-7 xl:mt-8">
+                    <div className="flex justify-start items-start gap-1.5 sm:gap-2 md:gap-2.5 lg:gap-3">
+                      {isHttp(linkedinUrl) ? (
+                        <a
+                          href={linkedinUrl}
+                          className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] md:w-[32px] md:h-[32px] lg:w-[40px] lg:h-[40px] xl:w-[46px] xl:h-[46px] 2xl:w-[50px] 2xl:h-[50px] rounded-full border border-white flex items-center justify-center text-white hover:bg-[#0DFCC1] hover:border-[#0DFCC1] transition-colors footer-social-icon"
+                          aria-label="LinkedIn"
+                        >
+                          <Image
+                            src={linkedinIcon}
+                            alt="LinkedIn"
+                            width={17}
+                            height={15}
+                            className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] md:w-[11px] md:h-[11px] lg:w-[13px] lg:h-[13px] xl:w-[15px] xl:h-[15px] 2xl:w-[17px] 2xl:h-[15px] footer-social-icon-img"
+                          />
+                        </a>
+                      ) : null}
+                      {isHttp(instagramUrl) ? (
+                        <a
+                          href={instagramUrl}
+                          className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] md:w-[32px] md:h-[32px] lg:w-[40px] lg:h-[40px] xl:w-[46px] xl:h-[46px] 2xl:w-[50px] 2xl:h-[50px] rounded-full border border-white flex items-center justify-center text-white hover:bg-[#0DFCC1] hover:border-[#0DFCC1] transition-colors footer-social-icon"
+                          aria-label="Instagram"
+                        >
+                          <Image
+                            src={instagramIcon}
+                            alt="Instagram"
+                            width={17}
+                            height={15}
+                            className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] md:w-[11px] md:h-[11px] lg:w-[13px] lg:h-[13px] xl:w-[15px] xl:h-[15px] 2xl:w-[17px] 2xl:h-[15px] footer-social-icon-img"
+                          />
+                        </a>
+                      ) : null}
+                      {isHttp(twitterUrl) ? (
+                        <a
+                          href={twitterUrl}
+                          className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] md:w-[32px] md:h-[32px] lg:w-[40px] lg:h-[40px] xl:w-[46px] xl:h-[46px] 2xl:w-[50px] 2xl:h-[50px] rounded-full border border-white flex items-center justify-center text-white hover:bg-[#0DFCC1] hover:border-[#0DFCC1] transition-colors footer-social-icon"
+                          aria-label="Twitter"
+                        >
+                          <Image
+                            src={twitterIcon}
+                            alt="Twitter"
+                            width={17}
+                            height={15}
+                            className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] md:w-[11px] md:h-[11px] lg:w-[13px] lg:h-[13px] xl:w-[15px] xl:h-[15px] 2xl:w-[17px] 2xl:h-[15px] footer-social-icon-img"
+                          />
+                        </a>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
+                ) : null}
               </div>
+              ) : null}
 
               {/* Copyright and Legal */}
-              <div className="footer-column flex flex-col justify-start md:justify-start lg:justify-center items-start md:items-start lg:items-end footer-copyright mt-4 sm:mt-0">
-                <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
-                  <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
-                    {copyrightLineOne}
-                  </li>
-                  <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
-                    {copyrightLineTwo}
-                  </li>
-                  <li>
-                    <a href={privacyLink} className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      {privacyLabel}
-                    </a>
-                  </li>
-                  <li>
-                    <a href={termsLink} className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
-                      {termsLabel}
-                    </a>
-                  </li>
-                </ul>
-              </div>
+              {(copyrightLineOne ||
+                copyrightLineTwo ||
+                (privacyLabel && privacyLink) ||
+                (termsLabel && termsLink)) ? (
+                <div className="footer-column flex flex-col justify-start md:justify-start lg:justify-center items-start md:items-start lg:items-end footer-copyright mt-4 sm:mt-0">
+                  <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 lg:space-y-3.5 xl:space-y-4 font-graphik-light-weight-300">
+                    {copyrightLineOne ? (
+                      <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
+                        {copyrightLineOne}
+                      </li>
+                    ) : null}
+                    {copyrightLineTwo ? (
+                      <li className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] footer-text">
+                        {copyrightLineTwo}
+                      </li>
+                    ) : null}
+                    {privacyLabel && privacyLink ? (
+                      <li>
+                        <a href={privacyLink} className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
+                          {privacyLabel}
+                        </a>
+                      </li>
+                    ) : null}
+                    {termsLabel && termsLink ? (
+                      <li>
+                        <a href={termsLink} className="text-white text-[10px] sm:text-[12px] md:text-[14px] lg:text-[18px] xl:text-[20px] 2xl:text-[25px] hover:text-[#0DFCC1] transition-colors footer-link">
+                          {termsLabel}
+                        </a>
+                      </li>
+                    ) : null}
+                  </ul>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

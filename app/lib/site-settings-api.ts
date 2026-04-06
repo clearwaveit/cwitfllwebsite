@@ -185,80 +185,38 @@ export type SiteSettings = {
   footer: FooterSettings;
 };
 
-export const DEFAULT_HEADER_SETTINGS: HeaderSettings = {
-  logoSrc: "/imgs/cwit_logo.svg",
-  logoAlt: "CWIT Logo",
-  ctaText: "Let's Talk",
-  ctaLink: "/contact-us",
-  menuItems: [
-    { label: "Home", href: "/" },
-    {
-      label: "Services",
-      href: "#",
-      submenu: [
-        { label: "Digital experience studio", href: "/digital-experience-studio" },
-        { label: "Application Development Studio", href: "/application-development-studio" },
-        { label: "Growth Branding Studio", href: "/growth-branding-studio" },
-      ],
+/** Empty shell when GraphQL fails or fields are missing — no hardcoded nav or copy. */
+export function createEmptySiteSettings(): SiteSettings {
+  return {
+    header: {
+      logoSrc: "",
+      logoAlt: "",
+      ctaText: "",
+      ctaLink: "",
+      menuItems: [],
+      officeLocations: [],
     },
-    { label: "About Us", href: "#" },
-    { label: "Our Work", href: "/our-work" },
-    { label: "Blogs", href: "/blogs" },
-    { label: "Contact Us", href: "/contact-us" },
-  ],
-  officeLocations: [
-    {
-      city: "Dubai",
-      address: ["World Trade Center area", "Dubai, UAE"],
-      email: "dubai@cwit.ae",
-      phone: "+971 58 8279426",
+    footer: {
+      ctaHeading: "",
+      ctaParagraph: "",
+      ctaButtonText: "",
+      ctaButtonLink: "",
+      navigationLinks: [],
+      serviceLinks: [],
+      addressLines: [],
+      phone: "",
+      linkedinUrl: "",
+      instagramUrl: "",
+      twitterUrl: "",
+      copyrightLineOne: "",
+      copyrightLineTwo: "",
+      privacyLabel: "",
+      privacyLink: "",
+      termsLabel: "",
+      termsLink: "",
     },
-    {
-      city: "London",
-      address: ["East London", "London, UAE"],
-      email: "lonodon@cwit.ae",
-      phone: "+44 33 333 9426",
-    },
-    {
-      city: "New York",
-      address: ["East London", "London, UAE"],
-      email: "lonodon@cwit.ae",
-      phone: "+44 33 333 9426",
-    },
-  ],
-};
-
-export const DEFAULT_FOOTER_SETTINGS: FooterSettings = {
-  ctaHeading: "Get Started now!",
-  ctaParagraph: "Request for a free quote, submit your RFP/RFI.",
-  ctaButtonText: "Let's Talk",
-  ctaButtonLink: "/contact-us",
-  navigationLinks: [
-    { label: "Home", href: "/" },
-    { label: "Services", href: "/services" },
-    { label: "Work", href: "/our-work" },
-    { label: "About", href: "/about-us" },
-    { label: "Contact Us", href: "/contact-us" },
-  ],
-  serviceLinks: [
-    { label: "Website design & Development", href: "#" },
-    { label: "AI Automation and Services", href: "#" },
-    { label: "Mobile apps development", href: "#" },
-    { label: "Web apps development", href: "#" },
-    { label: "Branding and Brand strategy", href: "#" },
-  ],
-  addressLines: ["Trade Center Area", "Sheikh Zayed Road", "Dubai, UAE"],
-  phone: "+971 4 111 111 1",
-  linkedinUrl: "#",
-  instagramUrl: "#",
-  twitterUrl: "#",
-  copyrightLineOne: "CWIT © 2025",
-  copyrightLineTwo: "All rights reserved",
-  privacyLabel: "Privacy Policy",
-  privacyLink: "#",
-  termsLabel: "Terms & Conditions",
-  termsLink: "#",
-};
+  };
+}
 
 function trimOrUndefined(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -272,7 +230,7 @@ function toLinkItems(
     .filter(Boolean)
     .map((item) => ({
       label: item?.label?.trim() || "",
-      href: item?.link?.trim() || "#",
+      href: item?.link?.trim() || "",
     }))
     .filter((item) => item.label);
 }
@@ -284,7 +242,7 @@ function normalizeSettings(fields: SiteSettingsFields | null | undefined): SiteS
       const submenu = toLinkItems(item?.submenuItems);
       return {
         label: item?.label?.trim() || "",
-        href: item?.link?.trim() || "#",
+        href: item?.link?.trim() || "",
         submenu: submenu.length > 0 ? submenu : undefined,
       };
     })
@@ -310,47 +268,37 @@ function normalizeSettings(fields: SiteSettingsFields | null | undefined): SiteS
 
   return {
     header: {
-      logoSrc: trimOrUndefined(fields?.headerLogo?.node?.sourceUrl) || DEFAULT_HEADER_SETTINGS.logoSrc,
-      logoAlt: trimOrUndefined(fields?.headerLogo?.node?.altText) || DEFAULT_HEADER_SETTINGS.logoAlt,
-      ctaText: trimOrUndefined(fields?.headerCtaText) || DEFAULT_HEADER_SETTINGS.ctaText,
-      ctaLink: trimOrUndefined(fields?.headerCtaLink) || DEFAULT_HEADER_SETTINGS.ctaLink,
-      menuItems: headerMenuItems.length > 0 ? headerMenuItems : DEFAULT_HEADER_SETTINGS.menuItems,
-      officeLocations:
-        headerOfficeLocations.length > 0
-          ? headerOfficeLocations
-          : DEFAULT_HEADER_SETTINGS.officeLocations,
+      logoSrc: trimOrUndefined(fields?.headerLogo?.node?.sourceUrl) ?? "",
+      logoAlt: trimOrUndefined(fields?.headerLogo?.node?.altText) ?? "",
+      ctaText: trimOrUndefined(fields?.headerCtaText) ?? "",
+      ctaLink: trimOrUndefined(fields?.headerCtaLink) ?? "",
+      menuItems: headerMenuItems,
+      officeLocations: headerOfficeLocations,
     },
     footer: {
-      ctaHeading: trimOrUndefined(fields?.footerCtaHeading) || DEFAULT_FOOTER_SETTINGS.ctaHeading,
-      ctaParagraph: trimOrUndefined(fields?.footerCtaParagraph) || DEFAULT_FOOTER_SETTINGS.ctaParagraph,
-      ctaButtonText: trimOrUndefined(fields?.footerCtaButtonText) || DEFAULT_FOOTER_SETTINGS.ctaButtonText,
-      ctaButtonLink: trimOrUndefined(fields?.footerCtaButtonLink) || DEFAULT_FOOTER_SETTINGS.ctaButtonLink,
-      navigationLinks: toLinkItems(fields?.footerNavigationLinks).length > 0
-        ? toLinkItems(fields?.footerNavigationLinks)
-        : DEFAULT_FOOTER_SETTINGS.navigationLinks,
-      serviceLinks: toLinkItems(fields?.footerServiceLinks).length > 0
-        ? toLinkItems(fields?.footerServiceLinks)
-        : DEFAULT_FOOTER_SETTINGS.serviceLinks,
-      addressLines: addressLines.length > 0 ? addressLines : DEFAULT_FOOTER_SETTINGS.addressLines,
-      phone: trimOrUndefined(fields?.footerPhone) || DEFAULT_FOOTER_SETTINGS.phone,
-      linkedinUrl: trimOrUndefined(fields?.footerLinkedinUrl) || DEFAULT_FOOTER_SETTINGS.linkedinUrl,
-      instagramUrl: trimOrUndefined(fields?.footerInstagramUrl) || DEFAULT_FOOTER_SETTINGS.instagramUrl,
-      twitterUrl: trimOrUndefined(fields?.footerTwitterUrl) || DEFAULT_FOOTER_SETTINGS.twitterUrl,
-      copyrightLineOne: trimOrUndefined(fields?.footerCopyrightLineOne) || DEFAULT_FOOTER_SETTINGS.copyrightLineOne,
-      copyrightLineTwo: trimOrUndefined(fields?.footerCopyrightLineTwo) || DEFAULT_FOOTER_SETTINGS.copyrightLineTwo,
-      privacyLabel: trimOrUndefined(fields?.footerPrivacyLabel) || DEFAULT_FOOTER_SETTINGS.privacyLabel,
-      privacyLink: trimOrUndefined(fields?.footerPrivacyLink) || DEFAULT_FOOTER_SETTINGS.privacyLink,
-      termsLabel: trimOrUndefined(fields?.footerTermsLabel) || DEFAULT_FOOTER_SETTINGS.termsLabel,
-      termsLink: trimOrUndefined(fields?.footerTermsLink) || DEFAULT_FOOTER_SETTINGS.termsLink,
+      ctaHeading: trimOrUndefined(fields?.footerCtaHeading) ?? "",
+      ctaParagraph: trimOrUndefined(fields?.footerCtaParagraph) ?? "",
+      ctaButtonText: trimOrUndefined(fields?.footerCtaButtonText) ?? "",
+      ctaButtonLink: trimOrUndefined(fields?.footerCtaButtonLink) ?? "",
+      navigationLinks: toLinkItems(fields?.footerNavigationLinks),
+      serviceLinks: toLinkItems(fields?.footerServiceLinks),
+      addressLines,
+      phone: trimOrUndefined(fields?.footerPhone) ?? "",
+      linkedinUrl: trimOrUndefined(fields?.footerLinkedinUrl) ?? "",
+      instagramUrl: trimOrUndefined(fields?.footerInstagramUrl) ?? "",
+      twitterUrl: trimOrUndefined(fields?.footerTwitterUrl) ?? "",
+      copyrightLineOne: trimOrUndefined(fields?.footerCopyrightLineOne) ?? "",
+      copyrightLineTwo: trimOrUndefined(fields?.footerCopyrightLineTwo) ?? "",
+      privacyLabel: trimOrUndefined(fields?.footerPrivacyLabel) ?? "",
+      privacyLink: trimOrUndefined(fields?.footerPrivacyLink) ?? "",
+      termsLabel: trimOrUndefined(fields?.footerTermsLabel) ?? "",
+      termsLink: trimOrUndefined(fields?.footerTermsLink) ?? "",
     },
   };
 }
 
 export async function fetchSiteSettings(): Promise<SiteSettings> {
-  const fallbackSettings = {
-    header: { ...DEFAULT_HEADER_SETTINGS },
-    footer: { ...DEFAULT_FOOTER_SETTINGS },
-  };
+  const empty = createEmptySiteSettings();
 
   try {
     const nestedRes = await fetch(GRAPHQL_ENDPOINT, {
@@ -387,8 +335,8 @@ export async function fetchSiteSettings(): Promise<SiteSettings> {
       return normalizeSettings(flatFields);
     }
 
-    return fallbackSettings;
+    return empty;
   } catch {
-    return fallbackSettings;
+    return empty;
   }
 }

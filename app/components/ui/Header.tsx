@@ -33,28 +33,11 @@ export default function Header({ settings }: { settings?: HeaderSettings }) {
   const officeLocationsRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
-  const menuItems: HeaderMenuItem[] = settings?.menuItems?.length
-    ? settings.menuItems
-    : [
-        { label: "Home", href: "/" },
-        {
-          label: "Services",
-          href: "#",
-          submenu: [
-            { label: "Digital experience studio", href: "/digital-experience-studio" },
-            { label: "Application Development Studio", href: "/application-development-studio" },
-            { label: "Growth Branding Studio", href: "/growth-branding-studio" },
-          ],
-        },
-        { label: "About Us", href: "#" },
-        { label: "Our Work", href: "/our-work" },
-        { label: "Blogs", href: "/blogs" },
-        { label: "Contact Us", href: "/contact-us" },
-      ];
-  const logoSrc = settings?.logoSrc?.trim() || "/imgs/cwit_logo.svg";
-  const logoAlt = settings?.logoAlt?.trim() || "CWIT Logo";
-  const headerCtaText = settings?.ctaText?.trim() || "Let's Talk";
-  const headerCtaLink = settings?.ctaLink?.trim() || "/contact-us";
+  const menuItems: HeaderMenuItem[] = settings?.menuItems?.length ? settings.menuItems : [];
+  const logoSrc = settings?.logoSrc?.trim() ?? "";
+  const logoAlt = settings?.logoAlt?.trim() ?? "";
+  const headerCtaText = settings?.ctaText?.trim() ?? "";
+  const headerCtaLink = settings?.ctaLink?.trim() ?? "";
   const officeLocations = settings?.officeLocations;
 
   function animateMenuContent() {
@@ -387,17 +370,21 @@ export default function Header({ settings }: { settings?: HeaderSettings }) {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center">
-              <Link href="/" className="relative h-12 w-auto">
-                <Image
-                  src={logoSrc}
-                  alt={logoAlt}
-                  width={100}
-                  height={100}
-                  className="h-[32px] md:h-[56px] min-w-[74px] md:min-w-[112px] w-auto object-contain"
-                  priority
-                  unoptimized={typeof logoSrc === "string" && logoSrc.startsWith("http")}
-                />
-              </Link>
+              {logoSrc ? (
+                <Link href="/" className="relative h-12 w-auto">
+                  <Image
+                    src={logoSrc}
+                    alt={logoAlt?.trim() || ""}
+                    width={100}
+                    height={100}
+                    className="h-[32px] md:h-[56px] min-w-[74px] md:min-w-[112px] w-auto object-contain"
+                    priority
+                    unoptimized={typeof logoSrc === "string" && logoSrc.startsWith("http")}
+                  />
+                </Link>
+              ) : (
+                <Link href="/" className="relative h-12 min-w-[74px] md:min-w-[112px]" aria-label="Home" />
+              )}
             </div>
 
             {/* Right side - Menu Button */}
@@ -475,7 +462,7 @@ export default function Header({ settings }: { settings?: HeaderSettings }) {
               */}
 
               {/* CallToActionButton - Right side */}
-              {!isMenuOpen && (
+              {!isMenuOpen && headerCtaText && headerCtaLink && (
                 <CallToActionButton
                   variant="shiny"
                   size="small"
@@ -487,7 +474,7 @@ export default function Header({ settings }: { settings?: HeaderSettings }) {
                   {headerCtaText}
                 </CallToActionButton>
               )}
-              {!isMenuOpen && (
+              {!isMenuOpen && headerCtaText && headerCtaLink && (
                 <CallToActionButton
                   variant="shiny"
                   onClick={() => {
@@ -682,22 +669,23 @@ export default function Header({ settings }: { settings?: HeaderSettings }) {
               </ul>
 
               {/* CallToActionButton below menu items */}
-              <div ref={ctaButtonRef} className="mt-8 md:mt-12 flex items-center justify-center sm:items-center justify-center md:justify-center lg:justify-start">
-                <CallToActionButton
-                  variant="shiny"
-                  size="small"
-                  onClick={() => {
-                    setActiveButtonType(null);
-                    setIsClosing(true);
-                    // Wait for animation to complete before navigating
-                    setTimeout(() => {
-                      router.push(headerCtaLink);
-                    }, 900); // Match animation duration
-                  }}
-                >
-                  {headerCtaText}
-                </CallToActionButton>
-              </div>
+              {headerCtaText && headerCtaLink && (
+                <div ref={ctaButtonRef} className="mt-8 md:mt-12 flex items-center justify-center sm:items-center justify-center md:justify-center lg:justify-start">
+                  <CallToActionButton
+                    variant="shiny"
+                    size="small"
+                    onClick={() => {
+                      setActiveButtonType(null);
+                      setIsClosing(true);
+                      setTimeout(() => {
+                        router.push(headerCtaLink);
+                      }, 900);
+                    }}
+                  >
+                    {headerCtaText}
+                  </CallToActionButton>
+                </div>
+              )}
             </nav>
 
             {/* Image - Right Side */}

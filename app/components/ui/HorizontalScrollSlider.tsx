@@ -334,7 +334,7 @@ export default function HorizontalScrollSlider({
     }
 
     // Text card
-    const bgColor = card.backgroundColor || "bg-zinc-900";
+    const bgColor = card.backgroundColor?.trim() || "";
     const customTextColor = card.textColor;
     const isWhiteBg = bgColor === "bg-white" || bgColor === "white";
     const isLightBg = bgColor === "bg-zinc-200" || bgColor === "bg-gray-200" || bgColor === "bg-zinc-100" || bgColor === "bg-gray-100" || bgColor === "bg-[#E3E3E3]";

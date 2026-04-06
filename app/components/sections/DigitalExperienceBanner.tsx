@@ -441,63 +441,65 @@ export default function DigitalExperienceBanner({
         </div>
       )}
 
-      {/* Background Image - Vector (Left Side) - Desktop */}
-      <div
-        ref={vectorRef}
-        className="absolute hidden md:block pointer-events-none vector-background"
-        style={{
-          zIndex: 20,
-          // Base styles for md (768px-1023px) - will be updated by useEffect
-          width: 'clamp(800px, 100vw, 1100px)',
-          height: 'clamp(1400px, 180vh, 1800px)',
-          transform: 'rotate(0)',
-          top: 'clamp(-300px, -25vh, -200px)',
-          left: 'clamp(-200px, -10vw, -100px)',
-          ...backgroundImage?.style || {},
-        }}
-      >
-        <Image
-          src={backgroundImage?.src || ''}
-          alt={backgroundImage?.alt || ''}
-          width={1364}
-          height={2200}
-          className="object-contain"
-          priority
-          unoptimized
-          style={{
-            width: '100%',
-            height: '100%',
-          }}
-        />
-      </div>
-      {/* Background Image - Vector (Left Side) - Mobile */}
-      <div
-        className="absolute md:hidden pointer-events-none"
-        style={{
-          zIndex: 20,
-          width: '100%',
-          height: 'clamp(400px, 60vh, 600px)',
-          maxHeight: '100vh',
-          top: '0',
-          left: '0',
-          ...backgroundImage?.style || {},
-        }}
-      >
-        <Image
-          src={backgroundImage?.src || ''}
-          alt={backgroundImage?.alt || ''}
-          width={1364}
-          height={2200}
-          className="object-cover w-full h-full"
-          priority
-          unoptimized
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
-      </div>
+      {/* Background Image — only when CMS provides src */}
+      {backgroundImage?.src ? (
+        <>
+          <div
+            ref={vectorRef}
+            className="absolute hidden md:block pointer-events-none vector-background"
+            style={{
+              zIndex: 20,
+              width: 'clamp(800px, 100vw, 1100px)',
+              height: 'clamp(1400px, 180vh, 1800px)',
+              transform: 'rotate(0)',
+              top: 'clamp(-300px, -25vh, -200px)',
+              left: 'clamp(-200px, -10vw, -100px)',
+              ...backgroundImage?.style || {},
+            }}
+          >
+            <Image
+              src={backgroundImage.src}
+              alt={backgroundImage.alt || ""}
+              width={1364}
+              height={2200}
+              className="object-contain"
+              priority
+              unoptimized
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+            />
+          </div>
+          <div
+            className="absolute md:hidden pointer-events-none"
+            style={{
+              zIndex: 20,
+              width: '100%',
+              height: 'clamp(400px, 60vh, 600px)',
+              maxHeight: '100vh',
+              top: '0',
+              left: '0',
+              ...backgroundImage?.style || {},
+            }}
+          >
+            <Image
+              src={backgroundImage.src}
+              alt={backgroundImage.alt || ""}
+              width={1364}
+              height={2200}
+              className="object-cover w-full h-full"
+              priority
+              unoptimized
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
+          </div>
+        </>
+      ) : null}
 
       {/* Content - Positioned within the green curved section */}
       <div ref={contentRef} className="relative z-20 h-full flex items-center pointer-events-none">
