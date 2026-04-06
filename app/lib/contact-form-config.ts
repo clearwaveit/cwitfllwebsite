@@ -1,8 +1,7 @@
 import type { ContactFormFieldConfig } from "@/app/components/ui/ContactForm";
 
-export const DEFAULT_CONTACT_SUBMIT_BUTTON_TEXT = "SEND MESSAGE";
-export const DEFAULT_CONTACT_SUCCESS_MESSAGE =
-  "Thank you! Your message has been sent successfully.";
+export const DEFAULT_CONTACT_SUBMIT_BUTTON_TEXT = "";
+export const DEFAULT_CONTACT_SUCCESS_MESSAGE = "";
 
 export function trimString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
@@ -115,38 +114,16 @@ export const DEFAULT_CONTACT_FORM_FIELDS: ContactFormFieldConfig[] =
 export function buildContactFormFields(
   settings: Record<string, unknown> | undefined
 ): ContactFormFieldConfig[] {
-  if (!settings) {
-    return DEFAULT_CONTACT_FORM_FIELDS.map((field) => ({ ...field }));
-  }
+  if (!settings) return [];
 
-  const hasFieldSpecificSettings = CONTACT_FIELD_TEMPLATES.some((field) => {
+  return CONTACT_FIELD_TEMPLATES.filter((field) => {
     const placeholder = getSettingString(settings, field.placeholderKeys);
     const explicitVisibility = getSettingBoolean(settings, field.visibleKeys);
-    const explicitRequired = getSettingBoolean(settings, field.requiredKeys);
-
-    return !!placeholder ||
-      explicitVisibility === true ||
-      (typeof explicitRequired === "boolean" && explicitRequired !== field.defaultRequired);
-  });
-
-  const visibleFields = CONTACT_FIELD_TEMPLATES.filter((field) => {
-    if (field.alwaysVisible) return true;
-    if (!hasFieldSpecificSettings) return true;
-
-    const explicitVisibility = getSettingBoolean(settings, field.visibleKeys);
-    const placeholder = getSettingString(settings, field.placeholderKeys);
-    const explicitRequired = getSettingBoolean(settings, field.requiredKeys);
-
     if (explicitVisibility === false) return false;
-    if (explicitVisibility === true) return true;
-
-    return !!placeholder ||
-      (typeof explicitRequired === "boolean" && explicitRequired !== field.defaultRequired);
-  });
-
-  return visibleFields.map((field) => ({
+    return explicitVisibility === true || !!placeholder;
+  }).map((field) => ({
     name: field.name,
-    placeholder: getSettingString(settings, field.placeholderKeys) || field.defaultPlaceholder,
-    required: getSettingBoolean(settings, field.requiredKeys) ?? field.defaultRequired,
+    placeholder: getSettingString(settings, field.placeholderKeys) || "",
+    required: getSettingBoolean(settings, field.requiredKeys) ?? false,
   }));
 }

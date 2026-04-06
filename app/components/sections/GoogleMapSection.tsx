@@ -64,32 +64,10 @@ export default function GoogleMapSection({
   // Get API key from prop or environment variable (for client components, use NEXT_PUBLIC_ prefix)
   const googleMapsApiKey = apiKey || (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : '') || '';
 
-  // Default locations based on provided addresses
-  const defaultLocations: Location[] = [
-    {
-      name: "Dubai",
-      address: "World Trade Center area, Dubai, UAE",
-      latitude: 25.2235, // Dubai World Trade Centre coordinates
-      longitude: 55.2804,
-    },
-    {
-      name: "London",
-      address: "East London, London, UK",
-      latitude: 51.5074, // East London area coordinates
-      longitude: -0.0750,
-    },
-    {
-      name: "New York",
-      address: "New York, NY, USA",
-      latitude: 40.7128, // New York coordinates
-      longitude: -74.0060,
-    },
-  ];
-
-  const mapLocations = locations || defaultLocations;
+  const mapLocations = locations?.filter(Boolean) ?? [];
 
   useEffect(() => {
-    if (!mapRef.current) return;
+    if (!mapLocations.length || !mapRef.current) return;
 
     // If no API key provided, use embed fallback
     // Note: Google Maps embed only shows one location, so we'll show the first one
@@ -267,6 +245,10 @@ export default function GoogleMapSection({
       }
     };
   }, [mapLocations, googleMapsApiKey]);
+
+  if (!mapLocations.length) {
+    return null;
+  }
 
   return (
     <section className={`relative md:min-h-[800px] h-[400px] md:py-20 py-10 bg-black overflow-hidden ${className}`}>

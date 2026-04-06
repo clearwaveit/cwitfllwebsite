@@ -2,7 +2,6 @@
 
 import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
-import ourClientsImg from "@/app/assets/imgs/clients_img_brands.png";
 import Image from "next/image";
 
 interface OurClientsProps {
@@ -10,7 +9,9 @@ interface OurClientsProps {
 }
 
 export default function OurClients({ logoSrc }: OurClientsProps = {}) {
-  const logoSource = logoSrc?.trim() ? logoSrc : ourClientsImg;
+  const trimmed = logoSrc?.trim();
+  if (!trimmed) return null;
+  const logoSource = trimmed;
   const clients = [{ logo: logoSource }];
   const carouselTrackRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<gsap.core.Tween | null>(null);

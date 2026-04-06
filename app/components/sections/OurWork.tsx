@@ -29,17 +29,22 @@ interface OurWorkProps {
   ctaVariant?: "outline" | "filled" | "shiny";
   className?: string;
   showCTA?: boolean;
+  /** When set with showCTA, button label comes from props (no implicit default copy). */
+  ctaLabel?: string;
   useNewDesign?: boolean; // Toggle between old and new design
   cardClickAction?: "navigate" | "modal";
 }
 
-/** Portfolio base path: e.g. /work-details/example */
-const PORTFOLIO_BASE = "/work-details";
+/** Portfolio detail path: e.g. /portfolio/example */
+const PORTFOLIO_BASE = "/portfolio";
 
 function getPortfolioHref(link: string | undefined): string {
   if (!link?.trim()) return "/our-work";
   const raw = link.trim();
-  if (raw.startsWith("/work-details/")) return raw;
+  if (raw.startsWith("/portfolio/")) return raw;
+  if (raw.startsWith("/work-details/")) {
+    return `${PORTFOLIO_BASE}/${raw.slice("/work-details/".length)}`;
+  }
   const slug = raw.replace(/^\/+|\/+$/g, "").replace(/^work\//, "").replace(/^work-details\//, "");
   if (!slug) return "/our-work";
   return `${PORTFOLIO_BASE}/${slug}`;
@@ -108,6 +113,7 @@ export default function OurWork({
   ctaVariant = "shiny",
   className = "",
   showCTA = true,
+  ctaLabel,
   useNewDesign = true,
   cardClickAction = "navigate",
 }: OurWorkProps) {
@@ -393,17 +399,13 @@ export default function OurWork({
       >
         {/* Mobile Layout - Vertical Stack */}
         <div className="flex flex-col md:hidden py-12 md:py-20">
-          {/* Title */}
-          <div className="mb-8 flex justify-center">
-            <h2 className="text-white our-work-mobile-heading text-center">
-              <span className="inline text-[48px] sm:text-[60px] font-[700] leading-[0.85] tracking-tight">
-                OUR{" "}
-              </span>
-              <span className="inline text-[48px] sm:text-[60px] font-[700] leading-[0.85] tracking-tight">
-                WORK
-              </span>
-            </h2>
-          </div>
+          {title?.trim() ? (
+            <div className="mb-8 flex justify-center">
+              <h2 className="text-white our-work-mobile-heading text-center whitespace-pre-line text-[48px] sm:text-[60px] font-[700] leading-[0.85] tracking-tight px-4">
+                {title.trim()}
+              </h2>
+            </div>
+          ) : null}
 
           {/* Cards - Vertical scroll on mobile */}
           <div className="flex flex-col gap-6 px-4 sm:px-5">
@@ -458,13 +460,11 @@ export default function OurWork({
           </div>
 
           {/* CTA Button */}
-          {showCTA && (
+          {showCTA && ctaLabel?.trim() ? (
             <div className="mt-8 flex justify-center">
-              <CallToActionButton variant={ctaVariant}>
-                Let&apos;s Talk
-              </CallToActionButton>
+              <CallToActionButton variant={ctaVariant}>{ctaLabel.trim()}</CallToActionButton>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* Desktop/Tablet Layout - Horizontal Scroll */}
@@ -485,19 +485,21 @@ export default function OurWork({
           >
             {/* Left Side - Title and CTA */}
             <div className="flex-shrink-0 w-[280px] lg:w-[400px] xl:w-[520px] flex flex-col justify-center items-start pl-8 lg:pl-16 xl:pl-20 pr-6 lg:pr-10 py-12 our-work-title-container">
-              <h2 className="text-white mb-12 lg:mb-16 xl:mb-20 our-work-title our-work-desktop-heading">
-                <span className="block text-[70px] lg:text-[90px] xl:text-[128px] font-[700] leading-[0.85] tracking-tight our-work-title-text">
-                  OUR
-                </span>
-                <span className="block text-[70px] lg:text-[90px] xl:text-[128px] font-[700] leading-[0.85] tracking-tight our-work-title-text">
-                  WORK
-                </span>
-              </h2>
-              {showCTA && (
-                <CallToActionButton variant="shiny">
-                  Let&apos;s Talk
-                </CallToActionButton>
-              )}
+              {title?.trim() ? (
+                <h2 className="text-white mb-12 lg:mb-16 xl:mb-20 our-work-title our-work-desktop-heading whitespace-pre-line">
+                  {title.trim().split(/\n/).map((line, idx) => (
+                    <span
+                      key={idx}
+                      className="block text-[70px] lg:text-[90px] xl:text-[128px] font-[700] leading-[0.85] tracking-tight our-work-title-text"
+                    >
+                      {line}
+                    </span>
+                  ))}
+                </h2>
+              ) : null}
+              {showCTA && ctaLabel?.trim() ? (
+                <CallToActionButton variant="shiny">{ctaLabel.trim()}</CallToActionButton>
+              ) : null}
             </div>
 
             {/* Cards */}
@@ -692,11 +694,11 @@ export default function OurWork({
         </div>
 
         {/* Call to Action Button */}
-        {showCTA && (
+        {showCTA && ctaLabel?.trim() ? (
           <div className="flex justify-center">
-            <CallToActionButton variant="shiny" />
+            <CallToActionButton variant="shiny">{ctaLabel.trim()}</CallToActionButton>
           </div>
-        )}
+        ) : null}
       </div>
     </section>
   );

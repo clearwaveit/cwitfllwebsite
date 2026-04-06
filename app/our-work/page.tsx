@@ -4,8 +4,6 @@ import DigitalExperienceBanner from "@/app/components/sections/DigitalExperience
 import { WorkItem } from "../components/sections/OurWork";
 import type { OurWorkPageItem } from "@/app/our-work/our-work-types";
 import Accordion, { AccordionItem } from "../components/sections/Accordion";
-import ourWorkImg from "@/app/assets/imgs/our_work_img.png";
-import vectorBg from "@/app/assets/imgs/Mask group (1).png";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useEffect, useState, useMemo } from "react";
@@ -17,10 +15,7 @@ import {
   fetchPortfoliosList,
   type OurWorkListingPage,
 } from "@/app/lib/our-work-api";
-import {
-  normalizeOurWorkPageData,
-  DEFAULT_WORK_ITEMS as DEFAULT_WORK_ITEMS_NORMALIZED,
-} from "@/app/our-work/our-work-normalize";
+import { normalizeOurWorkPageData } from "@/app/our-work/our-work-normalize";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -35,19 +30,7 @@ function useScrollTriggerRefresh(deps: unknown[]) {
   }, deps);
 }
 
-const DEFAULT_BANNER = {
-  title: "Our Work",
-  description: "Digital Experiences That Inspire and Perform",
-  backgroundImage: { src: vectorBg.src, alt: "Background" },
-  videoSrc: undefined as string | undefined,
-};
-
-const DEFAULT_WORK_ITEMS = DEFAULT_WORK_ITEMS_NORMALIZED;
-const DEFAULT_CARD = DEFAULT_WORK_ITEMS[0];
-const DEFAULT_SUBTITLE = DEFAULT_CARD?.category ?? "";
-const DEFAULT_DESCRIPTION = DEFAULT_CARD?.description ?? "";
-
-const PORTFOLIO_BASE = "/work-details";
+const PORTFOLIO_BASE = "/portfolio";
 
 function getCategoryLines(category: string | undefined): string[] {
   if (!category?.trim()) return [];
@@ -126,6 +109,11 @@ function getOverridePortfolioId(override: PerPortfolioOverride | null | undefine
   return toNumberId(override?.portfolioPost?.nodes?.[0]?.databaseId);
 }
 
+function itemHasImage(item: OurWorkPageItem): boolean {
+  if (typeof item.image === "string") return item.image.trim().length > 0;
+  return Boolean((item.image as { src?: string } | undefined)?.src);
+}
+
 function mapPortfolioNodesToCards(
   nodes: Array<PortfolioListNode>,
   overrides: Array<PerPortfolioOverride>
@@ -135,7 +123,7 @@ function mapPortfolioNodesToCards(
     const matchedOverride =
       overrides.find((ov) => getOverridePortfolioId(ov) === portfolioId) ?? null;
     const slug = p?.slug?.trim();
-    const portfolioTitle = p?.title?.trim() || DEFAULT_CARD?.title || "";
+    const portfolioTitle = p?.title?.trim() || "";
     const listing = p?.homePortfolioListing;
     const listingCards = (listing?.portfolioListingCards ?? []).filter(Boolean) as Array<{
       cardSubtitle?: string | null;
@@ -145,14 +133,13 @@ function mapPortfolioNodesToCards(
     }>;
 
     const fallbackImage =
-      p?.portfolioDetails?.backgroundImage?.node?.sourceUrl ??
-      p?.portfolioDetails?.heroBackgroundImage?.node?.sourceUrl ??
-      ourWorkImg;
+      p?.portfolioDetails?.backgroundImage?.node?.sourceUrl?.trim() ??
+      p?.portfolioDetails?.heroBackgroundImage?.node?.sourceUrl?.trim() ??
+      undefined;
 
     const mainSubtitle =
       matchedOverride?.portfolioSubtitle?.trim() ||
       listing?.portfolioListingSubtitle?.trim() ||
-      DEFAULT_SUBTITLE ||
       undefined;
     const mainTitle =
       matchedOverride?.portfolioTitle?.trim() ||
@@ -161,7 +148,7 @@ function mapPortfolioNodesToCards(
     const mainDescription =
       matchedOverride?.portfolioDescription?.trim() ||
       listing?.portfolioListingDescription?.trim() ||
-      DEFAULT_DESCRIPTION;
+      "";
     const mainImage =
       matchedOverride?.portfolioImage?.node?.sourceUrl?.trim() ||
       matchedOverride?.portfolioImage?.node?.mediaItemUrl?.trim() ||
@@ -178,8 +165,10 @@ function mapPortfolioNodesToCards(
         category: card.cardSubtitle?.trim() || mainSubtitle,
         title: card.cardTitle?.trim() || mainTitle,
         description: card.cardDescription?.trim() || mainDescription,
-        image: (card.cardImage?.node?.sourceUrl?.trim() || card.cardImage?.node?.mediaItemUrl?.trim() || mainImage) as OurWorkPageItem["image"],
-        link: slug ? `/work-details/${slug}` : undefined,
+        image: (card.cardImage?.node?.sourceUrl?.trim() ||
+          card.cardImage?.node?.mediaItemUrl?.trim() ||
+          mainImage) as OurWorkPageItem["image"],
+        link: slug ? `/portfolio/${slug}` : undefined,
       }));
     }
 
@@ -188,8 +177,10 @@ function mapPortfolioNodesToCards(
         category: card.cardSubtitle?.trim() || mainSubtitle,
         title: card.cardTitle?.trim() || mainTitle,
         description: card.cardDescription?.trim() || mainDescription,
-        image: (card.cardImage?.node?.sourceUrl?.trim() || card.cardImage?.node?.mediaItemUrl?.trim() || mainImage) as OurWorkPageItem["image"],
-        link: slug ? `/work-details/${slug}` : undefined,
+        image: (card.cardImage?.node?.sourceUrl?.trim() ||
+          card.cardImage?.node?.mediaItemUrl?.trim() ||
+          mainImage) as OurWorkPageItem["image"],
+        link: slug ? `/portfolio/${slug}` : undefined,
       }));
     }
 
@@ -198,15 +189,18 @@ function mapPortfolioNodesToCards(
       description: mainDescription,
       image: mainImage as OurWorkPageItem["image"],
       ...(mainSubtitle ? { category: mainSubtitle } : {}),
-      link: slug ? `/work-details/${slug}` : undefined,
+      link: slug ? `/portfolio/${slug}` : undefined,
     }];
-  });
+  }).filter(itemHasImage);
 }
 
 function getPortfolioUrl(workItemLink: string | undefined): string {
   const raw = workItemLink?.trim();
   if (!raw) return "/our-work";
-  if (raw.startsWith("/work-details/")) return raw;
+  if (raw.startsWith("/portfolio/")) return raw;
+  if (raw.startsWith("/work-details/")) {
+    return PORTFOLIO_BASE + "/" + raw.slice("/work-details/".length);
+  }
   if (raw.startsWith("/work/")) return PORTFOLIO_BASE + "/" + raw.replace(/^\/work\//, "");
   const fromPortfolioPath = raw.match(/\/portfolio\/([^/]+)/)?.[1];
   if (fromPortfolioPath) return PORTFOLIO_BASE + "/" + fromPortfolioPath;
@@ -233,10 +227,7 @@ export default function OurWorkPage() {
     return normalizeOurWorkPageData(apiData);
   }, [apiData]);
 
-  const bannerProps = useMemo(
-    () => normalized?.banner ?? DEFAULT_BANNER,
-    [normalized]
-  );
+  const bannerProps = useMemo(() => normalized.banner, [normalized]);
 
   const workItemsToShow: OurWorkPageItem[] = useMemo(() => {
     if (normalized?.workItems?.length) {
@@ -246,21 +237,19 @@ export default function OurWorkPage() {
         const slug = portfoliosSlugs[portfolioIndex];
         if (slug) {
           portfolioIndex++;
-          return { ...item, link: "/work-details/" + slug };
+          return { ...item, link: "/portfolio/" + slug };
         }
         return item;
       });
     }
     if (portfoliosItems?.length) return portfoliosItems;
-    return DEFAULT_WORK_ITEMS;
+    return [];
   }, [normalized, portfoliosItems, portfoliosSlugs]);
 
   const accordionProps = useMemo(() => {
     const acc = normalized?.accordion;
     const hasItems = (acc?.items?.length ?? 0) > 0;
-    return hasItems && acc
-      ? { title: acc.title, items: acc.items }
-      : { title: "FAQ's" as const };
+    return hasItems && acc ? { title: acc.title, items: acc.items } : null;
   }, [normalized]);
 
   useEffect(() => {
@@ -388,7 +377,7 @@ export default function OurWorkPage() {
     <main className="min-h-screen">
       {error && (
         <div className="bg-amber-900/20 text-amber-200 text-sm text-center py-2 px-4">
-          Could not load content from CMS. Showing default content.
+          Could not load all content from the CMS.
           <span className="block mt-1 text-amber-300/80 text-xs font-mono max-w-2xl mx-auto truncate" title={error}>
             {error}
           </span>
@@ -396,8 +385,10 @@ export default function OurWorkPage() {
       )}
       <DigitalExperienceBanner
         title={<>{bannerProps.title}</>}
-        description={bannerProps.description}
-        backgroundImage={bannerProps.backgroundImage}
+        description={bannerProps.description || undefined}
+        backgroundImage={
+          bannerProps.backgroundImage?.src ? bannerProps.backgroundImage : undefined
+        }
         videoSrc={bannerProps.videoSrc}
       />
       <section
@@ -457,10 +448,9 @@ export default function OurWorkPage() {
           </div>
         </div>
       </section>
-      <Accordion
-        title={accordionProps.title}
-        items={"items" in accordionProps && accordionProps.items?.length ? accordionProps.items : undefined}
-      />
+      {accordionProps?.items?.length ? (
+        <Accordion title={accordionProps.title} items={accordionProps.items} />
+      ) : null}
     </main>
     </>
   );

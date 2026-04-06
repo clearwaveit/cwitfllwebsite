@@ -12,23 +12,6 @@ if (typeof window !== "undefined") {
 }
 
 import BeforeImage from "@/app/components/ui/BeforeImage";
-import beforeImg from "@/app/assets/imgs/__before.png";
-import cwitLogo2 from "@/app/assets/imgs/cwit_logo_2.png";
-import clockImg from "@/app/assets/imgs/clock_img.png";
-import digitalImg from "@/app/assets/imgs/digital_img.png";
-import lensImg from "@/app/assets/imgs/lens_img.png";
-
-const DEFAULT_SLIDER_CARDS: SliderCard[] = [
-  { type: "text", title: "10+ Years", subtitle: "of Digital Excellence", description: "Across teams in Dubai, the UK, and the US" },
-  { type: "image", image: clockImg, title: "300+ Projects", subtitle: "Delivered", description: "" },
-  { type: "text", title: "AI-Driven", subtitle: "Automation", description: "Intelligent workflows, automation, and AI integrations across digital platforms", backgroundColor: "bg-white", textColor: "text-black" },
-  { type: "image", image: digitalImg, title: "End-to-End", subtitle: "Services", description: "Strategy, design, development, and growth" },
-  { type: "text", title: "3 Engagement Models", subtitle: "", description: "Classic / Agile / Venture" },
-  { type: "image", image: lensImg, title: "Scalable Solutions", subtitle: "", description: "Built for startups through to enterprise platforms" },
-];
-
-const DEFAULT_HEADLINE =
-  "Clearwave is a website design company in Dubai delivering web design, web development, web application development, and mobile application development services for businesses building modern digital platforms.";
 
 interface ShowcaseProps {
   headline?: string;
@@ -38,10 +21,10 @@ interface ShowcaseProps {
 }
 
 export default function Showcase({ headline, cards, beforeImageSrc, logoImageSrc }: ShowcaseProps = {}) {
-  const displayHeadline = headline?.trim() || DEFAULT_HEADLINE;
-  const displayCards = cards?.length ? cards : DEFAULT_SLIDER_CARDS;
-  const displayBeforeImage = beforeImageSrc || beforeImg;
-  const displayLogoImage = logoImageSrc || cwitLogo2;
+  const displayHeadline = headline?.trim() || "";
+  const displayCards = cards?.length ? cards : [];
+  const displayBeforeImage = beforeImageSrc?.trim() || "";
+  const displayLogoImage = logoImageSrc?.trim() || "";
   const sectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
   const gradientTextRef = useRef<HTMLSpanElement>(null);
@@ -115,35 +98,41 @@ export default function Showcase({ headline, cards, beforeImageSrc, logoImageSrc
       ref={sectionRef}
       className="relative min-h-screen bg-black py-24 overflow-hidden"
     >
-      {/* Before Image - Full width */}
-      <BeforeImage image={displayBeforeImage} alt="Showcase" />
+      {displayBeforeImage ? (
+        <BeforeImage image={displayBeforeImage} alt="" />
+      ) : null}
 
-      {/* CWIT Logo 2 - At top of carousel, 1/4 in carousel */}
-      <div className="absolute left-1/2 top-[calc(74vh+8rem-9rem)] -translate-x-1/2 md:max-w-[600px] max-w-[350px] w-full h-100 z-10">
-        <Image
-          src={displayLogoImage}
-          alt="CWIT Logo"
-          fill
-          className="object-contain"
-          unoptimized
-        />
-      </div>
+      {displayLogoImage ? (
+        <div className="absolute left-1/2 top-[calc(74vh+8rem-9rem)] -translate-x-1/2 md:max-w-[600px] max-w-[350px] w-full h-100 z-10">
+          <Image
+            src={displayLogoImage}
+            alt=""
+            fill
+            className="object-contain"
+            unoptimized
+          />
+        </div>
+      ) : null}
 
       <div className="relative z-20 container mx-auto px-4">
         {/* Text Section - Centered vertically */}
         <div className="flex items-center justify-center h-[20vh] md:min-h-[70vh]">
           <div ref={headlineRef} className="text-left space-y-6 lg:max-w-[70%]">
-            <h2 className="text-[#ffffff] text-[16px] sm:text-[26px] md:text-[34px] lg:text-[38px] leading-[30px] md:leading-[58px] lg:leading-[52px] font-[400] tracking-normal showcase-heading">
-              {displayHeadline}
-            </h2>
+            {displayHeadline && (
+              <h2 className="text-[#ffffff] text-[16px] sm:text-[26px] md:text-[34px] lg:text-[38px] leading-[30px] md:leading-[58px] lg:leading-[52px] font-[400] tracking-normal showcase-heading">
+                {displayHeadline}
+              </h2>
+            )}
           </div>
         </div>
       </div>
 
       {/* Horizontal Scroll Slider Section - Full width */}
-      <div className="relative z-20 w-full pt-32 pb-12">
-        <HorizontalScrollSlider cards={displayCards} />
-      </div>
+      {displayCards.length > 0 && (
+        <div className="relative z-20 w-full pt-32 pb-12">
+          <HorizontalScrollSlider cards={displayCards} />
+        </div>
+      )}
     </section>
   );
 }

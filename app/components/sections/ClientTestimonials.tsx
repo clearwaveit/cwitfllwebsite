@@ -7,31 +7,16 @@ export interface Testimonial {
   rating: number; // Number of stars (1-5)
 }
 
-const DEFAULT_TITLE = "What Our Client Say";
-const DEFAULT_TESTIMONIALS: Testimonial[] = [
-  {
-    text: "The website delivered by Digital Gravity worked wonders for our business. Thanks to them, we were able to showcase our portfolio to a wider audience. We will be looking forward to another collaboration in the future. Highly recommended.",
-    rating: 4,
-  },
-  {
-    text: "Outstanding work! The team at Digital Gravity transformed our online presence completely. Their attention to detail and creative approach exceeded our expectations. The website is not just beautiful but also highly functional.",
-    rating: 5,
-  },
-  {
-    text: "Professional, efficient, and creative. Digital Gravity delivered exactly what we needed and more. The website has significantly improved our customer engagement and business growth. Truly impressed with their expertise.",
-    rating: 5,
-  },
-];
-
 interface ClientTestimonialsProps {
   title?: string;
   testimonials?: Testimonial[];
 }
 
 export default function ClientTestimonials({
-  title = DEFAULT_TITLE,
-  testimonials = DEFAULT_TESTIMONIALS,
+  title,
+  testimonials,
 }: ClientTestimonialsProps) {
+  if (!testimonials || testimonials.length === 0) return null;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);

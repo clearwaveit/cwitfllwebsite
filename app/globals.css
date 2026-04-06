@@ -6,7 +6,7 @@
   src: url('/fonts/Graphik-Light.woff2') format('woff2'),
     url('/fonts/Graphik-Light.woff') format('woff');
   font-weight: 300;
-  font-style: light;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -15,7 +15,7 @@
   src: url('/fonts/Graphik-Regular.woff2') format('woff2'),
     url('/fonts/Graphik-Regular.woff') format('woff');
   font-weight: 400;
-  font-style: regular;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -24,7 +24,7 @@
   src: url('/fonts/Graphik-Medium.woff2') format('woff2'),
     url('/fonts/Graphik-Medium.woff') format('woff');
   font-weight: 500;
-  font-style: medium;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -33,7 +33,7 @@
   src: url('/fonts/Graphik-Semibold.woff2') format('woff2'),
     url('/fonts/Graphik-Semibold.woff') format('woff');
   font-weight: 600;
-  font-style: semibold;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -42,7 +42,7 @@
   src: url('/fonts/Graphik-Bold.woff2') format('woff2'),
     url('/fonts/Graphik-Bold.woff') format('woff');
   font-weight: 700;
-  font-style: bold;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -73,17 +73,33 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-graphik);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Apply Graphik font to all elements */
 * {
   font-family: var(--font-graphik);
+}
+
+/* Prevent text blur on GPU-composited elements across all browsers */
+.will-change-transform,
+[style*="will-change: transform"],
+[style*="willChange"] {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .font-graphik-light-weight-300 {
@@ -1007,7 +1023,7 @@ body {
   }
 
   .global-section-padding {
-    padding: 0 100px !important;
+    padding: 0 160px !important;
   }
 
   .digital-experience-banner-video {

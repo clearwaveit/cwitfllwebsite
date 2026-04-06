@@ -11,7 +11,7 @@ interface BeforeImageProps {
 
 export default function BeforeImage({
   image,
-  alt = "Background",
+  alt = "",
   className = "",
   imageClassName = "",
 }: BeforeImageProps) {

@@ -1,55 +1,13 @@
 import type { OurWorkListingPage } from "@/app/lib/our-work-api";
 import type { OurWorkPageItem } from "@/app/our-work/our-work-types";
 import type { AccordionItem } from "@/app/components/sections/Accordion";
-import ourWorkImg from "@/app/assets/imgs/our_work_img.png";
-import vectorBg from "@/app/assets/imgs/Mask group (1).png";
 
-const DEFAULT_BANNER = {
-  title: "Our Work",
-  description: "Digital Experiences That Inspire and Perform",
-  backgroundImage: { src: vectorBg.src, alt: "Background" as string },
+const EMPTY_BANNER = {
+  title: "",
+  description: "",
+  backgroundImage: { src: "" as string, alt: "" as string },
   videoSrc: undefined as string | undefined,
 };
-
-/** Default work items when CMS has none. */
-export const DEFAULT_WORK_ITEMS: OurWorkPageItem[] = [
-  {
-    title: "The Oxford Institute",
-    description:
-      "70% increased in digital interaction of potential students looking for information",
-    image: ourWorkImg,
-    category: "EDUCATION\nTECH\nWEBSITE",
-  },
-  {
-    title: "The Oxford Institute",
-    description:
-      "70% increased in digital interaction of potential students looking for information",
-    image: ourWorkImg,
-    category: "EDUCATION\nTECH\nWEBSITE",
-  },
-  {
-    title: "The Oxford Institute",
-    description:
-      "70% increased in digital interaction of potential students looking for information",
-    image: ourWorkImg,
-    category: "EDUCATION\nTECH\nWEBSITE",
-  },
-  {
-    title: "The Oxford Institute",
-    description:
-      "70% increased in digital interaction of potential students looking for information",
-    image: ourWorkImg,
-    category: "EDUCATION\nTECH\nWEBSITE",
-  },
-  {
-    title: "The Oxford Institute",
-    description:
-      "70% increased in digital interaction of potential students looking for information",
-    image: ourWorkImg,
-    category: "EDUCATION\nTECH\nWEBSITE",
-  },
-];
-const DEFAULT_CARD = DEFAULT_WORK_ITEMS[0];
 
 type OverrideCard = {
   cardSubtitle?: string | null;
@@ -76,11 +34,16 @@ type PerPortfolioOverride = {
   portfolioCards?: Array<OverrideCard | null> | null;
 };
 
-function getImageUrlWithFallback(
-  image: { node?: { sourceUrl?: string | null; mediaItemUrl?: string | null } | null } | null | undefined,
-  fallback: OurWorkPageItem["image"]
-): OurWorkPageItem["image"] {
-  return (image?.node?.sourceUrl || image?.node?.mediaItemUrl || fallback) as OurWorkPageItem["image"];
+function mediaUrl(
+  image: { node?: { sourceUrl?: string | null; mediaItemUrl?: string | null } | null } | null | undefined
+): string | undefined {
+  const u = image?.node?.sourceUrl || image?.node?.mediaItemUrl;
+  const t = u?.trim();
+  return t || undefined;
+}
+
+function asWorkImage(url: string | undefined): OurWorkPageItem["image"] | undefined {
+  return url ? (url as OurWorkPageItem["image"]) : undefined;
 }
 
 function toNumberId(value: unknown): number | undefined {
@@ -109,18 +72,23 @@ function getRawWorkItems(rawWorkList: unknown): unknown[] {
   return [];
 }
 
+function hasRenderableImage(item: OurWorkPageItem): boolean {
+  if (typeof item.image === "string") return item.image.trim().length > 0;
+  return Boolean((item.image as { src?: string } | undefined)?.src);
+}
+
 export function normalizeOurWorkPageData(
   data: OurWorkListingPage | null
 ): {
-  banner: typeof DEFAULT_BANNER;
+  banner: typeof EMPTY_BANNER;
   workItems: OurWorkPageItem[];
   accordion: { title: string; items: AccordionItem[] };
 } {
   if (!data?.page?.ourWorkPageFields) {
     return {
-      banner: DEFAULT_BANNER,
-      workItems: DEFAULT_WORK_ITEMS,
-      accordion: { title: "FAQ's", items: [] },
+      banner: EMPTY_BANNER,
+      workItems: [],
+      accordion: { title: "", items: [] },
     };
   }
 
@@ -132,116 +100,111 @@ export function normalizeOurWorkPageData(
     data.page.ourWorkPerPortfolioOverrides?.ourWorkPerPortfolioItems ?? []
   ).filter(Boolean) as PerPortfolioOverride[];
 
-  const bannerTitle =
-    bannerSection?.bannerTitle?.trim() || DEFAULT_BANNER.title;
-  const bannerDescription =
-    bannerSection?.bannerDescription?.trim() || DEFAULT_BANNER.description;
+  const bannerTitle = bannerSection?.bannerTitle?.trim() || "";
+  const bannerDescription = bannerSection?.bannerDescription?.trim() || "";
   const bgNode = bannerSection?.bannerBackgroundImage?.node;
-  const bannerBackgroundImage = bgNode?.sourceUrl
-    ? { src: bgNode.sourceUrl, alt: bgNode.altText || "Background" }
-    : DEFAULT_BANNER.backgroundImage;
-  const bannerVideo = bannerSection?.bannerVideo?.node?.sourceUrl;
+  const bannerBackgroundImage = bgNode?.sourceUrl?.trim()
+    ? { src: bgNode.sourceUrl, alt: bgNode.altText?.trim() || "" }
+    : { src: "", alt: "" };
+  const bannerVideo = bannerSection?.bannerVideo?.node?.sourceUrl?.trim();
 
   const rawWorkItems = getRawWorkItems(workSection?.workItems);
 
   const workItems: OurWorkPageItem[] =
     rawWorkItems.length > 0
-      ? rawWorkItems.flatMap((wi) => {
-          const node = wi as Record<string, unknown> | null | undefined;
-          const currentPortfolioId = toNumberId(node?.databaseId);
-          const matchedOverride =
-            perPortfolioOverrides.find((ov) => getOverridePortfolioId(ov) === currentPortfolioId) ?? null;
-          const title = (node?.title as string)?.trim() ?? "";
-          const slug = (node?.slug as string)?.trim();
-          const excerpt = (node?.excerpt as string)?.trim() ?? "";
-          const portfolioDetails = node?.portfolioDetails as Record<string, unknown> | null | undefined;
-          const bgImg = (portfolioDetails?.backgroundImage ?? portfolioDetails?.heroBackgroundImage) as
-            | { node?: { sourceUrl?: string; altText?: string } }
-            | null
-            | undefined;
-          const imgUrl = bgImg?.node?.sourceUrl;
-          const image = (imgUrl || ourWorkImg) as OurWorkPageItem["image"];
-          const industryTitle = (portfolioDetails?.industryTitle as string)?.trim();
-          const industryCategory = industryTitle ? industryTitle.replace(/\s*,\s*/g, "\n") : undefined;
-          const link = slug ? "/work-details/" + slug : "";
+      ? rawWorkItems
+          .flatMap((wi) => {
+            const node = wi as Record<string, unknown> | null | undefined;
+            const currentPortfolioId = toNumberId(node?.databaseId);
+            const matchedOverride =
+              perPortfolioOverrides.find((ov) => getOverridePortfolioId(ov) === currentPortfolioId) ?? null;
+            const title = (node?.title as string)?.trim() ?? "";
+            const slug = (node?.slug as string)?.trim();
+            const excerpt = (node?.excerpt as string)?.trim() ?? "";
+            const portfolioDetails = node?.portfolioDetails as Record<string, unknown> | null | undefined;
+            const bgImg = (portfolioDetails?.backgroundImage ?? portfolioDetails?.heroBackgroundImage) as
+              | { node?: { sourceUrl?: string; altText?: string } }
+              | null
+              | undefined;
+            const baseImgUrl = bgImg?.node?.sourceUrl?.trim();
+            const industryTitle = (portfolioDetails?.industryTitle as string)?.trim();
+            const industryCategory = industryTitle ? industryTitle.replace(/\s*,\s*/g, "\n") : undefined;
+            const link = slug ? "/portfolio/" + slug : "";
 
-          const listing = node?.homePortfolioListing as Record<string, unknown> | null | undefined;
-          const listingSubtitle = (listing?.portfolioListingSubtitle as string)?.trim();
-          const listingTitle = (listing?.portfolioListingTitle as string)?.trim();
-          const listingDescription = (listing?.portfolioListingDescription as string)?.trim();
-          const listingCards = Array.isArray(listing?.portfolioListingCards)
-            ? (listing?.portfolioListingCards as Array<Record<string, unknown> | null>)
-            : [];
+            const listing = node?.homePortfolioListing as Record<string, unknown> | null | undefined;
+            const listingSubtitle = (listing?.portfolioListingSubtitle as string)?.trim();
+            const listingTitle = (listing?.portfolioListingTitle as string)?.trim();
+            const listingDescription = (listing?.portfolioListingDescription as string)?.trim();
+            const listingCards = Array.isArray(listing?.portfolioListingCards)
+              ? (listing?.portfolioListingCards as Array<Record<string, unknown> | null>)
+              : [];
 
-          const mainSubtitle =
-            matchedOverride?.portfolioSubtitle?.trim() ||
-            listingSubtitle ||
-            industryCategory ||
-            DEFAULT_CARD?.category ||
-            "";
-          const mainTitle =
-            matchedOverride?.portfolioTitle?.trim() ||
-            listingTitle ||
-            title ||
-            DEFAULT_CARD?.title ||
-            "";
-          const mainDescription =
-            matchedOverride?.portfolioDescription?.trim() ||
-            listingDescription ||
-            excerpt ||
-            DEFAULT_CARD?.description ||
-            "";
-          const mainImage = getImageUrlWithFallback(matchedOverride?.portfolioImage, image);
+            const mainSubtitle =
+              matchedOverride?.portfolioSubtitle?.trim() || listingSubtitle || industryCategory || "";
+            const mainTitle =
+              matchedOverride?.portfolioTitle?.trim() || listingTitle || title || "";
+            const mainDescription =
+              matchedOverride?.portfolioDescription?.trim() || listingDescription || excerpt || "";
+            const mainImage =
+              asWorkImage(mediaUrl(matchedOverride?.portfolioImage)) ?? asWorkImage(baseImgUrl);
 
-          const overrideCards = (matchedOverride?.portfolioCards ?? []).filter(Boolean) as OverrideCard[];
-          if (overrideCards.length > 0) {
-            return overrideCards.map((card) => ({
-              title: card.cardTitle?.trim() || mainTitle,
-              description: card.cardDescription?.trim() || mainDescription,
-              image: getImageUrlWithFallback(card.cardImage, mainImage),
-              ...(card.cardSubtitle?.trim() || mainSubtitle
-                ? { category: (card.cardSubtitle?.trim() || mainSubtitle) as string }
-                : {}),
-              ...(link ? { link } : {}),
-            }));
-          }
+            const overrideCards = (matchedOverride?.portfolioCards ?? []).filter(Boolean) as OverrideCard[];
+            if (overrideCards.length > 0) {
+              return overrideCards.map((card) => {
+                const img =
+                  asWorkImage(mediaUrl(card.cardImage)) ??
+                  mainImage;
+                return {
+                  title: card.cardTitle?.trim() || mainTitle,
+                  description: card.cardDescription?.trim() || mainDescription,
+                  image: img as OurWorkPageItem["image"],
+                  ...(card.cardSubtitle?.trim() || mainSubtitle
+                    ? { category: (card.cardSubtitle?.trim() || mainSubtitle) as string }
+                    : {}),
+                  ...(link ? { link } : {}),
+                } as OurWorkPageItem;
+              });
+            }
 
-          if (listingCards.length > 0) {
-            return listingCards.filter(Boolean).map((card) => {
-              const c = card as Record<string, unknown>;
-              const cardSubtitle = (c?.cardSubtitle as string)?.trim();
-              const cardTitle = (c?.cardTitle as string)?.trim();
-              const cardDescription = (c?.cardDescription as string)?.trim();
-              const cardImageNode = (c?.cardImage as { node?: { sourceUrl?: string; mediaItemUrl?: string } } | null | undefined)?.node;
-              const cardImage = cardImageNode?.sourceUrl || cardImageNode?.mediaItemUrl || mainImage;
-              return {
-                title: cardTitle || mainTitle,
-                description: cardDescription || mainDescription,
-                image: (cardImage || mainImage) as OurWorkPageItem["image"],
-                ...(cardSubtitle || mainSubtitle
-                  ? { category: (cardSubtitle || mainSubtitle) as string }
-                  : {}),
+            if (listingCards.length > 0) {
+              return listingCards.filter(Boolean).map((card) => {
+                const c = card as Record<string, unknown>;
+                const cardSubtitle = (c?.cardSubtitle as string)?.trim();
+                const cardTitle = (c?.cardTitle as string)?.trim();
+                const cardDescription = (c?.cardDescription as string)?.trim();
+                const cardImageNode = (c?.cardImage as { node?: { sourceUrl?: string; mediaItemUrl?: string } } | null | undefined)?.node;
+                const cardUrl = cardImageNode?.sourceUrl?.trim() || cardImageNode?.mediaItemUrl?.trim();
+                const img = asWorkImage(cardUrl) ?? mainImage;
+                return {
+                  title: cardTitle || mainTitle,
+                  description: cardDescription || mainDescription,
+                  image: img as OurWorkPageItem["image"],
+                  ...(cardSubtitle || mainSubtitle
+                    ? { category: (cardSubtitle || mainSubtitle) as string }
+                    : {}),
+                  ...(link ? { link } : {}),
+                } as OurWorkPageItem;
+              });
+            }
+
+            return [
+              {
+                title: mainTitle,
+                description: mainDescription,
+                image: mainImage as OurWorkPageItem["image"],
+                ...(mainSubtitle ? { category: mainSubtitle } : {}),
                 ...(link ? { link } : {}),
-              };
-            });
-          }
-
-          return [{
-            title: mainTitle,
-            description: mainDescription,
-            image: mainImage,
-            ...(mainSubtitle ? { category: mainSubtitle } : {}),
-            ...(link ? { link } : {}),
-          }];
-        })
+              } as OurWorkPageItem,
+            ];
+          })
+          .filter(hasRenderableImage)
       : [];
 
-  const accordionTitle =
-    accordionSection?.accordionTitle?.trim() || "FAQ's";
+  const accordionTitle = accordionSection?.accordionTitle?.trim() || "";
   const rawList = accordionSection?.accordionItems;
   const rawAccordionItems = Array.isArray(rawList)
     ? rawList
-    : (rawList && typeof rawList === "object" && "nodes" in rawList && Array.isArray((rawList as { nodes: unknown[] }).nodes))
+    : rawList && typeof rawList === "object" && "nodes" in rawList && Array.isArray((rawList as { nodes: unknown[] }).nodes)
       ? (rawList as { nodes: unknown[] }).nodes
       : [];
 

@@ -10,10 +10,6 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const DEFAULT_GENAI_VIDEO = "/videos/animated_gen_ai_clip_2.mp4";
-const DEFAULT_GENAI_HEADING = "Redefining Businesses\nwith AI-as-a-Service";
-const DEFAULT_GENAI_PARAGRAPH = "Clearwave integrates AI into digital platforms to enable automation, intelligent workflows, and smarter digital experiences. From AI chat systems to custom integrations, our focus is on applying AI where it creates real value.";
-
 function splitGenAiHeading(value: string): string[] {
   const explicitLines = value
     .replace(/<br\s*\/?>/gi, "\n")
@@ -39,9 +35,11 @@ interface GenAIProps {
 
 export default function GenAI({ heading, paragraph, videoSrc, ctaText, ctaLink }: GenAIProps = {}) {
   const router = useRouter();
-  const src = videoSrc?.trim() || DEFAULT_GENAI_VIDEO;
-  const headingText = heading?.trim() || DEFAULT_GENAI_HEADING;
-  const paragraphText = paragraph?.trim() || DEFAULT_GENAI_PARAGRAPH;
+  const src = videoSrc?.trim() || "";
+  const headingText = heading?.trim() || "";
+  const paragraphText = paragraph?.trim() || "";
+
+  if (!src && !headingText && !paragraphText) return null;
   const headingLines = splitGenAiHeading(headingText);
   const paragraphLines = paragraphText
     .replace(/<br\s*\/?>/gi, "\n")
@@ -65,6 +63,8 @@ export default function GenAI({ heading, paragraph, videoSrc, ctaText, ctaLink }
 
   // Video playback synced with scroll progress
   useEffect(() => {
+    if (!src) return;
+
     const section = sectionRef.current;
     const video = videoRef.current;
 
@@ -224,10 +224,11 @@ export default function GenAI({ heading, paragraph, videoSrc, ctaText, ctaLink }
       video.removeEventListener('canplaythrough', handleCanPlay);
       video.removeEventListener('timeupdate', handleTimeUpdate);
     };
-  }, []);
+  }, [src]);
 
   // iOS video loading fix
   useEffect(() => {
+    if (!src) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -246,7 +247,7 @@ export default function GenAI({ heading, paragraph, videoSrc, ctaText, ctaLink }
     const timeout = setTimeout(loadVideo, 100);
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [src]);
 
   // GSAP scroll animations
   useEffect(() => {
@@ -296,7 +297,7 @@ export default function GenAI({ heading, paragraph, videoSrc, ctaText, ctaLink }
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [src, ctaText]);
 
   return (
     <section ref={sectionRef} className="relative bg-black pt-0 pb-12 md:pb-24 overflow-hidden gen-ai-section w-full">
@@ -304,32 +305,34 @@ export default function GenAI({ heading, paragraph, videoSrc, ctaText, ctaLink }
         <div className="space-y-0 h-full w-full">
           {/* Main Content Div */}
           <div className="relative flex flex-col items-center h-full min-h-[100vh] min-h-[100dvh] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px] xl:min-h-[700px] justify-center overflow-hidden gen-ai-container w-full">
-            {/* Background Video */}
-            <video
-              ref={videoRef}
-              src={src}
-              muted
-              playsInline
-              loop={false}
-              preload="auto"
-              className="absolute inset-0 z-0 video-responsive-gen-ai"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                display: 'block',
-              }}
-              onLoadedMetadata={(e) => {
-                // Ensure video is ready on iOS
-                const video = e.currentTarget;
-                if (video) {
-                  video.setAttribute('webkit-playsinline', 'true');
-                  video.pause();
-                  video.currentTime = 0;
-                }
-              }}
-            />
+            {/* Background Video — only when CMS provides a URL */}
+            {src ? (
+              <video
+                key={src}
+                ref={videoRef}
+                src={src}
+                muted
+                playsInline
+                loop={false}
+                preload="auto"
+                className="absolute inset-0 z-0 video-responsive-gen-ai"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  display: 'block',
+                }}
+                onLoadedMetadata={(e) => {
+                  const video = e.currentTarget;
+                  if (video) {
+                    video.setAttribute('webkit-playsinline', 'true');
+                    video.pause();
+                    video.currentTime = 0;
+                  }
+                }}
+              />
+            ) : null}
 
             {/* Content */}
             <div className="relative z-20 w-full flex flex-col items-center text-center gap-4 sm:gap-4 md:gap-4 lg:gap-6 xl:gap-8 pt-140 sm:pt-170 md:pt-170 lg:pt-170 xl:pt-170 2xl:pt-200 gen-ai-content">
@@ -346,14 +349,16 @@ export default function GenAI({ heading, paragraph, videoSrc, ctaText, ctaLink }
                   <span key={i}>{line}{i < paragraphLines.length - 1 && <br />}</span>
                 ))}
               </p>
-              <div ref={buttonRef}>
-                <CallToActionButton
-                  variant="shiny"
-                  onClick={ctaLink?.trim() ? handleCtaClick : undefined}
-                >
-                  {ctaText?.trim() || "Let's Talk"}
-                </CallToActionButton>
-              </div>
+              {ctaText?.trim() ? (
+                <div ref={buttonRef}>
+                  <CallToActionButton
+                    variant="shiny"
+                    onClick={ctaLink?.trim() ? handleCtaClick : undefined}
+                  >
+                    {ctaText.trim()}
+                  </CallToActionButton>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

@@ -4,8 +4,13 @@
  *
  * ACF groups (see wordpress/acf-json/README.md):
  * - homePage: Hero, Intro, Showcase, Studios, GenAI, featurePortfolioHome, Clients, Blogs Section (title + Selected Blogs + repeater), Accordion
+ *
+ * Optional ACF **URL** fields (direct video file URLs — WordPress uploads, CDN, or Cloudflare Stream e.g. …/downloads/default.mp4):
+ * - homeHeroSection: heroVideoUrl, heroVideoMobileUrl (use instead of or alongside Media heroVideo / heroVideoMobile)
+ * - homeStudios row: videoUrl (alongside Media video), buttonText (CTA label), link (CTA URL)
+ * - homeGenaiSection: genaiVideoUrl (alongside Media video)
  * - homePagePortfolioListing: Portfolio listing (page-level, optional)
- * Selected Blogs: Home Page > Blogs Section > "Selected Blogs" (relationship). Leave empty → show all/latest; no posts → hardcoded default.
+ * Selected Blogs: Home Page > Blogs Section > "Selected Blogs" (relationship). Empty → blogs section shows no cards (no front-end latest-posts fallback).
  */
 
 const GRAPHQL_ENDPOINT =
@@ -35,6 +40,7 @@ const HOME_PAGE_FIELDS_FRAGMENT = `
         mediaItemUrl
       }
     }
+    heroVideoUrl
     heroTitle
     heroSubtitle
     heroimage {
@@ -50,6 +56,7 @@ const HOME_PAGE_FIELDS_FRAGMENT = `
         mediaItemUrl
       }
     }
+    heroVideoMobileUrl
     heroImageMobile {
       node {
         sourceUrl
@@ -103,7 +110,9 @@ const HOME_PAGE_FIELDS_FRAGMENT = `
         mediaItemUrl
       }
     }
+    videoUrl
     link
+    buttonText
   }
   homeGenaiSection {
     heading
@@ -114,6 +123,7 @@ const HOME_PAGE_FIELDS_FRAGMENT = `
         mediaItemUrl
       }
     }
+    genaiVideoUrl
     ctaText
     ctaLink
   }
@@ -191,6 +201,7 @@ const HOME_PAGE_FIELDS_FRAGMENT_LEGACY = `
         mediaItemUrl
       }
     }
+    heroVideoUrl
     heroTitle
     heroSubtitle
     heroimage {
@@ -206,6 +217,7 @@ const HOME_PAGE_FIELDS_FRAGMENT_LEGACY = `
         mediaItemUrl
       }
     }
+    heroVideoMobileUrl
     heroImageMobile {
       node {
         sourceUrl
@@ -247,7 +259,9 @@ const HOME_PAGE_FIELDS_FRAGMENT_LEGACY = `
         mediaItemUrl
       }
     }
+    videoUrl
     link
+    buttonText
   }
   homeGenaiSection {
     heading
@@ -258,6 +272,7 @@ const HOME_PAGE_FIELDS_FRAGMENT_LEGACY = `
         mediaItemUrl
       }
     }
+    genaiVideoUrl
     ctaText
     ctaLink
   }
@@ -390,6 +405,7 @@ export const GET_HOME_PAGE_BY_URI = `
               mediaItemUrl
             }
           }
+          heroVideoUrl
           heroTitle
           heroSubtitle
           heroimage {
@@ -405,6 +421,7 @@ export const GET_HOME_PAGE_BY_URI = `
               mediaItemUrl
             }
           }
+          heroVideoMobileUrl
           heroImageMobile {
             node {
               sourceUrl
@@ -458,15 +475,20 @@ export const GET_HOME_PAGE_BY_URI = `
               mediaItemUrl
             }
           }
+          videoUrl
           link
+          buttonText
         }
         homeGenaiSection {
           heading
+          paragraph
           video {
             node {
               sourceUrl
+              mediaItemUrl
             }
           }
+          genaiVideoUrl
           ctaText
           ctaLink
         }
@@ -558,6 +580,7 @@ const GET_HOME_PAGE_BY_URI_LEGACY = `
               mediaItemUrl
             }
           }
+          heroVideoUrl
           heroTitle
           heroSubtitle
           heroimage {
@@ -573,6 +596,7 @@ const GET_HOME_PAGE_BY_URI_LEGACY = `
               mediaItemUrl
             }
           }
+          heroVideoMobileUrl
           heroImageMobile {
             node {
               sourceUrl
@@ -584,8 +608,8 @@ const GET_HOME_PAGE_BY_URI_LEGACY = `
         homeIntroSection { introParagraph introBackgroundImage { node { sourceUrl altText } } }
         showcaseHeadline
         showcaseCards { cardType title subtitle description image { node { sourceUrl altText } } backgroundClass textColorClass }
-        homeStudios { title description video { node { sourceUrl mediaItemUrl } } link }
-        homeGenaiSection { heading paragraph video { node { sourceUrl mediaItemUrl } } ctaText ctaLink }
+        homeStudios { title description video { node { sourceUrl mediaItemUrl } } videoUrl link buttonText }
+        homeGenaiSection { heading paragraph video { node { sourceUrl mediaItemUrl } } genaiVideoUrl ctaText ctaLink }
         ourWorkTitle
         featurePortfolioHome { nodes { ... on Portfolio { databaseId slug title uri excerpt portfolioDetails { backgroundImage { node { sourceUrl } } } } } }
         clientsLogo { node { sourceUrl altText } }
@@ -643,6 +667,7 @@ const GET_HOME_PAGE_BY_URI_WITH_SELECTED_BLOGS = `
               mediaItemUrl
             }
           }
+          heroVideoUrl
           heroTitle
           heroSubtitle
           heroimage {
@@ -658,6 +683,7 @@ const GET_HOME_PAGE_BY_URI_WITH_SELECTED_BLOGS = `
               mediaItemUrl
             }
           }
+          heroVideoMobileUrl
           heroImageMobile {
             node {
               sourceUrl
@@ -711,15 +737,20 @@ const GET_HOME_PAGE_BY_URI_WITH_SELECTED_BLOGS = `
               mediaItemUrl
             }
           }
+          videoUrl
           link
+          buttonText
         }
         homeGenaiSection {
           heading
+          paragraph
           video {
             node {
               sourceUrl
+              mediaItemUrl
             }
           }
+          genaiVideoUrl
           ctaText
           ctaLink
         }
@@ -1452,11 +1483,15 @@ const HOME_PAGE_ID = process.env.NEXT_PUBLIC_HOME_PAGE_ID;
 
 export type HomeHeroSection = {
   heroVideo?: { node?: { sourceUrl?: string; mediaItemUrl?: string | null } } | null;
+  /** Plain URL from ACF (e.g. external MP4/WebM) — preferred over Media `heroVideo` when set */
+  heroVideoUrl?: string | null;
   /** Optional mobile-only hero video — connection in WPGraphQL, or string URL if ACF return format is “URL” */
   heroVideoMobile?:
     | string
     | { node?: { sourceUrl?: string; mediaItemUrl?: string | null } }
     | null;
+  /** Plain mobile hero video URL — preferred over Media `heroVideoMobile` when set */
+  heroVideoMobileUrl?: string | null;
   heroTitle?: string | null;
   heroSubtitle?: string | null;
   /** When ACF GraphQL exposes the image as `heroImage` */
@@ -1488,14 +1523,20 @@ export type ShowcaseCard = {
 export type HomeStudio = {
   title?: string | null;
   description?: string | null;
-  video?: { node?: { sourceUrl?: string } } | null;
+  video?: { node?: { sourceUrl?: string; mediaItemUrl?: string | null } } | null;
+  /** Plain video URL — preferred over Media `video` when set */
+  videoUrl?: string | null;
   link?: string | null;
+  /** CTA label for the studio card button */
+  buttonText?: string | null;
 };
 
 export type HomeGenaiSection = {
   heading?: string | null;
   paragraph?: string | null;
   video?: { node?: { sourceUrl?: string; mediaItemUrl?: string } } | null;
+  /** Plain video URL — preferred over Media `video` when set */
+  genaiVideoUrl?: string | null;
   ctaText?: string | null;
   ctaLink?: string | null;
 };

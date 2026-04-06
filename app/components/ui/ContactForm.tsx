@@ -5,7 +5,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CallToActionButton from "./CallToActionButton";
 import {
-  DEFAULT_CONTACT_FORM_FIELDS,
   DEFAULT_CONTACT_SUBMIT_BUTTON_TEXT,
   DEFAULT_CONTACT_SUCCESS_MESSAGE,
 } from "@/app/lib/contact-form-config";
@@ -46,7 +45,7 @@ export default function ContactForm({
 }: ContactFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRefs = useRef<(HTMLInputElement | HTMLTextAreaElement | HTMLDivElement | null)[]>([]);
-  const visibleFields = fields?.length ? fields : DEFAULT_CONTACT_FORM_FIELDS;
+  const visibleFields = fields ?? [];
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -206,6 +205,10 @@ export default function ContactForm({
       setIsSubmitting(false);
     }
   };
+
+  if (!visibleFields.length) {
+    return null;
+  }
 
   return (
     <form

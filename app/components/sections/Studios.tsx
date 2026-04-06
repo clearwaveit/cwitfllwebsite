@@ -10,19 +10,12 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const DEFAULT_DESCRIPTION = "As we are adept in developing visual and verbal excellence, we make sure your brand is highlighted with a user-friendly, accessible and adaptive user interface that will make your website relevant in this ever-evolving prospect.";
-
-const DEFAULT_STUDIOS = [
-  { title: "Digital Experience Studio", description: DEFAULT_DESCRIPTION, video: "/videos/animated_clip_1.mp4", href: "/digital-experience-studio" },
-  { title: "Application Development Studio", description: DEFAULT_DESCRIPTION, video: "/videos/animated_clip_2.mp4", href: "/application-development-studio" },
-  { title: "Growth & Branding Studio", description: DEFAULT_DESCRIPTION, video: "/videos/animated_clip_3.mp4", href: "/growth-branding-studio" },
-];
-
 interface StudioItem {
   title: string;
   description: string;
   video: string;
   href: string;
+  buttonText?: string;
 }
 
 interface StudiosProps {
@@ -33,27 +26,34 @@ const STUDIO_INDICES = [0, 1, 2] as const;
 
 export default function Studios({ studios: studiosProp }: StudiosProps = {}) {
   const fromCms = studiosProp?.length ? studiosProp.slice(0, 3) : [];
-  // Slot 0 = Digital (clip_1), slot 1 = Application (clip_2), slot 2 = Growth (clip_3). Base = DEFAULT_STUDIOS, overlay CMS per index.
-  const studios: typeof DEFAULT_STUDIOS = [0, 1, 2].map((i) => {
-    const base = DEFAULT_STUDIOS[i];
-    const cms = fromCms[i];
-    if (!cms) return base;
-    const cmsVideo = (cms.video ?? "").trim();
-    const isCmsVideoUrl = cmsVideo.length > 0 && (cmsVideo.startsWith("http") || cmsVideo.startsWith("/"));
-    return {
-      title: (cms.title?.trim()) || base.title,
-      description: (cms.description?.trim()) || base.description,
-      video: isCmsVideoUrl ? cmsVideo : base.video,
-      href: base.href,
-    };
-  }) as typeof DEFAULT_STUDIOS;
+  const studios: StudioItem[] = fromCms.length > 0
+    ? fromCms.map((cms) => ({
+        title: cms.title?.trim() || "",
+        description: cms.description?.trim() || "",
+        video: (cms.video ?? "").trim(),
+        href: (cms.href ?? "").trim(),
+        buttonText: cms.buttonText?.trim() || undefined,
+      }))
+    : [];
   const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const divRefs = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
 
-  const getStudio = (index: number): StudioItem => studios[index] ?? DEFAULT_STUDIOS[index];
-  const getHref = (index: number): string => DEFAULT_STUDIOS[index]?.href ?? "/";
+  const getStudio = (index: number): StudioItem =>
+    studios[index] ?? { title: "", description: "", video: "", href: "" };
+
+  const navigateToStudio = (href: string) => {
+    const h = href.trim();
+    if (!h || h === "#") return;
+    if (/^https?:\/\//i.test(h)) {
+      window.location.assign(h);
+      return;
+    }
+    router.push(h.startsWith("/") ? h : `/${h.replace(/^\/+/, "")}`);
+  };
+
+  if (studios.length === 0) return null;
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -162,57 +162,63 @@ export default function Studios({ studios: studiosProp }: StudiosProps = {}) {
               >
                 <div className={`relative flex flex-col items-start max-w-[1400px] ps-3 pe-3 md:ps-38 md:mt-[-140px] ${index === 1 ? "mx-auto" : index === 2 ? "ml-auto" : ""}`}>
                   {/* Video: index 0 top-right (manta), index 1 right (orb), index 2 left (rocket) */}
-                  <video
-                    src={studio.video}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className={`absolute inset-0 object-cover mx-auto video-responsive-studios video-studio-${index}`}
-                    style={{
-                      left: index === 0 ? "150px" : index === 1 ? "774px" : index === 2 ? "-650px" : "100px",
-                      top: index === 0 ? "-190px" : index === 1 ? "-100px" : index === 2 ? "-20px" : "-150px",
-                      width: index === 0 ? "720px" : index === 1 ? "461px" : index === 2 ? "420px" : "420px",
-                      height: index === 0 ? "405px" : index === 1 ? "461px" : index === 2 ? "420px" : "420px",
-                      zIndex: -1000,
-                    }}
-                  />
+                  {studio.video ? (
+                    <video
+                      src={studio.video}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className={`absolute inset-0 object-cover mx-auto video-responsive-studios video-studio-${index}`}
+                      style={{
+                        left: index === 0 ? "150px" : index === 1 ? "774px" : index === 2 ? "-650px" : "100px",
+                        top: index === 0 ? "-190px" : index === 1 ? "-100px" : index === 2 ? "-20px" : "-150px",
+                        width: index === 0 ? "720px" : index === 1 ? "461px" : index === 2 ? "420px" : "420px",
+                        height: index === 0 ? "405px" : index === 1 ? "461px" : index === 2 ? "420px" : "420px",
+                        zIndex: -1000,
+                      }}
+                    />
+                  ) : null}
 
                   {/* Content - all three left-aligned to match DEFAULT_STUDIOS screenshot */}
                   <div className={`content-wrapper relative z-20 w-full ${index === 0 ? "ps-0 lg:ps-8 lg:pt-0 content-studio-0" : index === 1 ? "ps-0 lg:ps-26 content-studio-1" : index === 2 ? "ps-0 lg:ps-100 content-studio-2" : "ps-0"}`}>
                     <h2 className={`text-[30px] md:text-[80px] font-[700] text-white leading-[32px] md:leading-[80px] ${index === 0 ? "studio-heading-0" : index === 1 ? "studio-heading-1" : "studio-heading-2"}`}>
                       {index === 0 ? (
                         (() => {
-                          const t = studio.title || DEFAULT_STUDIOS[0].title;
-                          const first = t.split(" ")[0] || "Digital";
-                          const second = t.split(" ").slice(1).join(" ") || "Experience Studio";
+                          const t = studio.title || "";
+                          const first = t.split(" ")[0] || "";
+                          const second = t.split(" ").slice(1).join(" ") || "";
                           return <>{first}<br />{second}</>;
                         })()
                       ) : index === 1 ? (
                         (() => {
-                          const t = studio.title || DEFAULT_STUDIOS[1].title;
-                          const first = t.split(" ")[0] || "Application";
-                          const second = t.split(" ").slice(1).join(" ") || "Development Studio";
+                          const t = studio.title || "";
+                          const first = t.split(" ")[0] || "";
+                          const second = t.split(" ").slice(1).join(" ") || "";
                           return <>{first}<br />{second}</>;
                         })()
                       ) : index === 2 ? (
                         (() => {
-                          const t = studio.title || DEFAULT_STUDIOS[2].title;
-                          const first = t.startsWith("Growth &") ? "Growth &" : t.split(" ")[0] || "Growth &";
-                          const second = t.startsWith("Growth &") ? t.slice(8).trim() : t.split(" ").slice(1).join(" ") || "Branding Studio";
+                          const t = studio.title || "";
+                          const first = t.startsWith("Growth &") ? "Growth &" : t.split(" ")[0] || "";
+                          const second = t.startsWith("Growth &") ? t.slice(8).trim() : t.split(" ").slice(1).join(" ") || "";
                           return <>{first}<br />{second}</>;
                         })()
                       ) : (
-                        studio.title || DEFAULT_STUDIOS[index]?.title || "Studio"
+                        studio.title || ""
                       )}
                     </h2>
                     <p className="text-[16px] md:text-[18px] text-white py-8 max-w-[730px] leading-relaxed">
-                      {studio.description || DEFAULT_STUDIOS[index]?.description || ""}
+                      {studio.description || ""}
                     </p>
-                    <CallToActionButton 
-                      variant="shiny" 
-                      onClick={() => router.push(getHref(index))}
-                    />
+                    {studio.buttonText?.trim() && studio.href?.trim() ? (
+                      <CallToActionButton
+                        variant="shiny"
+                        onClick={() => navigateToStudio(studio.href)}
+                      >
+                        {studio.buttonText.trim()}
+                      </CallToActionButton>
+                    ) : null}
                   </div>
                 </div>
               </div>
