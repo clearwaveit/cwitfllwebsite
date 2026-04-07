@@ -103,7 +103,7 @@ export default async function Home() {
       {(genaiProps.heading || genaiProps.paragraph || genaiProps.videoSrc) && <GenAI {...genaiProps} />}
       {ourWorkProps.items?.length ? <HomeOurWork {...ourWorkProps} /> : null}
       {ourClientsProps.logoSrc?.trim() ? <OurClients {...ourClientsProps} /> : null}
-      {blogsProps.items.length > 0 && <Blogs {...blogsProps} />}
+      {blogsProps.items.length > 0 && <Blogs {...blogsProps} isCarousel={true} />}
       {accordionProps.items?.length ? <Accordion {...accordionProps} /> : null}
     </main>
   );

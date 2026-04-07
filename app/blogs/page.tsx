@@ -15,10 +15,10 @@ export default async function BlogPage() {
   const listing = resolveBlogPageListing(blogPageData);
   return (
     <main className="min-h-screen">
-      <DigitalExperienceBanner
+      {/* <DigitalExperienceBanner
         title={<>{listing.heroTitle}</>}
         description={listing.heroDescription || undefined}
-      />
+      /> */}
       <Blogs
         sectionSubtitle={listing.sectionSubtitle}
         sectionTitle={listing.sectionTitle}

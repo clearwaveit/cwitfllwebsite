@@ -158,6 +158,7 @@ const HOME_PAGE_FIELDS_FRAGMENT = `
           backgroundImage {
             node {
               sourceUrl
+              mediaItemUrl
             }
           }
         }
@@ -235,6 +236,18 @@ const HOME_PAGE_FIELDS_FRAGMENT_LEGACY = `
       }
     }
   }
+  showcaseBeforeImage {
+    node {
+      sourceUrl
+      altText
+    }
+  }
+  showcaseLogoImage {
+    node {
+      sourceUrl
+      altText
+    }
+  }
   showcaseHeadline
   showcaseCards {
     cardType
@@ -307,6 +320,7 @@ const HOME_PAGE_FIELDS_FRAGMENT_LEGACY = `
           backgroundImage {
             node {
               sourceUrl
+              mediaItemUrl
             }
           }
         }
@@ -397,6 +411,62 @@ export const GET_HOME_PAGE_BY_URI = `
           cardButtonLink
         }
       }
+      homePagePortfolioListingRoot: homePagePortfolioListing {
+        homePortfolioListingSubtitle
+        homePortfolioListingTitle
+        homePortfolioListingDescription
+        homePortfolioListingCards {
+          cardSubtitle
+          cardTitle
+          cardDescription
+          cardImage {
+            node {
+              ... on MediaItem {
+                sourceUrl
+                mediaItemUrl
+              }
+            }
+          }
+        }
+        homePortfolioPerPortfolioItems {
+          portfolioPost {
+            nodes {
+              ... on Portfolio {
+                databaseId
+                slug
+                title
+              }
+            }
+          }
+          sectionSubtitle
+          sectionTitle
+          sectionDescription
+          portfolioSubtitle
+          portfolioTitle
+          portfolioDescription
+          portfolioImage {
+            node {
+              ... on MediaItem {
+                sourceUrl
+                mediaItemUrl
+              }
+            }
+          }
+          portfolioCards {
+            cardSubtitle
+            cardTitle
+            cardDescription
+            cardImage {
+              node {
+                ... on MediaItem {
+                  sourceUrl
+                  mediaItemUrl
+                }
+              }
+            }
+          }
+        }
+      }
       homePage {
         homeHeroSection {
           heroVideo {
@@ -501,10 +571,29 @@ export const GET_HOME_PAGE_BY_URI = `
               title
               uri
               excerpt
+              homePortfolioListing {
+                portfolioListingSubtitle
+                portfolioListingTitle
+                portfolioListingDescription
+                portfolioListingCards {
+                  cardSubtitle
+                  cardTitle
+                  cardDescription
+                  cardImage {
+                    node {
+                      ... on MediaItem {
+                        sourceUrl
+                        mediaItemUrl
+                      }
+                    }
+                  }
+                }
+              }
               portfolioDetails {
                 backgroundImage {
                   node {
                     sourceUrl
+                    mediaItemUrl
                   }
                 }
               }
@@ -572,6 +661,62 @@ const GET_HOME_PAGE_BY_URI_LEGACY = `
   query GetHomePageByUri($uri: ID!) {
     page(id: $uri, idType: URI) {
       id title slug uri
+      homePagePortfolioListingRoot: homePagePortfolioListing {
+        homePortfolioListingSubtitle
+        homePortfolioListingTitle
+        homePortfolioListingDescription
+        homePortfolioListingCards {
+          cardSubtitle
+          cardTitle
+          cardDescription
+          cardImage {
+            node {
+              ... on MediaItem {
+                sourceUrl
+                mediaItemUrl
+              }
+            }
+          }
+        }
+        homePortfolioPerPortfolioItems {
+          portfolioPost {
+            nodes {
+              ... on Portfolio {
+                databaseId
+                slug
+                title
+              }
+            }
+          }
+          sectionSubtitle
+          sectionTitle
+          sectionDescription
+          portfolioSubtitle
+          portfolioTitle
+          portfolioDescription
+          portfolioImage {
+            node {
+              ... on MediaItem {
+                sourceUrl
+                mediaItemUrl
+              }
+            }
+          }
+          portfolioCards {
+            cardSubtitle
+            cardTitle
+            cardDescription
+            cardImage {
+              node {
+                ... on MediaItem {
+                  sourceUrl
+                  mediaItemUrl
+                }
+              }
+            }
+          }
+        }
+      }
       homePage {
         homeHeroSection {
           heroVideo {
@@ -606,12 +751,50 @@ const GET_HOME_PAGE_BY_URI_LEGACY = `
           }
         }
         homeIntroSection { introParagraph introBackgroundImage { node { sourceUrl altText } } }
+        showcaseBeforeImage { node { sourceUrl altText } }
+        showcaseLogoImage { node { sourceUrl altText } }
         showcaseHeadline
         showcaseCards { cardType title subtitle description image { node { sourceUrl altText } } backgroundClass textColorClass }
         homeStudios { title description video { node { sourceUrl mediaItemUrl } } videoUrl link buttonText }
         homeGenaiSection { heading paragraph video { node { sourceUrl mediaItemUrl } } genaiVideoUrl ctaText ctaLink }
         ourWorkTitle
-        featurePortfolioHome { nodes { ... on Portfolio { databaseId slug title uri excerpt portfolioDetails { backgroundImage { node { sourceUrl } } } } } }
+        featurePortfolioHome {
+          nodes {
+            ... on Portfolio {
+              databaseId
+              slug
+              title
+              uri
+              excerpt
+              homePortfolioListing {
+                portfolioListingSubtitle
+                portfolioListingTitle
+                portfolioListingDescription
+                portfolioListingCards {
+                  cardSubtitle
+                  cardTitle
+                  cardDescription
+                  cardImage {
+                    node {
+                      ... on MediaItem {
+                        sourceUrl
+                        mediaItemUrl
+                      }
+                    }
+                  }
+                }
+              }
+              portfolioDetails {
+                backgroundImage {
+                  node {
+                    sourceUrl
+                    mediaItemUrl
+                  }
+                }
+              }
+            }
+          }
+        }
         clientsLogo { node { sourceUrl altText } }
         blogsSectionTitle
         homeBlogs { category title description image { node { sourceUrl altText } } link buttonText buttonLink }
@@ -653,6 +836,62 @@ const GET_HOME_PAGE_BY_URI_WITH_SELECTED_BLOGS = `
                   sourceUrl
                   mediaItemUrl
                   altText
+                }
+              }
+            }
+          }
+        }
+      }
+      homePagePortfolioListingRoot: homePagePortfolioListing {
+        homePortfolioListingSubtitle
+        homePortfolioListingTitle
+        homePortfolioListingDescription
+        homePortfolioListingCards {
+          cardSubtitle
+          cardTitle
+          cardDescription
+          cardImage {
+            node {
+              ... on MediaItem {
+                sourceUrl
+                mediaItemUrl
+              }
+            }
+          }
+        }
+        homePortfolioPerPortfolioItems {
+          portfolioPost {
+            nodes {
+              ... on Portfolio {
+                databaseId
+                slug
+                title
+              }
+            }
+          }
+          sectionSubtitle
+          sectionTitle
+          sectionDescription
+          portfolioSubtitle
+          portfolioTitle
+          portfolioDescription
+          portfolioImage {
+            node {
+              ... on MediaItem {
+                sourceUrl
+                mediaItemUrl
+              }
+            }
+          }
+          portfolioCards {
+            cardSubtitle
+            cardTitle
+            cardDescription
+            cardImage {
+              node {
+                ... on MediaItem {
+                  sourceUrl
+                  mediaItemUrl
                 }
               }
             }
@@ -763,10 +1002,29 @@ const GET_HOME_PAGE_BY_URI_WITH_SELECTED_BLOGS = `
               title
               uri
               excerpt
+              homePortfolioListing {
+                portfolioListingSubtitle
+                portfolioListingTitle
+                portfolioListingDescription
+                portfolioListingCards {
+                  cardSubtitle
+                  cardTitle
+                  cardDescription
+                  cardImage {
+                    node {
+                      ... on MediaItem {
+                        sourceUrl
+                        mediaItemUrl
+                      }
+                    }
+                  }
+                }
+              }
               portfolioDetails {
                 backgroundImage {
                   node {
                     sourceUrl
+                    mediaItemUrl
                   }
                 }
               }

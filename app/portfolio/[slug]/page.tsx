@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { fetchPortfolioBySlug, resolveImageUrl } from "@/app/lib/our-work-api";
+import { coalesceProjectInfoRows, fetchPortfolioBySlug, resolveImageUrl } from "@/app/lib/our-work-api";
 import HeroBanner from "@/app/components/ui/HeroBanner";
 import Education from "@/app/components/sections/Education";
 import Stay from "@/app/components/sections/Stay";
@@ -25,10 +25,10 @@ export default async function PortfolioDetailPage({
 
   const portfolio = res.data.portfolio;
   const pd = portfolio.portfolioDetails ?? null;
+  const hasProjectInfoRepeater = coalesceProjectInfoRows(pd?.projectInfoRows).length > 0;
   const fullWidthCmsSrc = resolveImageUrl(pd?.fullWidthBackgroundImage?.node?.sourceUrl);
-  const heroNode = pd?.heroBackgroundImage?.node;
-  const heroBg = heroNode?.sourceUrl ?? undefined;
-  const heroAlt = heroNode?.altText?.trim() || "";
+  const heroBg = resolveImageUrl(pd?.backgroundImage?.node?.sourceUrl);
+  const heroAlt = pd?.backgroundImage?.node?.altText?.trim() || "";
 
   return (
     <main className="min-h-screen relative bg-black">
@@ -39,11 +39,14 @@ export default async function PortfolioDetailPage({
       />
 
       <Education
-        backgroundImageSrc={pd?.educationBackgroundImage?.node?.sourceUrl ?? undefined}
+        backgroundImageSrc={resolveImageUrl(
+          pd?.educationBackgroundImage?.node?.sourceUrl ?? pd?.educationBackgroundImage?.node?.mediaItemUrl
+        )}
         industryTitle={pd?.industryTitle ?? undefined}
         industryDescription={pd?.industryDescription ?? undefined}
-        projectTypeTitle={pd?.projectTypeTitle ?? undefined}
-        projectYear={pd?.projectYear ?? undefined}
+        projectTypeTitle={hasProjectInfoRepeater ? undefined : (pd?.projectTypeTitle ?? undefined)}
+        projectYear={hasProjectInfoRepeater ? undefined : (pd?.projectYear ?? undefined)}
+        projectInfoRows={pd?.projectInfoRows}
         servicesTitle={pd?.servicesTitle ?? undefined}
         services={pd?.servicesList?.map((s) => s?.serviceName).filter(Boolean) as string[] | undefined}
       />
