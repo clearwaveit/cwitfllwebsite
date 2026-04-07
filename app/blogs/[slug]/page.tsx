@@ -66,11 +66,13 @@ export default async function BlogDetailPage({
 
       <section className="w-full px-4 sm:px-6 lg:px-8 py-8">
         <div className="relative w-full max-w-[1494px] mx-auto aspect-[16/10] max-h-[720px] overflow-hidden bg-black/20">
-          <img
-            src={post.fullWidthImage ?? defaultFullWidthImg.src}
-            alt={post.fullWidthImageAlt ?? "Blog"}
-            className="absolute inset-0 w-full h-full object-contain"
-          />
+          {post.fullWidthImage ? (
+            <img
+              src={post.fullWidthImage}
+              alt={post.fullWidthImageAlt ?? "Blog"}
+              className="absolute inset-0 w-full h-full object-contain"
+            />
+          ) : null}
         </div>
       </section>
 

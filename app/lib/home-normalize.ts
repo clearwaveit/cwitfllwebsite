@@ -356,8 +356,8 @@ type FeaturedPortfolioNode = {
     } | null> | null;
   } | null;
   portfolioDetails?: {
-    backgroundImage?: { node?: { sourceUrl?: string } } | null;
-    heroBackgroundImage?: { node?: { sourceUrl?: string } } | null;
+    backgroundImage?: { node?: { sourceUrl?: string; mediaItemUrl?: string | null } } | null;
+    heroBackgroundImage?: { node?: { sourceUrl?: string; mediaItemUrl?: string | null } } | null;
   } | null;
 };
 
@@ -386,6 +386,15 @@ type PerPortfolioOverride = {
     cardImage?: NormalizedMediaNode;
   } | null> | null;
 } | null;
+
+function perPortfolioOverrideHasRowContent(ov: PerPortfolioOverride | null | undefined): boolean {
+  if (!ov) return false;
+  if (ov.sectionSubtitle?.trim() || ov.sectionTitle?.trim() || ov.sectionDescription?.trim()) return true;
+  if (ov.portfolioSubtitle?.trim() || ov.portfolioTitle?.trim() || ov.portfolioDescription?.trim()) return true;
+  if (getImageFromNode(ov.portfolioImage)) return true;
+  const cards = (ov.portfolioCards ?? []).filter(Boolean);
+  return cards.length > 0;
+}
 
 function getImageFromNode(image: NormalizedMediaNode): string | undefined {
   return resolve(image?.node?.sourceUrl ?? image?.node?.mediaItemUrl ?? undefined);
@@ -490,13 +499,25 @@ export function normalizeOurWork(fields: HomePageFields | null): HomeOurWorkProp
   const globalCards = (listing?.homePortfolioListingCards ?? []).filter(Boolean);
   const perPortfolioOverrides = ((listing?.homePortfolioPerPortfolioItems ?? []).filter(Boolean) as PerPortfolioOverride[]);
 
-  const firstMatchedOverrideWithSection = selected
-    .map((p) => {
-      const selectedId = normalizeId(p.databaseId);
-      if (!selectedId) return null;
-      return perPortfolioOverrides.find((ov) => getOverridePortfolioId(ov) === selectedId) ?? null;
-    })
-    .find((ov) => !!(ov?.sectionTitle?.trim() || ov?.sectionSubtitle?.trim() || ov?.sectionDescription?.trim()));
+  const unlinkedOverridesQueue = perPortfolioOverrides.filter(
+    (ov) => !getOverridePortfolioId(ov) && perPortfolioOverrideHasRowContent(ov)
+  );
+  let unlinkedOverrideIndex = 0;
+
+  const firstMatchedOverrideWithSection =
+    selected
+      .map((p) => {
+        const selectedId = normalizeId(p.databaseId);
+        if (!selectedId) return null;
+        return perPortfolioOverrides.find((ov) => getOverridePortfolioId(ov) === selectedId) ?? null;
+      })
+      .find((ov) => !!(ov?.sectionTitle?.trim() || ov?.sectionSubtitle?.trim() || ov?.sectionDescription?.trim())) ??
+    perPortfolioOverrides.find(
+      (ov) =>
+        !getOverridePortfolioId(ov) &&
+        !!(ov?.sectionTitle?.trim() || ov?.sectionSubtitle?.trim() || ov?.sectionDescription?.trim())
+    ) ??
+    null;
 
   out.titleOverride =
     firstMatchedOverrideWithSection?.sectionTitle?.trim() ||
@@ -516,10 +537,14 @@ export function normalizeOurWork(fields: HomePageFields | null): HomeOurWorkProp
 
   selected.forEach((portfolio) => {
     const selectedId = normalizeId(portfolio.databaseId);
-    const matchedOverride =
+    let matchedOverride =
       (selectedId
         ? perPortfolioOverrides.find((ov) => getOverridePortfolioId(ov) === selectedId)
         : null) ?? null;
+    if (!matchedOverride && unlinkedOverrideIndex < unlinkedOverridesQueue.length) {
+      matchedOverride = unlinkedOverridesQueue[unlinkedOverrideIndex];
+      unlinkedOverrideIndex += 1;
+    }
 
     const portfolioSlug = portfolio.slug?.trim();
     const link = portfolioSlug ? `/portfolio/${portfolioSlug}` : undefined;
@@ -533,7 +558,9 @@ export function normalizeOurWork(fields: HomePageFields | null): HomeOurWorkProp
     const baseImage =
       resolve(
         portfolio.portfolioDetails?.backgroundImage?.node?.sourceUrl ??
+        portfolio.portfolioDetails?.backgroundImage?.node?.mediaItemUrl ??
         portfolio.portfolioDetails?.heroBackgroundImage?.node?.sourceUrl ??
+        portfolio.portfolioDetails?.heroBackgroundImage?.node?.mediaItemUrl ??
         undefined
       ) || "";
 

@@ -28,6 +28,93 @@ export function resolveImageUrl(url: string | undefined | null): string | undefi
 }
 
 /**
+ * Multiple project type / year rows from the same ACF text fields: use one line per row in
+ * WordPress (newline-separated). Lines are paired by index; single-line values behave as before.
+ */
+export function parsePortfolioTypeYearPairs(
+  projectTypeTitle?: string | null,
+  projectYear?: string | null
+): { title: string; year: string }[] {
+  const splitLines = (v: string | null | undefined) =>
+    v
+      ?.split(/\r?\n/)
+      .map((s) => s.trim())
+      .filter(Boolean) ?? [];
+  const tLines = splitLines(projectTypeTitle);
+  const yLines = splitLines(projectYear);
+  if (tLines.length === 0 && yLines.length === 0) return [];
+  if (tLines.length <= 1 && yLines.length <= 1) {
+    const t = projectTypeTitle?.trim() ?? "";
+    const y = projectYear?.trim() ?? "";
+    if (!t && !y) return [];
+    return [{ title: t, year: y }];
+  }
+  const n = Math.max(tLines.length, yLines.length);
+  const out: { title: string; year: string }[] = [];
+  for (let i = 0; i < n; i++) {
+    const title = tLines[i] ?? "";
+    const year = yLines[i] ?? "";
+    if (title || year) out.push({ title, year });
+  }
+  return out;
+}
+
+/**
+ * Flatten ACF repeater payloads from WPGraphQL (array, Connection `nodes`, or snake_case keys).
+ */
+export function coalesceProjectInfoRows(raw: unknown): { rowTitle: string; rowDetail: string }[] {
+  const asList = (v: unknown): unknown[] => {
+    if (v == null) return [];
+    if (Array.isArray(v)) return v.filter(Boolean);
+    if (typeof v === "object") {
+      const o = v as Record<string, unknown>;
+      if (Array.isArray(o.nodes)) return o.nodes.filter(Boolean);
+      if (Array.isArray(o.edges)) {
+        return o.edges
+          .map((e) => (e as { node?: unknown } | null | undefined)?.node)
+          .filter(Boolean);
+      }
+    }
+    return [];
+  };
+
+  return asList(raw)
+    .map((item) => {
+      if (item == null || typeof item !== "object") return null;
+      const o = item as Record<string, unknown>;
+      const title = String(
+        o.rowTitle ?? o.row_title ?? o.projectType ?? o.project_type ?? ""
+      ).trim();
+      const detail = String(
+        o.rowDetail ?? o.row_detail ?? o.projectYear ?? o.project_year ?? ""
+      ).trim();
+      if (!title && !detail) return null;
+      return { rowTitle: title, rowDetail: detail };
+    })
+    .filter(Boolean) as { rowTitle: string; rowDetail: string }[];
+}
+
+/**
+ * Project info rows from the portfolio repeater (`projectInfoRows`), or legacy newline
+ * `projectTypeTitle` / `projectYear` pairs only when the repeater has no usable rows.
+ */
+export function getProjectInfoRowsForEducation(
+  projectInfoRows?: unknown,
+  projectTypeTitle?: string | null,
+  projectYear?: string | null
+): { title: string; detail: string }[] {
+  const fromRepeater = coalesceProjectInfoRows(projectInfoRows).map((r) => ({
+    title: r.rowTitle,
+    detail: r.rowDetail,
+  }));
+  if (fromRepeater.length > 0) return fromRepeater;
+  return parsePortfolioTypeYearPairs(projectTypeTitle, projectYear).map(({ title, year }) => ({
+    title,
+    detail: year,
+  }));
+}
+
+/**
  * Same resolution rules as {@link resolveImageUrl}, for `<video src>`.
  * Use for direct file URLs (MP4/WebM), including third-party CDNs such as
  * Cloudflare Stream download links, e.g.
@@ -402,6 +489,7 @@ export const GET_PORTFOLIO_BY_SLUG = `
         educationBackgroundImage {
           node {
             sourceUrl
+            mediaItemUrl
             altText
           }
         }
@@ -409,6 +497,10 @@ export const GET_PORTFOLIO_BY_SLUG = `
         industryDescription
         projectTypeTitle
         projectYear
+        projectInfoRows {
+          rowTitle
+          rowDetail
+        }
         servicesTitle
         servicesList {
           serviceName
@@ -555,11 +647,15 @@ export type PortfolioBySlug = {
     portfolioDetails?: {
       backgroundImage?: { node?: { sourceUrl?: string; altText?: string | null } } | null;
       heroBackgroundImage?: { node?: { sourceUrl?: string; altText?: string | null } } | null;
-      educationBackgroundImage?: { node?: { sourceUrl?: string; altText?: string | null } } | null;
+      educationBackgroundImage?: {
+        node?: { sourceUrl?: string | null; mediaItemUrl?: string | null; altText?: string | null } | null;
+      } | null;
       industryTitle?: string | null;
       industryDescription?: string | null;
       projectTypeTitle?: string | null;
       projectYear?: string | null;
+      /** Repeater from GraphQL — may be array, `{ nodes }`, or snake_case row keys; use {@link coalesceProjectInfoRows}. */
+      projectInfoRows?: unknown;
       servicesTitle?: string | null;
       servicesList?: Array<{ serviceName?: string | null } | null> | null;
       stayImage?: { node?: { sourceUrl?: string; altText?: string | null } } | null;
