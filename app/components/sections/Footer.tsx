@@ -308,7 +308,7 @@ export default function Footer({ settings }: { settings?: FooterSettings }) {
                 isHttp(linkedinUrl) ||
                 isHttp(instagramUrl) ||
                 isHttp(twitterUrl)) ? (
-              <div className="footer-column flex flex-col justify-center items-start md:items-start lg:items-end footer-contact-info mt-4 sm:mt-0">
+              <div className="footer-column flex flex-col justify-center items-start md:items-start lg:items-start footer-contact-info mt-4 sm:mt-0">
                 <ul className="font-graphik-light-weight-300 space-y-1.5 sm:space-y-2 md:space-y-2.5 lg:space-y-3">
                   {addressLines.map((line, index) => (
                     <li

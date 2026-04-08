@@ -8,6 +8,7 @@ import ClientTestimonials from "@/app/components/sections/ClientTestimonials";
 import Accordion from "@/app/components/sections/Accordion";
 import defaultFullWidthImg from "@/app/assets/imgs/Frame 42.png";
 import { fetchBlogDetailBySlug } from "@/app/lib/blog-api";
+import { coalesceProjectInfoRows } from "@/app/lib/our-work-api";
 
 export default async function BlogDetailPage({
   params,
@@ -22,6 +23,8 @@ export default async function BlogDetailPage({
   if (!post) notFound();
 
   const heroBg = post.heroImage || undefined;
+  // const hasProjectInfoRepeater = coalesceProjectInfoRows(post.projectInfoRows).length > 0;
+  const hasProjectInfoRepeater = coalesceProjectInfoRows(post.projectInfoRows).length > 0;
   const heroAlt = post.title ?? "Blog hero";
 
   return (
@@ -31,21 +34,25 @@ export default async function BlogDetailPage({
         title={post.title}
         backgroundImage={heroBg}
         backgroundImageAlt={heroAlt}
-        fallbackBackgroundClassName={
-          heroBg ? undefined : "bg-[rgba(100, 98, 98, 0.85)]"
-        }
+        minHeight="100vh"
       />
 
       <Education
+        backgroundImageSrc={post.educationBackgroundImage}
         industryTitle={post.industryTitle}
         industryDescription={post.industryDescription}
-        projectTypeTitle={post.projectTypeTitle}
-        projectYear={post.projectYear}
+        projectTypeTitle={hasProjectInfoRepeater ? undefined : post.projectTypeTitle}
+        projectYear={hasProjectInfoRepeater ? undefined : post.projectYear}
+        projectInfoRows={post.projectInfoRows}
         servicesTitle={post.servicesTitle}
         services={post.services}
       />
 
-      <Stay paragraphs={post.stayParagraphs} />
+      <Stay
+        imageSrc={post.stayImage}
+        imageAlt={post.stayImageAlt}
+        paragraphs={post.stayParagraphs}
+      />
 
       <WhatWeDelivered
         title={post.deliveredTitle}
