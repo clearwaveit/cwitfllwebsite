@@ -379,7 +379,10 @@ export default function Header({ settings }: { settings?: HeaderSettings }) {
                     height={100}
                     className="h-[32px] md:h-[56px] min-w-[74px] md:min-w-[112px] w-auto object-contain"
                     priority
-                    unoptimized={typeof logoSrc === "string" && logoSrc.startsWith("http")}
+                    unoptimized={
+                      typeof logoSrc === "string" &&
+                      (logoSrc.startsWith("http") || /\.svg(\?|$)/i.test(logoSrc))
+                    }
                   />
                 </Link>
               ) : (

@@ -1,3 +1,5 @@
+import { resolveImageUrl } from "@/app/lib/our-work-api";
+
 const GRAPHQL_ENDPOINT =
   process.env.NEXT_PUBLIC_WP_GRAPHQL_URL || "http://cwitmain.local/graphql";
 
@@ -5,9 +7,11 @@ const SITE_SETTINGS_FIELDS_FRAGMENT = `
   headerLogo {
     node {
       sourceUrl
+      mediaItemUrl
       altText
     }
   }
+  headerLogoUrl
   headerCtaText
   headerCtaLink
   headerMenuItems {
@@ -30,6 +34,15 @@ const SITE_SETTINGS_FIELDS_FRAGMENT = `
   footerCtaParagraph
   footerCtaButtonText
   footerCtaButtonLink
+  footerCtaBackgroundImage {
+    node {
+      sourceUrl
+      mediaItemUrl
+      altText
+    }
+  }
+  footerCtaBackgroundOverlayColor
+  footerCtaBackgroundOverlayOpacity
   footerNavigationLinks {
     label
     link
@@ -87,9 +100,12 @@ type SiteSettingsFields = {
   headerLogo?: {
     node?: {
       sourceUrl?: string | null;
+      mediaItemUrl?: string | null;
       altText?: string | null;
     } | null;
   } | null;
+  /** Full URL (or site-relative path) to logo; takes precedence over uploaded headerLogo. */
+  headerLogoUrl?: string | null;
   headerCtaText?: string | null;
   headerCtaLink?: string | null;
   headerMenuItems?: Array<{
@@ -112,6 +128,15 @@ type SiteSettingsFields = {
   footerCtaParagraph?: string | null;
   footerCtaButtonText?: string | null;
   footerCtaButtonLink?: string | null;
+  footerCtaBackgroundImage?: {
+    node?: {
+      sourceUrl?: string | null;
+      mediaItemUrl?: string | null;
+      altText?: string | null;
+    } | null;
+  } | null;
+  footerCtaBackgroundOverlayColor?: string | null;
+  footerCtaBackgroundOverlayOpacity?: number | string | null;
   footerNavigationLinks?: Array<{
     label?: string | null;
     link?: string | null;
@@ -165,6 +190,11 @@ export type FooterSettings = {
   ctaParagraph?: string;
   ctaButtonText?: string;
   ctaButtonLink?: string;
+  /** Footer CTA section background from CMS only; empty = none. */
+  ctaBackgroundImageSrc?: string;
+  ctaBackgroundImageAlt?: string;
+  /** Computed rgba() for tint over footer CTA background; empty = none. */
+  ctaBackgroundOverlayRgba?: string;
   navigationLinks?: MenuLinkItem[];
   serviceLinks?: MenuLinkItem[];
   addressLines?: string[];
@@ -201,6 +231,9 @@ export function createEmptySiteSettings(): SiteSettings {
       ctaParagraph: "",
       ctaButtonText: "",
       ctaButtonLink: "",
+      ctaBackgroundImageSrc: "",
+      ctaBackgroundImageAlt: "",
+      ctaBackgroundOverlayRgba: "",
       navigationLinks: [],
       serviceLinks: [],
       addressLines: [],
@@ -221,6 +254,43 @@ export function createEmptySiteSettings(): SiteSettings {
 function trimOrUndefined(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
   return trimmed || undefined;
+}
+
+/** Parse #RGB or #RRGGBB from ACF color picker. */
+function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+  const h = hex.replace(/^#/, "").trim();
+  if (h.length === 3 && /^[\da-fA-F]{3}$/.test(h)) {
+    return {
+      r: parseInt(h[0] + h[0], 16),
+      g: parseInt(h[1] + h[1], 16),
+      b: parseInt(h[2] + h[2], 16),
+    };
+  }
+  if (h.length === 6 && /^[\da-fA-F]{6}$/.test(h)) {
+    return {
+      r: parseInt(h.slice(0, 2), 16),
+      g: parseInt(h.slice(2, 4), 16),
+      b: parseInt(h.slice(4, 6), 16),
+    };
+  }
+  return null;
+}
+
+/** Overlay only when CMS provides a valid hex color and numeric opacity 0–100. */
+function buildCmsOverlayRgba(
+  color: string | null | undefined,
+  opacityRaw: number | string | null | undefined
+): string | undefined {
+  const trimmed = color?.trim();
+  if (!trimmed) return undefined;
+  const opacityNum = opacityRaw == null || opacityRaw === "" ? NaN : Number(opacityRaw);
+  if (!Number.isFinite(opacityNum)) return undefined;
+  const rgb = hexToRgb(trimmed);
+  if (!rgb) return undefined;
+  const pct = Math.min(100, Math.max(0, opacityNum));
+  if (pct <= 0) return undefined;
+  const a = pct / 100;
+  return `rgba(${rgb.r},${rgb.g},${rgb.b},${a})`;
 }
 
 function toLinkItems(
@@ -266,10 +336,36 @@ function normalizeSettings(fields: SiteSettingsFields | null | undefined): SiteS
     .map((item) => item?.text?.trim() || "")
     .filter(Boolean);
 
+  const logoUrlField = fields?.headerLogoUrl?.trim() ?? "";
+  const logoFromUrl = logoUrlField
+    ? resolveImageUrl(logoUrlField) ?? logoUrlField
+    : "";
+  const logoFromUpload =
+    resolveImageUrl(
+      fields?.headerLogo?.node?.sourceUrl ?? fields?.headerLogo?.node?.mediaItemUrl ?? undefined
+    ) ?? "";
+  const logoSrc = logoFromUrl || logoFromUpload;
+  const imageAlt = trimOrUndefined(fields?.headerLogo?.node?.altText);
+  const logoAlt = imageAlt ?? (logoSrc ? "Logo" : "");
+
+  const footerBgResolved =
+    resolveImageUrl(
+      fields?.footerCtaBackgroundImage?.node?.sourceUrl ??
+        fields?.footerCtaBackgroundImage?.node?.mediaItemUrl ??
+        undefined
+    ) ?? "";
+  const footerBgAlt =
+    trimOrUndefined(fields?.footerCtaBackgroundImage?.node?.altText) ??
+    (footerBgResolved ? "Footer background" : "");
+  const footerCtaOverlayRgba = buildCmsOverlayRgba(
+    fields?.footerCtaBackgroundOverlayColor,
+    fields?.footerCtaBackgroundOverlayOpacity
+  );
+
   return {
     header: {
-      logoSrc: trimOrUndefined(fields?.headerLogo?.node?.sourceUrl) ?? "",
-      logoAlt: trimOrUndefined(fields?.headerLogo?.node?.altText) ?? "",
+      logoSrc,
+      logoAlt,
       ctaText: trimOrUndefined(fields?.headerCtaText) ?? "",
       ctaLink: trimOrUndefined(fields?.headerCtaLink) ?? "",
       menuItems: headerMenuItems,
@@ -280,6 +376,9 @@ function normalizeSettings(fields: SiteSettingsFields | null | undefined): SiteS
       ctaParagraph: trimOrUndefined(fields?.footerCtaParagraph) ?? "",
       ctaButtonText: trimOrUndefined(fields?.footerCtaButtonText) ?? "",
       ctaButtonLink: trimOrUndefined(fields?.footerCtaButtonLink) ?? "",
+      ctaBackgroundImageSrc: footerBgResolved,
+      ctaBackgroundImageAlt: footerBgAlt,
+      ctaBackgroundOverlayRgba: footerCtaOverlayRgba ?? "",
       navigationLinks: toLinkItems(fields?.footerNavigationLinks),
       serviceLinks: toLinkItems(fields?.footerServiceLinks),
       addressLines,
