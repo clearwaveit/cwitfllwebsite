@@ -1,4 +1,5 @@
 import type { OurWorkListingPage } from "@/app/lib/our-work-api";
+import { resolveImageUrl, resolveVideoUrl } from "@/app/lib/our-work-api";
 import type { OurWorkPageItem } from "@/app/our-work/our-work-types";
 import type { AccordionItem } from "@/app/components/sections/Accordion";
 
@@ -103,10 +104,24 @@ export function normalizeOurWorkPageData(
   const bannerTitle = bannerSection?.bannerTitle?.trim() || "";
   const bannerDescription = bannerSection?.bannerDescription?.trim() || "";
   const bgNode = bannerSection?.bannerBackgroundImage?.node;
-  const bannerBackgroundImage = bgNode?.sourceUrl?.trim()
-    ? { src: bgNode.sourceUrl, alt: bgNode.altText?.trim() || "" }
+  const rawBannerBg =
+    bgNode?.sourceUrl?.trim() || bgNode?.mediaItemUrl?.trim() || "";
+  const resolvedBannerBg = rawBannerBg
+    ? resolveImageUrl(rawBannerBg) ?? rawBannerBg
+    : "";
+  const bannerBackgroundImage = resolvedBannerBg
+    ? {
+        src: resolvedBannerBg,
+        alt: bgNode?.altText?.trim() || "Background",
+      }
     : { src: "", alt: "" };
-  const bannerVideo = bannerSection?.bannerVideo?.node?.sourceUrl?.trim();
+  const rawBannerVideo =
+    bannerSection?.bannerVideo?.node?.sourceUrl?.trim() ||
+    bannerSection?.bannerVideo?.node?.mediaItemUrl?.trim() ||
+    "";
+  const bannerVideo = rawBannerVideo
+    ? resolveVideoUrl(rawBannerVideo) ?? rawBannerVideo
+    : undefined;
 
   const rawWorkItems = getRawWorkItems(workSection?.workItems);
 

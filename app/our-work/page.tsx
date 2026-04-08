@@ -228,6 +228,7 @@ export default function OurWorkPage() {
   }, [apiData]);
 
   const bannerProps = useMemo(() => normalized.banner, [normalized]);
+  const resolvedBannerBg = bannerProps.backgroundImage?.src?.trim() ?? "";
 
   const workItemsToShow: OurWorkPageItem[] = useMemo(() => {
     if (normalized?.workItems?.length) {
@@ -387,7 +388,12 @@ export default function OurWorkPage() {
         title={<>{bannerProps.title}</>}
         description={bannerProps.description || undefined}
         backgroundImage={
-          bannerProps.backgroundImage?.src ? bannerProps.backgroundImage : undefined
+          resolvedBannerBg
+            ? {
+                src: resolvedBannerBg,
+                alt: bannerProps.backgroundImage?.alt?.trim() || "Background",
+              }
+            : undefined
         }
         videoSrc={bannerProps.videoSrc}
       />
