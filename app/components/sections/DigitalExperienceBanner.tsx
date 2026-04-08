@@ -30,7 +30,7 @@ export default function DigitalExperienceBanner({
   contactForm,
   backgroundImage,
   className = "",
-  minHeight = "1080px",
+  minHeight,
 }: DigitalExperienceBannerProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -163,7 +163,7 @@ export default function DigitalExperienceBanner({
     updateResponsiveStyles();
     window.addEventListener('resize', updateResponsiveStyles);
     return () => window.removeEventListener('resize', updateResponsiveStyles);
-  }, [videoSrc, contactForm]);
+  }, [videoSrc, contactForm, backgroundImage?.src]);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -354,7 +354,7 @@ export default function DigitalExperienceBanner({
     return () => {
       ctx.revert();
     };
-  }, [description, videoSrc, contactForm]);
+  }, [description, videoSrc, contactForm, backgroundImage?.src]);
 
 
   return (
@@ -363,9 +363,8 @@ export default function DigitalExperienceBanner({
       ref={sectionRef}
       className={`relative bg-black overflow-hidden min-h-[500px] sm:min-h-[550px] md:min-h-[900px] lg:min-h-[1000px] xl:min-h-[1180px] isolate ${className}`}
       style={{
-        width: '100%',
-        height: '100%',
-        // minHeight: minHeight,
+        width: "100%",
+        ...(minHeight ? { minHeight } : {}),
       }}
     >
       {/* Background Video - Right Side */}

@@ -194,12 +194,14 @@ export const GET_OUR_WORK_LISTING_PAGE = `
           bannerBackgroundImage {
             node {
               sourceUrl
+              mediaItemUrl
               altText
             }
           }
           bannerVideo {
             node {
               sourceUrl
+              mediaItemUrl
             }
           }
         }
@@ -236,6 +238,7 @@ export const GET_OUR_WORK_LISTING_PAGE = `
                   backgroundImage {
                     node {
                       sourceUrl
+                      mediaItemUrl
                       altText
                     }
                   }
@@ -271,12 +274,14 @@ export const GET_OUR_WORK_LISTING_PAGE_LEGACY = `
           bannerBackgroundImage {
             node {
               sourceUrl
+              mediaItemUrl
               altText
             }
           }
           bannerVideo {
             node {
               sourceUrl
+              mediaItemUrl
             }
           }
         }
@@ -313,6 +318,7 @@ export const GET_OUR_WORK_LISTING_PAGE_LEGACY = `
                   backgroundImage {
                     node {
                       sourceUrl
+                      mediaItemUrl
                       altText
                     }
                   }
@@ -613,8 +619,10 @@ export type OurWorkListingPage = {
       ourWorkBannerSection?: {
         bannerTitle?: string | null;
         bannerDescription?: string | null;
-        bannerBackgroundImage?: { node?: { sourceUrl?: string; altText?: string | null } } | null;
-        bannerVideo?: { node?: { sourceUrl?: string } } | null;
+        bannerBackgroundImage?: {
+          node?: { sourceUrl?: string | null; mediaItemUrl?: string | null; altText?: string | null };
+        } | null;
+        bannerVideo?: { node?: { sourceUrl?: string | null; mediaItemUrl?: string | null } } | null;
       } | null;
       workItemsSection?: {
         workItems?:

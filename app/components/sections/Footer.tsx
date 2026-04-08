@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import vectorBg from "@/app/assets/imgs/Mask group (2).png";
 import CallToActionButton from "../ui/CallToActionButton";
 import phoneIcon from "@/app/assets/imgs/phone.png";
 import linkedinIcon from "@/app/assets/imgs/linkedin.png";
@@ -45,6 +44,10 @@ export default function Footer({ settings }: { settings?: FooterSettings }) {
   const privacyLink = settings?.privacyLink?.trim() ?? "";
   const termsLabel = settings?.termsLabel?.trim() ?? "";
   const termsLink = settings?.termsLink?.trim() ?? "";
+
+  const footerBgSrc = settings?.ctaBackgroundImageSrc?.trim() ?? "";
+  const footerBgAlt = settings?.ctaBackgroundImageAlt?.trim() ?? "";
+  const footerOverlayRgba = settings?.ctaBackgroundOverlayRgba?.trim() ?? "";
 
   const showFooterCta =
     !!(footerCtaHeading || footerCtaParagraph || (footerCtaButtonText && footerCtaButtonLink));
@@ -193,36 +196,36 @@ export default function Footer({ settings }: { settings?: FooterSettings }) {
       {/* Call to Action Section */}
       <section
         ref={ctaSectionRef}
-        className="relative overflow-hidden footer-section md:h-[1223px] h-[1023px] md:min-h-[1223px] min-h-[800px]"
+        className="relative overflow-hidden footer-section bg-black md:h-[1223px] h-[1023px] md:min-h-[1223px] min-h-[800px]"
         style={{
-          width: '1920px',
-          maxWidth: '100%',
-          // height: '1223px',
-          margin: '0 auto',
+          width: "1920px",
+          maxWidth: "100%",
+          margin: "0 auto",
         }}
       >
-        {/* Background Image - Vector */}
-        <div
-          className="absolute z-0 md:h-[1223px] h-[800px]"
-        >
-          <Image
-            src={vectorBg}
-            alt="Background"
-            width={1364}
-            height={1562}
-            className="object-cover"
-            priority
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
+        {footerBgSrc ? (
+          <div className="pointer-events-none absolute inset-0 z-0">
+            <Image
+              src={footerBgSrc}
+              alt={footerBgAlt || "Footer background"}
+              fill
+              className="object-cover"
+              sizes="100vw"
+              priority
+              unoptimized={
+                footerBgSrc.startsWith("http") || /\.svg(\?|$)/i.test(footerBgSrc)
+              }
+            />
+          </div>
+        ) : null}
+        {footerOverlayRgba ? (
+          <div
+            className="pointer-events-none absolute inset-0 z-[1]"
+            style={{ backgroundColor: footerOverlayRgba }}
+            aria-hidden
           />
-        </div>
+        ) : null}
 
-        {/* Gradient Overlay on Vector */}
-        {/* <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black/50" style={{ zIndex: 5 }}></div> */}
-
-        {/* CTA Content */}
         <div className="relative md:top-[-150px] z-10 h-full flex flex-col items-center justify-center text-center px-4 footer-cta-content">
           {showFooterCta && (
             <>
