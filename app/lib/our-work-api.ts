@@ -83,10 +83,22 @@ export function coalesceProjectInfoRows(raw: unknown): { rowTitle: string; rowDe
       if (item == null || typeof item !== "object") return null;
       const o = item as Record<string, unknown>;
       const title = String(
-        o.rowTitle ?? o.row_title ?? o.projectType ?? o.project_type ?? ""
+        o.rowTitle ??
+          o.row_title ??
+          o.projectType ??
+          o.project_type ??
+          o.title ??
+          ""
       ).trim();
       const detail = String(
-        o.rowDetail ?? o.row_detail ?? o.projectYear ?? o.project_year ?? ""
+        o.rowDetail ??
+          o.row_detail ??
+          o.projectYearDetail ??
+          o.project_year_detail ??
+          o.projectYear ??
+          o.project_year ??
+          o.detail ??
+          ""
       ).trim();
       if (!title && !detail) return null;
       return { rowTitle: title, rowDetail: detail };
@@ -508,6 +520,7 @@ export const GET_PORTFOLIO_BY_SLUG = `
         stayImage {
           node {
             sourceUrl
+            mediaItemUrl
             altText
           }
         }
@@ -658,7 +671,9 @@ export type PortfolioBySlug = {
       projectInfoRows?: unknown;
       servicesTitle?: string | null;
       servicesList?: Array<{ serviceName?: string | null } | null> | null;
-      stayImage?: { node?: { sourceUrl?: string; altText?: string | null } } | null;
+      stayImage?: {
+        node?: { sourceUrl?: string | null; mediaItemUrl?: string | null; altText?: string | null } | null;
+      } | null;
       stayParagraphs?: Array<{ paragraphText?: string | null } | null> | null;
       deliveredTitle?: string | null;
       deliveredDescription?: string | null;

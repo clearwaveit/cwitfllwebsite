@@ -16,6 +16,8 @@ export type BlogDetailMock = {
   projectYear?: string;
   servicesTitle?: string;
   services?: string[];
+  stayImage?: string;
+  stayImageAlt?: string;
   stayParagraphs?: string[];
   deliveredTitle?: string;
   deliveredDescription?: string;

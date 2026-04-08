@@ -131,12 +131,17 @@ export type BlogDetailItem = {
   heroImage?: string;
   excerpt?: string;
   content?: string;
+  educationBackgroundImage?: string;
   industryTitle?: string;
   industryDescription?: string;
   projectTypeTitle?: string;
   projectYear?: string;
+  projectInfoRows?: Array<{ title: string; detail: string }>;
   servicesTitle?: string;
   services?: string[];
+  /** Stay / overview mockup image (CMS only). */
+  stayImage?: string;
+  stayImageAlt?: string;
   stayParagraphs?: string[];
   deliveredTitle?: string;
   deliveredDescription?: string;
@@ -163,12 +168,26 @@ type GraphQLBlogDetailResponse = {
           } | null;
           excerpt?: string | null;
           content?: string | null;
+          educationBackgroundImage?: {
+            node?: { sourceUrl?: string | null; mediaItemUrl?: string | null } | null;
+          } | null;
           industryTitle?: string | null;
           industryDescription?: string | null;
           projectTypeTitle?: string | null;
           projectYear?: string | null;
+          projectInfoRows?: Array<{
+            projectType?: string | null;
+            projectYearDetail?: string | null;
+          } | null> | null;
           servicesTitle?: string | null;
           services?: Array<{ item?: string | null } | null> | null;
+          stayImage?: {
+            node?: {
+              sourceUrl?: string | null;
+              mediaItemUrl?: string | null;
+              altText?: string | null;
+            } | null;
+          } | null;
           stayParagraphs?: Array<{ paragraph?: string | null } | null> | null;
           deliveredTitle?: string | null;
           deliveredDescription?: string | null;
@@ -205,13 +224,30 @@ const GET_BLOG_DETAIL_BY_SLUG = `
           }
           excerpt
           content
+          educationBackgroundImage {
+            node {
+              sourceUrl
+              mediaItemUrl
+            }
+          }
           industryTitle
           industryDescription
           projectTypeTitle
           projectYear
+          projectInfoRows {
+            projectType
+            projectYearDetail
+          }
           servicesTitle
           services {
             item
+          }
+          stayImage {
+            node {
+              sourceUrl
+              mediaItemUrl
+              altText
+            }
           }
           stayParagraphs {
             paragraph
@@ -280,9 +316,29 @@ export async function fetchBlogDetailBySlug(slug: string): Promise<BlogDetailIte
   const heroImage = resolveImageUrl(
     details?.heroImage?.node?.sourceUrl ?? details?.heroImage?.node?.mediaItemUrl ?? undefined
   );
+
+  const educationBackgroundImage = resolveImageUrl(
+    details?.educationBackgroundImage?.node?.sourceUrl ??
+      details?.educationBackgroundImage?.node?.mediaItemUrl ??
+      undefined
+  );
+
   const fullWidthImage = resolveImageUrl(
     details?.fullWidthImage?.node?.sourceUrl ?? details?.fullWidthImage?.node?.mediaItemUrl ?? undefined
   );
+
+  const stayImage = resolveImageUrl(
+    details?.stayImage?.node?.sourceUrl ?? details?.stayImage?.node?.mediaItemUrl ?? undefined
+  );
+
+  const projectInfoRows = (details?.projectInfoRows ?? [])
+    .filter(Boolean)
+    .map((row) => ({
+      title: trimOrUndefined(row?.projectType) ?? "",
+      detail: trimOrUndefined(row?.projectYearDetail) ?? "",
+    }))
+    .filter((row) => row.title || row.detail);
+
   const performanceMetrics = (details?.performanceMetrics ?? [])
     .filter(Boolean)
     .map((m) => ({
@@ -290,6 +346,7 @@ export async function fetchBlogDetailBySlug(slug: string): Promise<BlogDetailIte
       value: trimOrUndefined(m?.value) ?? "",
     }))
     .filter((m) => m.title && m.value);
+
   const testimonials = (details?.testimonials ?? [])
     .filter(Boolean)
     .map((t) => ({
@@ -305,12 +362,16 @@ export async function fetchBlogDetailBySlug(slug: string): Promise<BlogDetailIte
     heroImage: heroImage ?? undefined,
     excerpt: trimOrUndefined(details?.excerpt) ?? trimOrUndefined(post.excerpt),
     content: trimOrUndefined(details?.content) ?? trimOrUndefined(post.content),
+    educationBackgroundImage: educationBackgroundImage ?? undefined,
     industryTitle: trimOrUndefined(details?.industryTitle),
     industryDescription: trimOrUndefined(details?.industryDescription),
     projectTypeTitle: trimOrUndefined(details?.projectTypeTitle),
     projectYear: trimOrUndefined(details?.projectYear),
+    projectInfoRows: projectInfoRows.length > 0 ? projectInfoRows : undefined,
     servicesTitle: trimOrUndefined(details?.servicesTitle),
     services: mapTextList(details?.services, "item"),
+    stayImage: stayImage ?? undefined,
+    stayImageAlt: trimOrUndefined(details?.stayImage?.node?.altText),
     stayParagraphs: mapTextList(details?.stayParagraphs, "paragraph"),
     deliveredTitle: trimOrUndefined(details?.deliveredTitle),
     deliveredDescription: trimOrUndefined(details?.deliveredDescription),
