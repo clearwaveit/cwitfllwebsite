@@ -52,7 +52,10 @@ export default async function PortfolioDetailPage({
       />
 
       <Stay
-        imageSrc={pd?.stayImage?.node?.sourceUrl ?? undefined}
+        imageSrc={resolveImageUrl(
+          pd?.stayImage?.node?.sourceUrl ?? pd?.stayImage?.node?.mediaItemUrl
+        )}
+        imageAlt={pd?.stayImage?.node?.altText?.trim() || undefined}
         paragraphs={
           pd?.stayParagraphs?.map((p) => p?.paragraphText).filter(Boolean) as string[] | undefined
         }
