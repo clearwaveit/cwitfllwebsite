@@ -3,6 +3,7 @@
 import { useRef, useEffect, type CSSProperties } from "react";
 import Image, { type StaticImageData } from "next/image";
 import gsap from "gsap";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 export interface CarouselCard {
   type: "text" | "image";
@@ -214,29 +215,26 @@ export default function Carousel({
             {/* Top text section */}
             <div className="relative z-10 p-6 text-white">
               <h3
-                className="text-[20px] md:text-[30px] font-bold text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] whitespace-pre-line"
+                className="text-[20px] md:text-[30px] font-bold text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]"
                 style={getTextStyles(textColorValue)}
-              >
-                {card.title}
-              </h3>
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.title) }}
+              />
               {card.subtitle && (
                 <p
-                  className="text-[20px] md:text-[30px] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] whitespace-pre-line"
+                  className="text-[20px] md:text-[30px] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]"
                   style={getTextStyles(textColorValue)}
-                >
-                  {card.subtitle}
-                </p>
+                  dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.subtitle) }}
+                />
               )}
             </div>
             {/* Bottom text section */}
             {card.description && (
               <div className="relative z-10 p-6 text-white">
                 <p
-                  className="text-[14px] md:text-[22px] text-white/70 leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] whitespace-pre-line"
+                  className="text-[14px] md:text-[22px] text-white/70 leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]"
                   style={getTextStyles(textColorValue, true)}
-                >
-                  {card.description}
-                </p>
+                  dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.description) }}
+                />
               </div>
             )}
           </div>
@@ -267,36 +265,32 @@ export default function Carousel({
         >
           <div>
             <h3
-              className={`text-[20px] md:text-[30px] font-bold mb-1 ${textColorValue ? "" : titleColor} leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] whitespace-pre-line`}
+              className={`text-[20px] md:text-[30px] font-bold mb-1 ${textColorValue ? "" : titleColor} leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]`}
               style={getTextStyles(textColorValue)}
-            >
-              {card.title}
-            </h3>
+              dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.title) }}
+            />
             {card.subtitle && (
               <p
-                className={`text-[20px] md:text-[30px] mb-2 ${textColorValue ? "" : titleColor} leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] whitespace-pre-line`}
+                className={`text-[20px] md:text-[30px] mb-2 ${textColorValue ? "" : titleColor} leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]`}
                 style={getTextStyles(textColorValue)}
-              >
-                {card.subtitle}
-              </p>
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.subtitle) }}
+              />
             )}
           </div>
           <div>
             {card.description && (
               <p
-                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor} leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] whitespace-pre-line`}
+                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor} leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]`}
                 style={getTextStyles(textColorValue, true)}
-              >
-                {card.description}
-              </p>
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.description) }}
+              />
             )}
             {card.marketInfo && (
               <p
-                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor} leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] whitespace-pre-line`}
+                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor} leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]`}
                 style={getTextStyles(textColorValue, true)}
-              >
-                {card.marketInfo}
-              </p>
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.marketInfo) }}
+              />
             )}
           </div>
         </div>

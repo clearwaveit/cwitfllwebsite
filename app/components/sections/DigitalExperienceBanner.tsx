@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useEffect, ReactNode } from "react";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -514,9 +515,8 @@ export default function DigitalExperienceBanner({
               <p
                 ref={textRef}
                 className="text-[14px] sm:text-[16px] md:text-[20px] lg:text-[24px] xl:text-[30px] font-light text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] contact-form-description"
-              >
-                {description}
-              </p>
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(description) }}
+              />
             )}
           </div>
           {/* Contact Form - Mobile View (below heading) */}

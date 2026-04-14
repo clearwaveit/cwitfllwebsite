@@ -4,6 +4,7 @@
  */
 
 import { resolveImageUrl, resolveVideoUrl } from "@/app/lib/our-work-api";
+import { splitCmsTextToParagraphs } from "@/app/lib/split-cms-text-to-paragraphs";
 import type { HomePageFields } from "@/app/lib/home-api";
 import type { SliderCard } from "@/app/components/ui/HorizontalScrollSlider";
 import type { AccordionItem } from "@/app/components/sections/Accordion";
@@ -235,26 +236,7 @@ export function normalizeIntro(fields: HomePageFields | null): HomeIntroProps {
     return { paragraphs: [] };
   }
   const html = s.introParagraph?.trim();
-  const paragraphs = html
-    ? (() => {
-        const paragraphMatches = Array.from(html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi))
-          .map((match) => match[1]?.replace(/<br\s*\/?>/gi, "\n"))
-          .map((value) => value?.replace(/<[^>]+>/g, " ").replace(/[ \t]+/g, " ").replace(/\s*\n\s*/g, " ").trim())
-          .filter(Boolean) as string[];
-
-        if (paragraphMatches.length > 0) {
-          return paragraphMatches;
-        }
-
-        return html
-          .replace(/<br\s*\/?>/gi, "\n")
-          .replace(/<\/(p|div|li|section|article|h[1-6])>/gi, "\n\n")
-          .replace(/<[^>]+>/g, " ")
-          .split(/\n\s*\n/)
-          .map((value) => value.replace(/[ \t]+/g, " ").replace(/\s*\n\s*/g, " ").trim())
-          .filter(Boolean);
-      })()
-    : [];
+  const paragraphs = html ? splitCmsTextToParagraphs(html) : [];
   const backgroundImageSrc = getImageUrl(s.introBackgroundImage as { node?: { sourceUrl?: string; altText?: string | null } });
   return { paragraphs, backgroundImageSrc };
 }

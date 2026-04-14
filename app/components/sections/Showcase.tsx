@@ -12,6 +12,7 @@ if (typeof window !== "undefined") {
 }
 
 import BeforeImage from "@/app/components/ui/BeforeImage";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 interface ShowcaseProps {
   headline?: string;
@@ -119,9 +120,10 @@ export default function Showcase({ headline, cards, beforeImageSrc, logoImageSrc
         <div className="flex items-center justify-center h-[20vh] md:min-h-[70vh]">
           <div ref={headlineRef} className="text-left space-y-6 lg:max-w-[70%]">
             {displayHeadline && (
-              <h2 className="text-[#ffffff] text-[16px] sm:text-[26px] md:text-[34px] lg:text-[38px] leading-[30px] md:leading-[58px] lg:leading-[52px] font-[400] tracking-normal showcase-heading">
-                {displayHeadline}
-              </h2>
+              <h2
+                className="text-[#ffffff] text-[16px] sm:text-[26px] md:text-[34px] lg:text-[38px] leading-[30px] md:leading-[58px] lg:leading-[52px] font-[400] tracking-normal showcase-heading"
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(displayHeadline) }}
+              />
             )}
           </div>
         </div>

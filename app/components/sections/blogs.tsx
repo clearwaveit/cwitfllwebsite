@@ -179,6 +179,7 @@ import Link from "next/link";
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -253,38 +254,6 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
       titleEl ? "-=0.4" : 0
     );
 
-    const hoverCleanups: Array<() => void> = [];
-
-    cards.forEach((card) => {
-      const cardElement = card as HTMLElement;
-
-      const handleEnter = () => {
-        gsap.to(cardElement, {
-          scale: 1.05,
-          y: -10,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      };
-
-      const handleLeave = () => {
-        gsap.to(cardElement, {
-          scale: 1,
-          y: 0,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      };
-
-      cardElement.addEventListener("mouseenter", handleEnter);
-      cardElement.addEventListener("mouseleave", handleLeave);
-
-      hoverCleanups.push(() => {
-        cardElement.removeEventListener("mouseenter", handleEnter);
-        cardElement.removeEventListener("mouseleave", handleLeave);
-      });
-    });
-
     if (blogs.length > 1) {
       const track = trackRef.current;
       const originalItems = track.querySelectorAll(
@@ -324,7 +293,6 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
     return () => {
       tl.kill();
       carouselTweenRef.current?.kill();
-      hoverCleanups.forEach((cleanup) => cleanup());
 
       const triggers = ScrollTrigger.getAll();
       triggers.forEach((trigger) => {
@@ -387,9 +355,10 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
                         </span>
                       ) : null}
 
-                      <p className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
-                        {blog.description}
-                      </p>
+                      <p
+                        className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
+                        dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(blog.description) }}
+                      />
 
                       {item.buttonText?.trim() &&
                         (item.buttonLink?.trim() || item.link?.trim()) && (
@@ -461,9 +430,10 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
                           </span>
                         ) : null}
 
-                        <p className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
-                          {blog.description}
-                        </p>
+                        <p
+                          className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
+                          dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(blog.description) }}
+                        />
 
                         {item.buttonText?.trim() &&
                           (item.buttonLink?.trim() || item.link?.trim()) && (
@@ -526,9 +496,10 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
                           </span>
                         ) : null}
 
-                        <p className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
-                          {blog.description}
-                        </p>
+                        <p
+                          className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
+                          dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(blog.description) }}
+                        />
 
                         {item.buttonText?.trim() &&
                           (item.buttonLink?.trim() || item.link?.trim()) && (

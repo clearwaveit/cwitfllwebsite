@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CallToActionButton from "@/app/components/ui/CallToActionButton";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
+import { splitCmsTextToParagraphs } from "@/app/lib/split-cms-text-to-paragraphs";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -41,11 +43,7 @@ export default function GenAI({ heading, paragraph, videoSrc, ctaText, ctaLink }
 
   if (!src && !headingText && !paragraphText) return null;
   const headingLines = splitGenAiHeading(headingText);
-  const paragraphLines = paragraphText
-    .replace(/<br\s*\/?>/gi, "\n")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
+  const paragraphBlocks = splitCmsTextToParagraphs(paragraphText);
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -338,17 +336,23 @@ export default function GenAI({ heading, paragraph, videoSrc, ctaText, ctaLink }
             <div className="relative z-20 w-full flex flex-col items-center text-center gap-4 sm:gap-4 md:gap-4 lg:gap-6 xl:gap-8 pt-140 sm:pt-170 md:pt-170 lg:pt-170 xl:pt-170 2xl:pt-200 gen-ai-content">
               <h2
                 ref={headingRef}
-                className="text-[18px] sm:text-[22px] md:text-[24px] lg:text-[28px] xl:text-[38px] 2xl:text-[42px] font-[400] text-white leading-tight sm:leading-[30px] md:leading-[34px] lg:leading-[46px] xl:leading-[56px] 2xl:leading-[60px]"
+                className="max-w-4xl text-[18px] sm:text-[22px] md:text-[24px] lg:text-[28px] xl:text-[38px] 2xl:text-[42px] font-[400] text-white leading-tight sm:leading-[30px] md:leading-[34px] lg:leading-[46px] xl:leading-[56px] 2xl:leading-[60px]"
               >
                 {headingLines.map((line, i) => (
                   <span key={i}>{line}{i < headingLines.length - 1 && <br />}</span>
                 ))}
               </h2>
-              <p className="text-[14px] md:text-[20px] text-white max-w-3xl md:px-0 px-12 leading-relaxed">
-                {paragraphLines.map((line, i) => (
-                  <span key={i}>{line}{i < paragraphLines.length - 1 && <br />}</span>
-                ))}
-              </p>
+              {paragraphBlocks.length > 0 ? (
+                <div className="flex flex-col gap-4 max-w-3xl md:px-0 px-12 w-full items-center">
+                  {paragraphBlocks.map((para, i) => (
+                    <p
+                      key={i}
+                      className="text-[14px] md:text-[20px] text-white leading-relaxed text-center"
+                      dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(para) }}
+                    />
+                  ))}
+                </div>
+              ) : null}
               {ctaText?.trim() ? (
                 <div ref={buttonRef}>
                   <CallToActionButton

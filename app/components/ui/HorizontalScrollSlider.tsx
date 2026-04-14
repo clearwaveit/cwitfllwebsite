@@ -4,6 +4,7 @@ import { useRef, useEffect, useState, type CSSProperties } from "react";
 import Image, { type StaticImageData } from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -303,29 +304,26 @@ export default function HorizontalScrollSlider({
             {/* Top text section */}
             <div className="relative z-10 p-6 text-white">
               <h3
-                className="text-[20px] md:text-[30px] font-bold text-white whitespace-pre-line"
+                className="text-[20px] md:text-[30px] font-bold text-white"
                 style={getTextStyles(textColorValue)}
-              >
-                {card.title}
-              </h3>
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.title) }}
+              />
               {card.subtitle && (
                 <p
-                  className="text-[20px] md:text-[30px] text-white whitespace-pre-line"
+                  className="text-[20px] md:text-[30px] text-white"
                   style={getTextStyles(textColorValue)}
-                >
-                  {card.subtitle}
-                </p>
+                  dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.subtitle) }}
+                />
               )}
             </div>
             {/* Bottom text section */}
             {card.description && (
               <div className="relative z-10 p-6 text-white">
                 <p
-                  className="text-[14px] md:text-[22px] text-white/70 whitespace-pre-line"
+                  className="text-[14px] md:text-[22px] text-white/70"
                   style={getTextStyles(textColorValue, true)}
-                >
-                  {card.description}
-                </p>
+                  dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.description) }}
+                />
               </div>
             )}
           </div>
@@ -358,36 +356,32 @@ export default function HorizontalScrollSlider({
         >
           <div>
             <h3
-              className={`text-[20px] md:text-[30px] font-bold mb-1 whitespace-pre-line ${textColorValue ? "" : titleColor}`}
+              className={`text-[20px] md:text-[30px] font-bold mb-1 ${textColorValue ? "" : titleColor}`}
               style={getTextStyles(textColorValue)}
-            >
-              {card.title}
-            </h3>
+              dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.title) }}
+            />
             {card.subtitle && (
               <p
-                className={`text-[20px] md:text-[30px] mb-2 whitespace-pre-line ${textColorValue ? "" : titleColor}`}
+                className={`text-[20px] md:text-[30px] mb-2 ${textColorValue ? "" : titleColor}`}
                 style={getTextStyles(textColorValue)}
-              >
-                {card.subtitle}
-              </p>
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.subtitle) }}
+              />
             )}
           </div>
           <div>
             {card.description && (
               <p
-                className={`text-[16px] md:text-[22px] whitespace-pre-line ${textColorValue ? "" : descColor}`}
+                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor}`}
                 style={getTextStyles(textColorValue, true)}
-              >
-                {card.description}
-              </p>
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.description) }}
+              />
             )}
             {card.marketInfo && (
               <p
-                className={`text-[16px] md:text-[22px] whitespace-pre-line ${textColorValue ? "" : descColor}`}
+                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor}`}
                 style={getTextStyles(textColorValue, true)}
-              >
-                {card.marketInfo}
-              </p>
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.marketInfo) }}
+              />
             )}
           </div>
         </div>
