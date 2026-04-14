@@ -215,7 +215,8 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
   const carouselBlogs = blogs.length > 1 ? [...blogs, ...blogs] : blogs;
 
   useEffect(() => {
-    if (!sectionRef.current || !cardsRef.current || !trackRef.current) return;
+    if (!sectionRef.current || !cardsRef.current) return;
+    if (isCarousel && !trackRef.current) return;
 
     const titleEl = titleRef.current;
     const cards = cardsRef.current.querySelectorAll(".blogs-card");
@@ -254,43 +255,65 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
       titleEl ? "-=0.4" : 0
     );
 
-    if (blogs.length > 1) {
+    let removeCarouselHoverListeners: (() => void) | undefined;
+
+    if (isCarousel && blogs.length > 1) {
       const track = trackRef.current;
-      const originalItems = track.querySelectorAll(
-        '[data-carousel-original="true"]'
-      ) as NodeListOf<HTMLElement>;
+      if (track) {
+        const originalItems = track.querySelectorAll(
+          '[data-carousel-original="true"]'
+        ) as NodeListOf<HTMLElement>;
 
-      const firstItem = originalItems[0];
-      if (firstItem) {
-        const trackStyles = window.getComputedStyle(track);
-        const gap =
-          parseFloat(trackStyles.gap || "0") ||
-          parseFloat(trackStyles.columnGap || "0") ||
-          0;
+        const firstItem = originalItems[0];
+        if (firstItem) {
+          const trackStyles = window.getComputedStyle(track);
+          const gap =
+            parseFloat(trackStyles.gap || "0") ||
+            parseFloat(trackStyles.columnGap || "0") ||
+            0;
 
-        const itemWidth = firstItem.offsetWidth;
-        const singleSetWidth = (itemWidth + gap) * blogs.length;
+          const itemWidth = firstItem.offsetWidth;
+          const singleSetWidth = (itemWidth + gap) * blogs.length;
 
-        carouselTweenRef.current?.kill();
+          carouselTweenRef.current?.kill();
 
-        carouselTweenRef.current = gsap.to(track, {
-          x: -singleSetWidth,
-          duration: 18,
-          ease: "none",
-          repeat: -1,
-          modifiers: {
-            x: (value) => {
-              const currentX = parseFloat(value);
-              return currentX <= -singleSetWidth
-                ? `${currentX + singleSetWidth}px`
-                : `${currentX}px`;
+          carouselTweenRef.current = gsap.to(track, {
+            x: -singleSetWidth,
+            duration: 18,
+            ease: "none",
+            repeat: -1,
+            modifiers: {
+              x: (value) => {
+                const currentX = parseFloat(value);
+                return currentX <= -singleSetWidth
+                  ? `${currentX + singleSetWidth}px`
+                  : `${currentX}px`;
+              },
             },
-          },
-        });
+          });
+
+          const tween = carouselTweenRef.current;
+          const hoverRoot = cardsRef.current;
+          if (tween && hoverRoot) {
+            const pauseCarousel = () => {
+              tween.pause();
+            };
+            const resumeCarousel = () => {
+              tween.resume();
+            };
+            hoverRoot.addEventListener("mouseenter", pauseCarousel);
+            hoverRoot.addEventListener("mouseleave", resumeCarousel);
+            removeCarouselHoverListeners = () => {
+              hoverRoot.removeEventListener("mouseenter", pauseCarousel);
+              hoverRoot.removeEventListener("mouseleave", resumeCarousel);
+            };
+          }
+        }
       }
     }
 
     return () => {
+      removeCarouselHoverListeners?.();
       tl.kill();
       carouselTweenRef.current?.kill();
 
@@ -301,7 +324,7 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
         }
       });
     };
-  }, [blogs.length, title]);
+  }, [blogs.length, title, isCarousel]);
 
   if (!blogs.length) return null;
 
