@@ -77,6 +77,21 @@ function getTextStyles(color: string | undefined, dimmed: boolean = false): CSSP
   return dimmed ? { color, opacity: 0.7 } : { color };
 }
 
+function tooltipFromHtml(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const text = value
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#39;/gi, "'")
+    .replace(/&quot;/gi, '"')
+    .trim();
+  return text || undefined;
+}
+
 export default function HorizontalScrollSlider({
   cards,
   className = "",
@@ -304,13 +319,15 @@ export default function HorizontalScrollSlider({
             {/* Top text section */}
             <div className="relative z-10 p-6 text-white">
               <h3
-                className="text-[20px] md:text-[30px] font-bold text-white"
+                className="text-[20px] md:text-[30px] font-bold text-white line-clamp-1 overflow-hidden"
+                title={tooltipFromHtml(card.title)}
                 style={getTextStyles(textColorValue)}
                 dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.title) }}
               />
               {card.subtitle && (
                 <p
-                  className="text-[20px] md:text-[30px] text-white"
+                  className="text-[20px] md:text-[30px] text-white line-clamp-2 overflow-hidden"
+                  title={tooltipFromHtml(card.subtitle)}
                   style={getTextStyles(textColorValue)}
                   dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.subtitle) }}
                 />
@@ -320,7 +337,8 @@ export default function HorizontalScrollSlider({
             {card.description && (
               <div className="relative z-10 p-6 text-white">
                 <p
-                  className="text-[14px] md:text-[22px] text-white/70"
+                  className="text-[14px] md:text-[22px] text-white/70 line-clamp-2 overflow-hidden"
+                  title={tooltipFromHtml(card.description)}
                   style={getTextStyles(textColorValue, true)}
                   dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.description) }}
                 />
@@ -356,13 +374,15 @@ export default function HorizontalScrollSlider({
         >
           <div>
             <h3
-              className={`text-[20px] md:text-[30px] font-bold mb-1 ${textColorValue ? "" : titleColor}`}
+              className={`text-[20px] md:text-[30px] font-bold mb-1 ${textColorValue ? "" : titleColor} line-clamp-1 overflow-hidden`}
+              title={tooltipFromHtml(card.title)}
               style={getTextStyles(textColorValue)}
               dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.title) }}
             />
             {card.subtitle && (
               <p
-                className={`text-[20px] md:text-[30px] mb-2 ${textColorValue ? "" : titleColor}`}
+                className={`text-[20px] md:text-[30px] mb-2 ${textColorValue ? "" : titleColor} line-clamp-2 overflow-hidden`}
+                title={tooltipFromHtml(card.subtitle)}
                 style={getTextStyles(textColorValue)}
                 dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.subtitle) }}
               />
@@ -371,14 +391,16 @@ export default function HorizontalScrollSlider({
           <div>
             {card.description && (
               <p
-                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor}`}
+                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor} line-clamp-2 overflow-hidden`}
+                title={tooltipFromHtml(card.description)}
                 style={getTextStyles(textColorValue, true)}
                 dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.description) }}
               />
             )}
             {card.marketInfo && (
               <p
-                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor}`}
+                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor} line-clamp-2 overflow-hidden mt-2`}
+                title={tooltipFromHtml(card.marketInfo)}
                 style={getTextStyles(textColorValue, true)}
                 dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.marketInfo) }}
               />

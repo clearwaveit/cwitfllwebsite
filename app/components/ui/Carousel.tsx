@@ -73,6 +73,21 @@ function getTextStyles(color: string | undefined, dimmed: boolean = false): CSSP
   return dimmed ? { color, opacity: 0.7 } : { color };
 }
 
+function tooltipFromHtml(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const text = value
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#39;/gi, "'")
+    .replace(/&quot;/gi, '"')
+    .trim();
+  return text || undefined;
+}
+
 export default function Carousel({
   cards,
   speed = 60,
@@ -215,13 +230,15 @@ export default function Carousel({
             {/* Top text section */}
             <div className="relative z-10 p-6 text-white">
               <h3
-                className="text-[20px] md:text-[30px] font-bold text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]"
+                className="text-[20px] md:text-[30px] font-bold text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] line-clamp-1 overflow-hidden"
+                title={tooltipFromHtml(card.title)}
                 style={getTextStyles(textColorValue)}
                 dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.title) }}
               />
               {card.subtitle && (
                 <p
-                  className="text-[20px] md:text-[30px] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]"
+                  className="text-[20px] md:text-[30px] text-white leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] line-clamp-2 overflow-hidden"
+                  title={tooltipFromHtml(card.subtitle)}
                   style={getTextStyles(textColorValue)}
                   dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.subtitle) }}
                 />
@@ -231,7 +248,8 @@ export default function Carousel({
             {card.description && (
               <div className="relative z-10 p-6 text-white">
                 <p
-                  className="text-[14px] md:text-[22px] text-white/70 leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]"
+                  className="text-[14px] md:text-[22px] text-white/70 leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] line-clamp-2 overflow-hidden"
+                  title={tooltipFromHtml(card.description)}
                   style={getTextStyles(textColorValue, true)}
                   dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.description) }}
                 />
@@ -265,13 +283,15 @@ export default function Carousel({
         >
           <div>
             <h3
-              className={`text-[20px] md:text-[30px] font-bold mb-1 ${textColorValue ? "" : titleColor} leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]`}
+              className={`text-[20px] md:text-[30px] font-bold mb-1 ${textColorValue ? "" : titleColor} leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] line-clamp-1 overflow-hidden`}
+              title={tooltipFromHtml(card.title)}
               style={getTextStyles(textColorValue)}
               dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.title) }}
             />
             {card.subtitle && (
               <p
-                className={`text-[20px] md:text-[30px] mb-2 ${textColorValue ? "" : titleColor} leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3]`}
+                className={`text-[20px] md:text-[30px] mb-2 ${textColorValue ? "" : titleColor} leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] line-clamp-1 overflow-hidden`}
+                title={tooltipFromHtml(card.subtitle)}
                 style={getTextStyles(textColorValue)}
                 dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.subtitle) }}
               />
@@ -280,14 +300,16 @@ export default function Carousel({
           <div>
             {card.description && (
               <p
-                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor} leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]`}
+                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor} leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] line-clamp-2 overflow-hidden`}
+                title={tooltipFromHtml(card.description)}
                 style={getTextStyles(textColorValue, true)}
                 dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.description) }}
               />
             )}
             {card.marketInfo && (
               <p
-                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor} leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6]`}
+                className={`text-[16px] md:text-[22px] ${textColorValue ? "" : descColor} leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] line-clamp-2 overflow-hidden mt-2`}
+                title={tooltipFromHtml(card.marketInfo)}
                 style={getTextStyles(textColorValue, true)}
                 dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(card.marketInfo) }}
               />
