@@ -3160,3 +3160,82 @@ body {
   transform: translateY(-50%) !important;
   opacity: 1 !important;
 }
+
+/* ─── CMS Rich Text (WYSIWYG) ─── */
+/* Styles for bullet points, ordered lists, blockquotes, and inline formatting
+   rendered via TextSection from WordPress WYSIWYG fields. */
+
+.cms-rich-text ul,
+.cms-rich-text ol {
+  list-style-position: outside;
+  padding-left: 1.5em;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.cms-rich-text ul {
+  list-style-type: disc;
+}
+
+.cms-rich-text ol {
+  list-style-type: decimal;
+}
+
+.cms-rich-text li {
+  margin-bottom: 0.4em;
+  line-height: 1.6;
+}
+
+.cms-rich-text li::marker {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Nested lists */
+.cms-rich-text ul ul,
+.cms-rich-text ol ul {
+  list-style-type: circle;
+  margin-top: 0.35em;
+  margin-bottom: 0.35em;
+}
+
+.cms-rich-text ul ul ul,
+.cms-rich-text ol ul ul {
+  list-style-type: square;
+}
+
+.cms-rich-text ol ol,
+.cms-rich-text ul ol {
+  list-style-type: lower-alpha;
+  margin-top: 0.35em;
+  margin-bottom: 0.35em;
+}
+
+/* Inline formatting */
+.cms-rich-text strong,
+.cms-rich-text b {
+  font-weight: 600;
+}
+
+.cms-rich-text em,
+.cms-rich-text i {
+  font-style: italic;
+}
+
+.cms-rich-text a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s ease;
+}
+
+.cms-rich-text a:hover {
+  opacity: 0.8;
+}
+
+/* Blockquotes */
+.cms-rich-text blockquote {
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+  padding-left: 1em;
+  margin: 0.75em 0;
+  font-style: italic;
+  opacity: 0.9;
+}
