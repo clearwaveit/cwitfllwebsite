@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CallToActionButton from "../ui/CallToActionButton";
 import Image, { StaticImageData } from "next/image";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -189,9 +190,10 @@ export default function SplitContentSection({
             <div
               ref={descriptionRef}
               className={`text-[14px] sm:text-[15px] md:text-[15px] lg:text-[16px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[20.25px] min-[1920px]:text-[20.5px] max-w-full md:max-w-[600px] lg:max-w-[650px] xl:max-w-[680px] 2xl:max-w-[700px] min-[1440px]:max-w-[706px] min-[1920px]:max-w-[720px] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] split-content-description ${descriptionClassName}`}
-            >
-              {description}
-            </div>
+              {...(typeof description === "string"
+                ? { dangerouslySetInnerHTML: { __html: normalizeDescriptionHtml(description) } }
+                : { children: description })}
+            />
 
             {/* Contact Us Button */}
             {buttonText && (

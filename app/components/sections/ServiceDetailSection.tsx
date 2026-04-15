@@ -3,6 +3,7 @@
 import CallToActionButton from "@/app/components/ui/CallToActionButton";
 import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 interface ServiceDetailSectionProps {
   service: {
@@ -55,9 +56,10 @@ export default function ServiceDetailSection({
         {service?.title}
       </h2>
 
-      <p className="text-[14px] sm:text-[15px] md:text-[18px] lg:text-[14px] xl:text-[16px] 2xl:text-[20px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[500] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
-        {service?.description}
-      </p>
+      <p
+        className="text-[14px] sm:text-[15px] md:text-[18px] lg:text-[14px] xl:text-[16px] 2xl:text-[20px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[500] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
+        dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(service?.description ?? "") }}
+      />
 
       <div className="flex flex-col space-y-0">
         {service?.services.map((serviceItem, index) => (

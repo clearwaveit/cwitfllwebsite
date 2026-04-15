@@ -443,6 +443,7 @@ export type PortfoliosList = {
       databaseId?: number | null;
       slug?: string | null;
       title?: string | null;
+      description?: string | null;
       uri?: string | null;
       homePortfolioListing?: {
         portfolioListingSubtitle?: string | null;
@@ -498,6 +499,7 @@ export const GET_PORTFOLIO_BY_SLUG = `
       uri
       portfolioDetails {
       title
+      description
       backgroundImage {
         node {
           sourceUrl
@@ -665,7 +667,10 @@ export type PortfolioBySlug = {
     title?: string | null;
     slug?: string | null;
     uri?: string | null;
+    description?: string | null;
     portfolioDetails?: {
+      title?: string | null;
+      description?: string | null;
       backgroundImage?: { node?: { sourceUrl?: string; altText?: string | null } } | null;
       heroBackgroundImage?: { node?: { sourceUrl?: string; altText?: string | null } } | null;
       educationBackgroundImage?: {

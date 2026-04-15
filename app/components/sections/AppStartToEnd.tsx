@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BeforeImage from "@/app/components/ui/BeforeImage";
 import CallToActionButton from "@/app/components/ui/CallToActionButton";
 import { StaticImageData } from "next/image";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 const videoSrc = "/videos/animated_clip_1.mp4";
 
@@ -256,9 +257,10 @@ export default function AppStartToEnd({
                 <div
                   ref={descriptionRef}
                   className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[20.5px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] max-w-full app-start-to-end-description"
-                >
-                  {description}
-                </div>
+                  {...(typeof description === "string"
+                    ? { dangerouslySetInnerHTML: { __html: normalizeDescriptionHtml(description) } }
+                    : { children: description })}
+                />
               )}
 
               {/* Contact Us Button - Only show in default layout or when no cards */}
@@ -302,9 +304,16 @@ export default function AppStartToEnd({
                       <h3 className={cardTitleClassName}>
                         {card.title}
                       </h3>
-                      <p className={cardDescriptionClassName}>
-                        {card.description}
-                      </p>
+                      <p
+                        className={cardDescriptionClassName}
+                        {...(typeof card.description === "string"
+                          ? {
+                              dangerouslySetInnerHTML: {
+                                __html: normalizeDescriptionHtml(card.description),
+                              },
+                            }
+                          : { children: card.description })}
+                      />
                     </div>
                   );
                 })}

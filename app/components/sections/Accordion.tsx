@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useGSAP } from "@/app/hooks/useGSAP";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -292,7 +293,9 @@ export default function Accordion({ title = "", items }: AccordionProps) {
                   <div className={`p-6 ${isOpen ? 'rounded-b-[10px]' : 'bg-black'}`}>
                     <div
                       className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px] 2xl:text-[17px] min-[1440px]:text-[18px] min-[1920px]:text-[18px] text-white leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] accordion-content prose prose-invert max-w-none"
-                      dangerouslySetInnerHTML={{ __html: item.content || "" }}
+                      dangerouslySetInnerHTML={{
+                        __html: normalizeDescriptionHtml(item.content || ""),
+                      }}
                     />
                   </div>
                 </div>

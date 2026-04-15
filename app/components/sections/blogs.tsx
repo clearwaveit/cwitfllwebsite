@@ -179,6 +179,7 @@ import Link from "next/link";
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -214,7 +215,8 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
   const carouselBlogs = blogs.length > 1 ? [...blogs, ...blogs] : blogs;
 
   useEffect(() => {
-    if (!sectionRef.current || !cardsRef.current || !trackRef.current) return;
+    if (!sectionRef.current || !cardsRef.current) return;
+    if (isCarousel && !trackRef.current) return;
 
     const titleEl = titleRef.current;
     const cards = cardsRef.current.querySelectorAll(".blogs-card");
@@ -253,78 +255,67 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
       titleEl ? "-=0.4" : 0
     );
 
-    const hoverCleanups: Array<() => void> = [];
+    let removeCarouselHoverListeners: (() => void) | undefined;
 
-    cards.forEach((card) => {
-      const cardElement = card as HTMLElement;
-
-      const handleEnter = () => {
-        gsap.to(cardElement, {
-          scale: 1.05,
-          y: -10,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      };
-
-      const handleLeave = () => {
-        gsap.to(cardElement, {
-          scale: 1,
-          y: 0,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      };
-
-      cardElement.addEventListener("mouseenter", handleEnter);
-      cardElement.addEventListener("mouseleave", handleLeave);
-
-      hoverCleanups.push(() => {
-        cardElement.removeEventListener("mouseenter", handleEnter);
-        cardElement.removeEventListener("mouseleave", handleLeave);
-      });
-    });
-
-    if (blogs.length > 1) {
+    if (isCarousel && blogs.length > 1) {
       const track = trackRef.current;
-      const originalItems = track.querySelectorAll(
-        '[data-carousel-original="true"]'
-      ) as NodeListOf<HTMLElement>;
+      if (track) {
+        const originalItems = track.querySelectorAll(
+          '[data-carousel-original="true"]'
+        ) as NodeListOf<HTMLElement>;
 
-      const firstItem = originalItems[0];
-      if (firstItem) {
-        const trackStyles = window.getComputedStyle(track);
-        const gap =
-          parseFloat(trackStyles.gap || "0") ||
-          parseFloat(trackStyles.columnGap || "0") ||
-          0;
+        const firstItem = originalItems[0];
+        if (firstItem) {
+          const trackStyles = window.getComputedStyle(track);
+          const gap =
+            parseFloat(trackStyles.gap || "0") ||
+            parseFloat(trackStyles.columnGap || "0") ||
+            0;
 
-        const itemWidth = firstItem.offsetWidth;
-        const singleSetWidth = (itemWidth + gap) * blogs.length;
+          const itemWidth = firstItem.offsetWidth;
+          const singleSetWidth = (itemWidth + gap) * blogs.length;
 
-        carouselTweenRef.current?.kill();
+          carouselTweenRef.current?.kill();
 
-        carouselTweenRef.current = gsap.to(track, {
-          x: -singleSetWidth,
-          duration: 18,
-          ease: "none",
-          repeat: -1,
-          modifiers: {
-            x: (value) => {
-              const currentX = parseFloat(value);
-              return currentX <= -singleSetWidth
-                ? `${currentX + singleSetWidth}px`
-                : `${currentX}px`;
+          carouselTweenRef.current = gsap.to(track, {
+            x: -singleSetWidth,
+            duration: 18,
+            ease: "none",
+            repeat: -1,
+            modifiers: {
+              x: (value) => {
+                const currentX = parseFloat(value);
+                return currentX <= -singleSetWidth
+                  ? `${currentX + singleSetWidth}px`
+                  : `${currentX}px`;
+              },
             },
-          },
-        });
+          });
+
+          const tween = carouselTweenRef.current;
+          const hoverRoot = cardsRef.current;
+          if (tween && hoverRoot) {
+            const pauseCarousel = () => {
+              tween.pause();
+            };
+            const resumeCarousel = () => {
+              tween.resume();
+            };
+            hoverRoot.addEventListener("mouseenter", pauseCarousel);
+            hoverRoot.addEventListener("mouseleave", resumeCarousel);
+            removeCarouselHoverListeners = () => {
+              hoverRoot.removeEventListener("mouseenter", pauseCarousel);
+              hoverRoot.removeEventListener("mouseleave", resumeCarousel);
+            };
+          }
+        }
       }
     }
 
     return () => {
+      removeCarouselHoverListeners?.();
       tl.kill();
       carouselTweenRef.current?.kill();
-      hoverCleanups.forEach((cleanup) => cleanup());
 
       const triggers = ScrollTrigger.getAll();
       triggers.forEach((trigger) => {
@@ -333,7 +324,7 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
         }
       });
     };
-  }, [blogs.length, title]);
+  }, [blogs.length, title, isCarousel]);
 
   if (!blogs.length) return null;
 
@@ -387,9 +378,10 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
                         </span>
                       ) : null}
 
-                      <p className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
-                        {blog.description}
-                      </p>
+                      <p
+                        className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
+                        dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(blog.description) }}
+                      />
 
                       {item.buttonText?.trim() &&
                         (item.buttonLink?.trim() || item.link?.trim()) && (
@@ -461,9 +453,10 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
                           </span>
                         ) : null}
 
-                        <p className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
-                          {blog.description}
-                        </p>
+                        <p
+                          className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
+                          dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(blog.description) }}
+                        />
 
                         {item.buttonText?.trim() &&
                           (item.buttonLink?.trim() || item.link?.trim()) && (
@@ -526,9 +519,10 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
                           </span>
                         ) : null}
 
-                        <p className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]">
-                          {blog.description}
-                        </p>
+                        <p
+                          className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
+                          dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(blog.description) }}
+                        />
 
                         {item.buttonText?.trim() &&
                           (item.buttonLink?.trim() || item.link?.trim()) && (

@@ -32,6 +32,7 @@ export default async function BlogDetailPage({
       <HeroBanner
         badge={post.badge}
         title={post.title}
+        description={post.excerpt}
         backgroundImage={heroBg}
         backgroundImageAlt={heroAlt}
         minHeight="100vh"

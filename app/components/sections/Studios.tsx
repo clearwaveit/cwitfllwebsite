@@ -5,6 +5,8 @@ import { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
+import { splitCmsTextToParagraphs } from "@/app/lib/split-cms-text-to-paragraphs";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -151,6 +153,7 @@ export default function Studios({ studios: studiosProp }: StudiosProps = {}) {
         >
           {STUDIO_INDICES.map((index) => {
             const studio = getStudio(index);
+            const descriptionParagraphs = splitCmsTextToParagraphs(studio.description);
             const divRef = divRefs[index];
             return (
               <div
@@ -208,9 +211,17 @@ export default function Studios({ studios: studiosProp }: StudiosProps = {}) {
                         studio.title || ""
                       )}
                     </h2>
-                    <p className="text-[16px] md:text-[18px] text-white py-8 max-w-[730px] leading-relaxed">
-                      {studio.description || ""}
-                    </p>
+                    {descriptionParagraphs.length > 0 ? (
+                      <div className="py-8 max-w-[730px] space-y-4">
+                        {descriptionParagraphs.map((para, i) => (
+                          <p
+                            key={i}
+                            className="text-[16px] md:text-[18px] text-white leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(para) }}
+                          />
+                        ))}
+                      </div>
+                    ) : null}
                     {studio.buttonText?.trim() && studio.href?.trim() ? (
                       <CallToActionButton
                         variant="shiny"

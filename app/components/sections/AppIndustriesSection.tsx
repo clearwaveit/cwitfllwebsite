@@ -5,6 +5,7 @@ import { useGSAP } from "@/app/hooks/useGSAP";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CallToActionButton from "@/app/components/ui/CallToActionButton";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -127,9 +128,12 @@ export default function IndustriesSection({
           {title}
         </h2>
         {description && (
-          <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[20.5px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[350] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] mb-8 sm:mb-10 md:mb-12 lg:mb-14 xl:mb-16">
-            {description}
-          </p>
+          <p
+            className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[20.5px] min-[1440px]:text-[21px] min-[1920px]:text-[22px] font-[350] text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] mb-8 sm:mb-10 md:mb-12 lg:mb-14 xl:mb-16"
+            {...(typeof description === "string"
+              ? { dangerouslySetInnerHTML: { __html: normalizeDescriptionHtml(description) } }
+              : { children: description })}
+          />
         )}
         {/* Cards Grid - 2x3 */}
         {industries && industries.length > 0 && (
@@ -156,9 +160,10 @@ export default function IndustriesSection({
                   <h3 className={`${titleColor} text-[18px] sm:text-[20px] md:text-[24px] lg:text-[26px] xl:text-[28px] 2xl:text-[29px] min-[1440px]:text-[29.5px] min-[1920px]:text-[30px] font-[700] mb-3 sm:mb-4 md:mb-5 lg:mb-6 ${titleClassName}`}>
                     {industry.title}
                   </h3>
-                  <p className={`${descriptionColor} text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[20.25px] min-[1920px]:text-[20.5px] font-[350] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] ${descriptionClassName}`}>
-                    {industry.description}
-                  </p>
+                  <p
+                    className={`${descriptionColor} text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] min-[1440px]:text-[20.25px] min-[1920px]:text-[20.5px] font-[350] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] ${descriptionClassName}`}
+                    dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(industry.description) }}
+                  />
                 </div>
               );
             })}

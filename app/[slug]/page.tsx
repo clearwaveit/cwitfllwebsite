@@ -34,6 +34,7 @@ export default async function PortfolioPage({
     <main className="min-h-screen relative bg-black">
       <HeroBanner
         title={portfolio.title ?? undefined}
+        description={pd?.description ?? undefined}
         backgroundImage={heroBg}
         backgroundImageAlt={heroAlt}
         minHeight="100vh"
