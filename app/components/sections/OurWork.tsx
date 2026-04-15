@@ -5,6 +5,7 @@ import CallToActionButton from "@/app/components/ui/CallToActionButton";
 import { StaticImageData } from "next/image";
 import { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -440,9 +441,10 @@ export default function OurWork({
 
                 {/* Description */}
                 <div className="px-4 pb-10">
-                  <p className="text-white text-[13px] sm:text-[14px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] font-[300]">
-                    {item.description}
-                  </p>
+                  <div
+                    className="text-white text-[13px] sm:text-[14px] leading-[18px] sm:leading-[22px] md:leading-[29px] font-[300] line-clamp-4"
+                    dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(item.description) }}
+                  />
                 </div>
 
                 {/* Image */}
@@ -509,13 +511,13 @@ export default function OurWork({
                   key={index}
                   data-work-card
                   data-index={index}
-                  className={`flex-shrink-0 w-[380px] lg:w-[480px] xl:w-[604px] h-auto bg-black border border-[#C1C1C1] overflow-hidden flex flex-col our-work-card our-work-responsive-card ${
+                  className={`flex-shrink-0 w-[380px] lg:w-[480px] xl:w-[604px] max-h-full bg-black border border-[#C1C1C1] overflow-hidden flex flex-col our-work-card our-work-responsive-card ${
                     isItemClickable(item) ? "cursor-pointer" : "cursor-default"
                   }`}
                 >
                   {/* Category Tags - Top */}
                   {item.category && (
-                    <div className="flex flex-col pt-4 lg:pt-10 px-5 lg:px-8 pb-40 category-tags-container">
+                    <div className="flex flex-col flex-1 justify-start pt-4 lg:pt-10 px-5 lg:px-8 pb-40  category-tags-container">
                       {getCategoryLines(item.category).map((cat, idx) => (
                         <span
                           key={idx}
@@ -535,14 +537,15 @@ export default function OurWork({
                   </div>
 
                   {/* Description */}
-                  <div className="max-w-[460px] px-5 lg:px-8 pb-4 lg:pb-16">
-                    <p className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] font-[400] our-work-item-description our-work-description">
-                      {item.description}
-                    </p>
+                  <div className="max-w-[460px] px-5 lg:px-8 pb-4 lg:pb-16 overflow-hidden">
+                    <div
+                      className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[18px] sm:leading-[22px] md:leading-[29px] font-[300] our-work-item-description our-work-description line-clamp-4"
+                      dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(item.description) }}
+                    />
                   </div>
 
                   {/* Image - Bottom */}
-                  <div className="relative w-full h-[220px] lg:h-[260px] xl:h-[300px] 2xl:h-[320px] min-[1440px]:h-[335px] min-[1920px]:h-[342px] overflow-hidden our-work-item-image">
+                  <div className="relative w-full flex-shrink-0 h-[220px] lg:h-[260px] xl:h-[300px] 2xl:h-[320px] min-[1440px]:h-[335px] min-[1920px]:h-[342px] overflow-hidden our-work-item-image">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -685,9 +688,10 @@ export default function OurWork({
                 <h3 className="text-[26px] md:text-[32px] lg:text-[34px] xl:text-[36px] 2xl:text-[38px] min-[1440px]:text-[39px] min-[1920px]:text-[40px] font-light leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] mb-3">
                   {item.title}
                 </h3>
-                <p className="text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[21px] min-[1440px]:text-[21.5px] min-[1920px]:text-[22px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] opacity-90">
-                  {item.description}
-                </p>
+                <div
+                  className="text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[21px] min-[1440px]:text-[21.5px] min-[1920px]:text-[22px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] opacity-90 line-clamp-4"
+                  dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(item.description) }}
+                />
               </div>
             </div>
           ))}

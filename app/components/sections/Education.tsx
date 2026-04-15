@@ -1,6 +1,7 @@
 import Image from "next/image";
 import vectorBg from "@/app/assets/imgs/Mask group (1).png";
 import { getProjectInfoRowsForEducation } from "@/app/lib/our-work-api";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 const headingClass =
   "text-[20px] md:text-[36px] lg:text-[50px] font-regular text-white leading-tight";
@@ -11,7 +12,12 @@ function ProjectInfoBlock({ title, detail }: { title: string; detail: string }) 
   return (
     <div className="flex flex-col">
       {title ? <h2 className={headingClass}>{title}</h2> : null}
-      {detail ? <p className={detailClass}>{detail}</p> : null}
+      {detail ? (
+        <p
+          className={detailClass}
+          dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(detail) }}
+        />
+      ) : null}
     </div>
   );
 }

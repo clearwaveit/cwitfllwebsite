@@ -4,6 +4,7 @@ import { useGSAP } from "@/app/hooks/useGSAP";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef, useEffect } from "react";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -237,10 +238,9 @@ export default function Hero({
             {subtitle?.trim() ? (
               <p
                 ref={subtitleRef}
-                className="text-lg leading-relaxed text-white/90 sm:text-xl md:text-2xl whitespace-pre-line"
-              >
-                {subtitle.trim()}
-              </p>
+                className="text-lg leading-relaxed text-white/90 sm:text-xl md:text-2xl"
+                dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(subtitle.trim()) }}
+              />
             ) : null}
           </div>
         </div>

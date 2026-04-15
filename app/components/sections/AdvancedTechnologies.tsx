@@ -5,6 +5,7 @@ import { useGSAP } from "@/app/hooks/useGSAP";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image, { StaticImageData } from "next/image";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -184,9 +185,10 @@ export default function TechnologiesSection({
                 <h3 className="text-white text-[18px] font-bold mb-3">
                   {tech.title}
                 </h3>
-                <p className="text-white/70 text-[14px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7]">
-                  {tech.description}
-                </p>
+                <p
+                  className="text-white/70 text-[14px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7]"
+                  dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(tech.description) }}
+                />
               </div>
             );
           })}
@@ -261,9 +263,10 @@ export default function TechnologiesSection({
                     </h3>
 
                     {/* Description */}
-                    <p className="text-white/70 text-[14px] md:text-[16px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] flex-grow overflow-hidden">
-                      {tech.description}
-                    </p>
+                    <p
+                      className="text-white/70 text-[14px] md:text-[16px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] flex-grow overflow-hidden"
+                      dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(tech.description) }}
+                    />
                   </div>
                 );
               })}

@@ -1,3 +1,4 @@
+import { splitCmsTextToParagraphs } from "@/app/lib/split-cms-text-to-paragraphs";
 import TextSection from "../ui/TextSection";
 
 interface WhatWeDeliveredProps {
@@ -12,13 +13,18 @@ export default function WhatWeDelivered({
   deliverables = [],
 }: WhatWeDeliveredProps) {
   if (deliverables.length === 0) return null;
+
+  // Split WYSIWYG description into separate paragraphs so line breaks render correctly
+  const descriptionParts = splitCmsTextToParagraphs(description);
+  const paragraphs = [title, ...descriptionParts].filter(Boolean);
+
   return (
     <section className="w-full mx-auto relative py-20 px-4 lg:px-0">
       <div className="max-w-[1494px] mx-auto whatwedeliver-section px-10 sm:px-10 md:px-10">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
           <div className="w-full lg:w-1/2 flex flex-col gap-6">
             <TextSection
-              paragraphs={[title, description]}
+              paragraphs={paragraphs}
               className="max-w-[1200px] mx-auto"
               firstParagraphClassName="text-[40px] md:text-[70px] font-light leading-tight items-center"
             />

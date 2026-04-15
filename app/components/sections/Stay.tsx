@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { splitCmsTextToParagraphs } from "@/app/lib/split-cms-text-to-paragraphs";
 import TextSection from "../ui/TextSection";
 
 interface StayProps {
@@ -13,7 +14,9 @@ export default function Stay({
   imageAlt = "",
   paragraphs = [],
 }: StayProps) {
-  const hasParagraphs = paragraphs.length > 0;
+  // Split each WYSIWYG paragraph entry so line breaks / multiple <p> tags render correctly
+  const splitParagraphs = paragraphs.flatMap((p) => splitCmsTextToParagraphs(p));
+  const hasParagraphs = splitParagraphs.length > 0;
   const cmsImage = imageSrc?.trim() ?? "";
   const hasCmsImage = cmsImage.length > 0;
 
@@ -21,15 +24,12 @@ export default function Stay({
 
   const alt = imageAlt.trim() || "Stay section";
 
-  const textWrapperClass = hasCmsImage
-    ? "relative md:top-[500px] top-0 px-4 md:px-0 stay-section-text"
-    : "relative top-0 px-4 md:px-0 stay-section-text py-10 md:py-16";
-
   return (
-    <section className="min-h-[60vh] md:min-h-screen max-w-[1494px] w-full mx-auto relative">
+    <section className="max-w-[1494px] w-full mx-auto relative">
+      {/* Desktop: image overlaps upward into previous section */}
       {hasCmsImage ? (
         <>
-          <div className="absolute top-[-400px] left-1/2 -translate-x-1/2 w-full max-w-[1494px] h-auto hidden md:block stay-section">
+          <div className="hidden md:block stay-section-image px-4 lg:px-0">
             <Image
               src={cmsImage}
               alt={alt}
@@ -51,10 +51,12 @@ export default function Stay({
           </div>
         </>
       ) : null}
+
+      {/* Text flows naturally below the image — no fixed offsets */}
       {hasParagraphs ? (
-        <div className={textWrapperClass}>
+        <div className="px-4 md:px-0 stay-section-text py-10 md:py-16">
           <TextSection
-            paragraphs={paragraphs}
+            paragraphs={splitParagraphs}
             className="max-w-[1200px] mx-auto text-center"
             firstParagraphClassName="text-[12px] sm:text-[16px] md:text-[40px] lg:text-[40px] xl:text-[40px] 2xl:text-[40px] text-center font-light leading-tight items-center"
           />

@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image, { StaticImageData } from "next/image";
 import CallToActionButton from "./CallToActionButton";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -331,10 +332,12 @@ export default function HeroBanner({
           {description && (
             <p
               ref={descriptionRef}
-              className={`${descriptionMaxWidth || "text-[14px] sm:text-[16px] md:text-[20px]"} font-[500] text-white/90 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] max-w-[600px] hero-banner-description ${descriptionClassName}`}
-            >
-              {description}
-            </p>
+              className={`${descriptionMaxWidth || "text-[14px] sm:text-[16px] md:text-[20px]"} font-[500] text-white/90 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] max-w-[600px] hero-banner-description
+              text-[14px] sm:text-[16px] md:text-[20px] lg:text-[24px] xl:text-[30px] font-light text-white leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] contact-form-description ${descriptionClassName}`}
+              {...(typeof description === "string"
+                ? { dangerouslySetInnerHTML: { __html: normalizeDescriptionHtml(description) } }
+                : { children: description })}
+            />
           )}
 
           {/* Button (optional) */}

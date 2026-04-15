@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image, { StaticImageData } from "next/image";
 import CallToActionButton from "../ui/CallToActionButton";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -205,7 +206,16 @@ export default function BusinessFeaturesSection({
                       <h3 className={featureHeadingClassName}>{feature.heading}</h3>
 
                       {/* Feature Description */}
-                      <p className={featureDescriptionClassName}>{feature.description}</p>
+                      <p
+                        className={featureDescriptionClassName}
+                        {...(typeof feature.description === "string"
+                          ? {
+                              dangerouslySetInnerHTML: {
+                                __html: normalizeDescriptionHtml(feature.description),
+                              },
+                            }
+                          : { children: feature.description })}
+                      />
                     </div>
                   );
                 })}
