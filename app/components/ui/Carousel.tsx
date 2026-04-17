@@ -4,6 +4,7 @@ import { useRef, useEffect, type CSSProperties } from "react";
 import Image, { type StaticImageData } from "next/image";
 import gsap from "gsap";
 import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
+import { tooltipFromHtml } from "@/app/lib/tooltip-from-html";
 
 export interface CarouselCard {
   type: "text" | "image";
@@ -71,21 +72,6 @@ function resolveColorValue(raw: string | undefined, kind: "bg" | "text"): string
 function getTextStyles(color: string | undefined, dimmed: boolean = false): CSSProperties | undefined {
   if (!color) return undefined;
   return dimmed ? { color, opacity: 0.7 } : { color };
-}
-
-function tooltipFromHtml(value: string | undefined): string | undefined {
-  if (!value) return undefined;
-  const text = value
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/&#39;/gi, "'")
-    .replace(/&quot;/gi, '"')
-    .trim();
-  return text || undefined;
 }
 
 export default function Carousel({
