@@ -3,6 +3,7 @@
 import DigitalExperienceBanner from "@/app/components/sections/DigitalExperienceBanner";
 import type { OurWorkPageItem } from "@/app/our-work/our-work-types";
 import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
+import { tooltipFromHtml } from "@/app/lib/tooltip-from-html";
 import Accordion, { AccordionItem } from "../components/sections/Accordion";
 import Image from "next/image";
 import Link from "next/link";
@@ -446,14 +447,20 @@ export default function OurWorkPage() {
                         ))}
                       </div>
                     )}
-                    <div className="shrink-0 px-5 pb-2 lg:px-8 lg:pb-3">
-                      <h3 className="our-work-item-title text-[28px] font-[400] leading-[1.3] text-white sm:leading-[1.35] md:leading-[1.4] lg:text-[34px] lg:leading-[1.35] xl:text-[41px] xl:leading-[1.3]">
+                    <div className="w-full min-w-0 shrink-0 px-5 pb-2 lg:px-8 lg:pb-3">
+                      <h3
+                        className="our-work-item-title line-clamp-1 w-full min-w-0 max-w-full overflow-hidden break-words text-[28px] font-[400] leading-[1.3] text-white sm:leading-[1.35] md:leading-[1.4] lg:text-[34px] lg:leading-[1.35] xl:text-[41px] xl:leading-[1.3]"
+                        title={tooltipFromHtml(item.title)}
+                      >
                         {item.title}
                       </h3>
                     </div>
                     <div className="max-w-[460px] shrink-0 overflow-hidden px-5 pb-4 lg:px-8 lg:pb-16">
                       <div
-                        className="our-work-description our-work-item-description line-clamp-4 text-[15px] font-[300] leading-[18px] text-white sm:leading-[22px] md:leading-[29px] lg:text-[18px] xl:text-[22px]"
+                        className="our-work-description our-work-item-description line-clamp-3 overflow-hidden break-words text-[15px] font-[300] leading-[18px] text-white sm:leading-[22px] md:leading-[29px] lg:text-[18px] xl:text-[22px]"
+                        title={tooltipFromHtml(
+                          normalizeDescriptionHtml(item.description ?? "")
+                        )}
                         dangerouslySetInnerHTML={{
                           __html: normalizeDescriptionHtml(item.description ?? ""),
                         }}
