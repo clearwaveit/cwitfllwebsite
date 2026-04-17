@@ -180,6 +180,7 @@ import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
+import { tooltipFromHtml } from "@/app/lib/tooltip-from-html";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -443,7 +444,10 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
                     </div>
                     <div className="w-full h-auto flex flex-col justify-center blogs-section-image blogs-card-content">
                       <div className="flex flex-col justify-center items-start gap-2 sm:gap-3 md:gap-4 p-4 sm:p-6 md:p-8 lg:p-9 xl:p-10">
-                        <h3 className="text-white text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] 2xl:text-[24px] font-bold text-black leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25]">
+                        <h3
+                          className="line-clamp-1 w-full min-w-0 max-w-full overflow-hidden break-words text-[14px] font-bold leading-[1.3] text-white sm:text-[16px] sm:leading-[1.35] md:text-[18px] md:leading-[1.4] lg:text-[20px] lg:leading-[1.35] xl:text-[22px] xl:leading-[1.3] 2xl:text-[24px] 2xl:leading-[1.25]"
+                          title={tooltipFromHtml(blog.title)}
+                        >
                           {blog.title}
                         </h3>
 
@@ -454,7 +458,8 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
                         ) : null}
 
                         <p
-                          className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
+                          className="line-clamp-3 overflow-hidden break-words text-[11px] font-normal leading-[1.5] text-white/90 sm:text-[12px] sm:leading-[1.55] md:text-[13px] md:leading-[1.6] lg:text-[14px] lg:leading-[1.65] xl:text-[15px] xl:leading-[1.6] 2xl:text-[16px] 2xl:leading-[1.55]"
+                          title={tooltipFromHtml(normalizeDescriptionHtml(blog.description ?? ""))}
                           dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(blog.description) }}
                         />
 
@@ -509,7 +514,10 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
                     </div>
                     <div className="w-full h-auto flex flex-col justify-center blogs-section-image blogs-card-content">
                       <div className="flex flex-col justify-center items-start gap-2 sm:gap-3 md:gap-4 p-4 sm:p-6 md:p-8 lg:p-9 xl:p-10">
-                        <h3 className="text-white text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] 2xl:text-[24px] font-bold text-black leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25]">
+                        <h3
+                          className="line-clamp-1 w-full min-w-0 max-w-full overflow-hidden break-words text-[14px] font-bold leading-[1.3] text-white sm:text-[16px] sm:leading-[1.35] md:text-[18px] md:leading-[1.4] lg:text-[20px] lg:leading-[1.35] xl:text-[22px] xl:leading-[1.3] 2xl:text-[24px] 2xl:leading-[1.25]"
+                          title={tooltipFromHtml(blog.title)}
+                        >
                           {blog.title}
                         </h3>
 
@@ -520,7 +528,8 @@ export default function Blogs({ sectionTitle, items, isCarousel }: BlogsProps = 
                         ) : null}
 
                         <p
-                          className="text-white text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px] text-gray-700 leading-[1.5] sm:leading-[1.55] md:leading-[1.6] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
+                          className="line-clamp-3 overflow-hidden break-words text-[11px] font-normal leading-[1.5] text-white/90 sm:text-[12px] sm:leading-[1.55] md:text-[13px] md:leading-[1.6] lg:text-[14px] lg:leading-[1.65] xl:text-[15px] xl:leading-[1.6] 2xl:text-[16px] 2xl:leading-[1.55]"
+                          title={tooltipFromHtml(normalizeDescriptionHtml(blog.description ?? ""))}
                           dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(blog.description) }}
                         />
 

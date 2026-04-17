@@ -6,6 +6,7 @@ import { StaticImageData } from "next/image";
 import { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
+import { tooltipFromHtml } from "@/app/lib/tooltip-from-html";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -432,15 +433,19 @@ export default function OurWork({
                     </div>
                   )}
 
-                  <div className="shrink-0 px-5 pb-2 lg:px-8 lg:pb-3">
-                    <h3 className="our-work-item-title text-[28px] font-[400] leading-[1.3] text-white sm:leading-[1.35] md:leading-[1.4] lg:text-[34px] lg:leading-[1.35] xl:text-[41px] xl:leading-[1.3]">
+                  <div className="w-full min-w-0 shrink-0 px-5 pb-2 lg:px-8 lg:pb-3">
+                    <h3
+                      className="our-work-item-title line-clamp-1 w-full min-w-0 max-w-full overflow-hidden break-words text-[28px] font-[400] leading-[1.3] text-white sm:leading-[1.35] md:leading-[1.4] lg:text-[34px] lg:leading-[1.35] xl:text-[41px] xl:leading-[1.3]"
+                      title={tooltipFromHtml(item.title)}
+                    >
                       {item.title}
                     </h3>
                   </div>
 
                   <div className="max-w-[460px] shrink-0 overflow-hidden px-5 pb-4 lg:px-8 lg:pb-20">
                     <div
-                      className="our-work-description our-work-item-description line-clamp-4 text-[15px] font-[300] leading-[18px] text-white sm:leading-[22px] md:leading-[29px] lg:text-[18px] xl:text-[22px]"
+                      className="our-work-description our-work-item-description line-clamp-3 overflow-hidden break-words text-[15px] font-[300] leading-[18px] text-white sm:leading-[22px] md:leading-[29px] lg:text-[18px] xl:text-[22px]"
+                      title={tooltipFromHtml(normalizeDescriptionHtml(item.description ?? ""))}
                       dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(item.description) }}
                     />
                   </div>
@@ -529,15 +534,19 @@ export default function OurWork({
                       </div>
                     )}
 
-                    <div className="shrink-0 px-5 pb-2 lg:px-8 lg:pb-3">
-                      <h3 className="our-work-item-title text-[28px] font-[400] leading-[1.3] text-white sm:leading-[1.35] md:leading-[1.4] lg:text-[34px] lg:leading-[1.35] xl:text-[41px] xl:leading-[1.3]">
+                    <div className="w-full min-w-0 shrink-0 px-5 pb-2 lg:px-8 lg:pb-3">
+                      <h3
+                        className="our-work-item-title line-clamp-1 w-full min-w-0 max-w-full overflow-hidden break-words text-[28px] font-[400] leading-[1.3] text-white sm:leading-[1.35] md:leading-[1.4] lg:text-[34px] lg:leading-[1.35] xl:text-[41px] xl:leading-[1.3]"
+                        title={tooltipFromHtml(item.title)}
+                      >
                         {item.title}
                       </h3>
                     </div>
 
                     <div className="max-w-[460px] shrink-0 overflow-hidden px-5 pb-4 lg:px-8 lg:pb-16">
                       <div
-                        className="our-work-description our-work-item-description line-clamp-4 text-[15px] font-[300] leading-[18px] text-white sm:leading-[22px] md:leading-[29px] lg:text-[18px] xl:text-[22px]"
+                        className="our-work-description our-work-item-description line-clamp-3 overflow-hidden break-words text-[15px] font-[300] leading-[18px] text-white sm:leading-[22px] md:leading-[29px] lg:text-[18px] xl:text-[22px]"
+                        title={tooltipFromHtml(normalizeDescriptionHtml(item.description ?? ""))}
                         dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(item.description) }}
                       />
                     </div>
@@ -636,8 +645,13 @@ export default function OurWork({
 
               <div className="absolute bottom-8 left-0 right-0 flex justify-center px-4">
                 <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-8 py-4 flex flex-col md:flex-row items-center gap-4 md:gap-8 max-w-3xl">
-                  <div className="flex flex-col md:items-start items-center text-center md:text-left">
-                    <h3 className="text-xl md:text-2xl font-bold text-white">{selectedItem.title}</h3>
+                  <div className="flex min-w-0 max-w-full flex-col items-center text-center md:items-start md:text-left">
+                    <h3
+                      className="line-clamp-1 w-full min-w-0 max-w-full overflow-hidden break-words text-xl font-bold text-white md:text-2xl"
+                      title={tooltipFromHtml(selectedItem.title)}
+                    >
+                      {selectedItem.title}
+                    </h3>
                   </div>
 
                   <div className="flex-shrink-0">
@@ -685,11 +699,15 @@ export default function OurWork({
 
               {/* Text Content */}
               <div className="text-white ps-6 md:pb-10 pb-6 md:pb-20 px-4 md:pe-0">
-                <h3 className="text-[26px] md:text-[32px] lg:text-[34px] xl:text-[36px] 2xl:text-[38px] min-[1440px]:text-[39px] min-[1920px]:text-[40px] font-light leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] 2xl:leading-[1.25] mb-3">
+                <h3
+                  className="mb-3 line-clamp-1 w-full min-w-0 max-w-full overflow-hidden break-words text-[26px] font-light leading-[1.3] text-white sm:leading-[1.35] md:text-[32px] md:leading-[1.4] lg:text-[34px] lg:leading-[1.35] xl:text-[36px] xl:leading-[1.3] 2xl:text-[38px] 2xl:leading-[1.25] min-[1440px]:text-[39px] min-[1920px]:text-[40px]"
+                  title={tooltipFromHtml(item.title)}
+                >
                   {item.title}
                 </h3>
                 <div
-                  className="text-[16px] md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[21px] min-[1440px]:text-[21.5px] min-[1920px]:text-[22px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55] opacity-90 line-clamp-4"
+                  className="line-clamp-3 overflow-hidden break-words text-[16px] opacity-90 md:text-[18px] lg:text-[19px] xl:text-[20px] 2xl:text-[21px] min-[1440px]:text-[21.5px] min-[1920px]:text-[22px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] lg:leading-[1.65] xl:leading-[1.6] 2xl:leading-[1.55]"
+                  title={tooltipFromHtml(normalizeDescriptionHtml(item.description ?? ""))}
                   dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(item.description) }}
                 />
               </div>
