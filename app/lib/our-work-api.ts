@@ -354,6 +354,7 @@ export const GET_PORTFOLIOS_LIST = `
         slug
         title
         uri
+        excerpt
         homePortfolioListing {
           portfolioListingSubtitle
           portfolioListingTitle
@@ -444,6 +445,7 @@ export type PortfoliosList = {
       slug?: string | null;
       title?: string | null;
       description?: string | null;
+      excerpt?: string | null;
       uri?: string | null;
       homePortfolioListing?: {
         portfolioListingSubtitle?: string | null;

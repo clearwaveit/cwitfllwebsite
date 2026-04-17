@@ -1961,7 +1961,7 @@ body {
 
   .our-work-responsive-card {
     max-height: calc(100vh - 60px) !important;
-    height: auto !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
@@ -1972,7 +1972,7 @@ body {
   .our-work-item-description {
     font-size: 14px !important;
     padding-bottom: 8px !important;
-    line-height: 1.4 !important;
+    line-height: 30px !important;
   }
 
   .category-text {
@@ -2009,7 +2009,7 @@ body {
 
   .our-work-responsive-card {
     max-height: calc(100vh - 60px) !important;
-    height: auto !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
@@ -2020,7 +2020,7 @@ body {
   .our-work-item-description {
     font-size: 14px !important;
     padding-bottom: 8px !important;
-    line-height: 1.4 !important;
+    line-height: 30px !important;
   }
 
   .category-text {
@@ -2053,7 +2053,7 @@ body {
 
   .our-work-responsive-card {
     max-height: calc(100vh - 60px) !important;
-    height: auto !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
@@ -2064,7 +2064,7 @@ body {
   .our-work-item-description {
     font-size: 14px !important;
     padding-bottom: 8px !important;
-    line-height: 1.4 !important;
+    line-height: 30px !important;
   }
 
   .category-text {
@@ -2097,7 +2097,7 @@ body {
 
   .our-work-responsive-card {
     max-height: calc(100vh - 60px) !important;
-    height: auto !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
@@ -2108,7 +2108,7 @@ body {
   .our-work-item-description {
     font-size: 14px !important;
     padding-bottom: 8px !important;
-    line-height: 1.4 !important;
+    line-height: 30px !important;
   }
 
   .category-text {
@@ -2141,7 +2141,7 @@ body {
 
   .our-work-responsive-card {
     max-height: calc(100vh - 60px) !important;
-    height: auto !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
@@ -2152,7 +2152,7 @@ body {
   .our-work-item-description {
     font-size: 14px !important;
     padding-bottom: 8px !important;
-    line-height: 1.4 !important;
+    line-height: 30px !important;
   }
 
   .category-text {
@@ -2186,7 +2186,7 @@ body {
 
   .our-work-responsive-card {
     max-height: calc(100vh - 60px) !important;
-    height: auto !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
@@ -2197,7 +2197,7 @@ body {
   .our-work-item-description {
     font-size: 15px !important;
     padding-bottom: 10px !important;
-    line-height: 1.4 !important;
+    line-height: 30px !important;
   }
 
   .category-text {
@@ -2230,7 +2230,7 @@ body {
 
   .our-work-responsive-card {
     max-height: calc(100vh - 60px) !important;
-    height: auto !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
@@ -2241,7 +2241,7 @@ body {
   .our-work-item-description {
     font-size: 15px !important;
     padding-bottom: 10px !important;
-    line-height: 1.4 !important;
+    line-height: 30px !important;
   }
 
   .category-text {
@@ -2274,7 +2274,7 @@ body {
 
   .our-work-responsive-card {
     max-height: calc(100vh - 60px) !important;
-    height: auto !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
@@ -2285,7 +2285,7 @@ body {
   .our-work-item-description {
     font-size: 15px !important;
     padding-bottom: 10px !important;
-    line-height: 1.4 !important;
+    line-height: 30px !important;
   }
 
   .category-text {
@@ -2318,7 +2318,7 @@ body {
 
   .our-work-responsive-card {
     max-height: calc(100vh - 60px) !important;
-    height: auto !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
@@ -2329,7 +2329,7 @@ body {
   .our-work-item-description {
     font-size: 15px !important;
     padding-bottom: 10px !important;
-    line-height: 1.4 !important;
+    line-height: 30px !important;
   }
 
   .category-text {
@@ -2362,7 +2362,7 @@ body {
 
   .our-work-responsive-card {
     max-height: calc(100vh - 60px) !important;
-    height: auto !important;
+    height: 100% !important;
     overflow: hidden !important;
   }
 
@@ -2373,7 +2373,7 @@ body {
   .our-work-item-description {
     font-size: 15px !important;
     padding-bottom: 10px !important;
-    line-height: 1.4 !important;
+    line-height: 30px !important;
   }
 
   .category-text {
