@@ -447,7 +447,7 @@ export default function OurWork({
                   <div className="min-h-0 min-w-0 shrink-0 basis-0 flex-1" aria-hidden />
                 </div>
 
-                <div className="relative h-[220px] w-full shrink-0 overflow-hidden lg:h-[280px] xl:h-[320px] 2xl:h-[340px] min-[1440px]:h-[350px] min-[1920px]:h-[370px]">
+                <div className="relative h-[220px] w-full shrink-0 overflow-hidden lg:h-[280px] xl:h-[370px] 2xl:h-[340px] min-[1440px]:h-[350px] min-[1920px]:h-[400px]">
                   <Image
                     src={item.image}
                     alt={item.title}
@@ -544,7 +544,7 @@ export default function OurWork({
                     <div className="min-h-0 min-w-0 shrink-0 basis-0 flex-1" aria-hidden />
                   </div>
 
-                  <div className="relative h-[220px] w-full shrink-0 overflow-hidden lg:h-[260px] xl:h-[300px] 2xl:h-[320px] min-[1440px]:h-[335px] min-[1920px]:h-[342px]">
+                  <div className="relative h-[220px] w-full shrink-0 overflow-hidden lg:h-[300px] xl:h-[370px] 2xl:h-[370px] min-[1440px]:h-[335px] min-[1920px]:h-[400px]">
                     <Image
                       src={item.image}
                       alt={item.title}
