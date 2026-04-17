@@ -1,8 +1,8 @@
 "use client";
 
 import DigitalExperienceBanner from "@/app/components/sections/DigitalExperienceBanner";
-import { WorkItem } from "../components/sections/OurWork";
 import type { OurWorkPageItem } from "@/app/our-work/our-work-types";
+import { normalizeDescriptionHtml } from "@/app/lib/cms-description-html";
 import Accordion, { AccordionItem } from "../components/sections/Accordion";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,6 +13,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   fetchOurWorkListingPage,
   fetchPortfoliosList,
+  resolveImageUrl,
   type OurWorkListingPage,
 } from "@/app/lib/our-work-api";
 import { normalizeOurWorkPageData } from "@/app/our-work/our-work-normalize";
@@ -63,6 +64,7 @@ type PortfolioListNode = {
   databaseId?: number | null;
   slug?: string | null;
   title?: string | null;
+  excerpt?: string | null;
   homePortfolioListing?: {
     portfolioListingSubtitle?: string | null;
     portfolioListingTitle?: string | null;
@@ -114,6 +116,12 @@ function itemHasImage(item: OurWorkPageItem): boolean {
   return Boolean((item.image as { src?: string } | undefined)?.src);
 }
 
+function resolvePortfolioImage(url: string | undefined): string | undefined {
+  const t = url?.trim();
+  if (!t) return undefined;
+  return resolveImageUrl(t) ?? t;
+}
+
 function mapPortfolioNodesToCards(
   nodes: Array<PortfolioListNode>,
   overrides: Array<PerPortfolioOverride>
@@ -145,14 +153,17 @@ function mapPortfolioNodesToCards(
       matchedOverride?.portfolioTitle?.trim() ||
       listing?.portfolioListingTitle?.trim() ||
       portfolioTitle;
+    const excerpt = p?.excerpt?.trim() || "";
     const mainDescription =
       matchedOverride?.portfolioDescription?.trim() ||
       listing?.portfolioListingDescription?.trim() ||
+      excerpt ||
       "";
-    const mainImage =
+    const rawMainImage =
       matchedOverride?.portfolioImage?.node?.sourceUrl?.trim() ||
       matchedOverride?.portfolioImage?.node?.mediaItemUrl?.trim() ||
       fallbackImage;
+    const mainImage = resolvePortfolioImage(rawMainImage);
 
     const overrideCards = (matchedOverride?.portfolioCards ?? []).filter(Boolean) as Array<{
       cardSubtitle?: string | null;
@@ -165,8 +176,10 @@ function mapPortfolioNodesToCards(
         category: card.cardSubtitle?.trim() || mainSubtitle,
         title: card.cardTitle?.trim() || mainTitle,
         description: card.cardDescription?.trim() || mainDescription,
-        image: (card.cardImage?.node?.sourceUrl?.trim() ||
-          card.cardImage?.node?.mediaItemUrl?.trim() ||
+        image: (resolvePortfolioImage(
+          card.cardImage?.node?.sourceUrl?.trim() ||
+            card.cardImage?.node?.mediaItemUrl?.trim()
+        ) ??
           mainImage) as OurWorkPageItem["image"],
         link: slug ? `/portfolio/${slug}` : undefined,
       }));
@@ -177,8 +190,10 @@ function mapPortfolioNodesToCards(
         category: card.cardSubtitle?.trim() || mainSubtitle,
         title: card.cardTitle?.trim() || mainTitle,
         description: card.cardDescription?.trim() || mainDescription,
-        image: (card.cardImage?.node?.sourceUrl?.trim() ||
-          card.cardImage?.node?.mediaItemUrl?.trim() ||
+        image: (resolvePortfolioImage(
+          card.cardImage?.node?.sourceUrl?.trim() ||
+            card.cardImage?.node?.mediaItemUrl?.trim()
+        ) ??
           mainImage) as OurWorkPageItem["image"],
         link: slug ? `/portfolio/${slug}` : undefined,
       }));
@@ -404,7 +419,7 @@ export default function OurWorkPage() {
         <div className="relative z-10 mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 max-w-[1920px]">
           <div
             ref={cardsContainerRef}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 items-stretch"
           >
             {workItemsToShow.map((item, index) => {
               const href = getPortfolioUrl(item.link);
@@ -415,36 +430,44 @@ export default function OurWorkPage() {
                 <Link
                   key={slugKey}
                   href={href}
-                  className="work-card bg-black border border-[#C1C1C1] overflow-hidden flex flex-col cursor-pointer block"
+                  className="work-card flex h-full min-h-0 min-w-0 cursor-pointer flex-col overflow-hidden border border-[#C1C1C1] bg-black"
                 >
-                  {item.category && (
-                    <div className="flex-col pt-4 lg:pt-10 px-5 lg:px-8 pb-40 flex">
-                      {getCategoryLines(item.category).map((cat: string, idx: number) => (
-                        <span
-                          key={idx}
-                          className="text-white text-[14px] lg:text-[20px] xl:text-[20px] uppercase tracking-[0.1em] font-[400]"
-                        >
-                          {cat}
-                        </span>
-                      ))}
+                  {/* Fills space above fixed image: short descriptions show black gap before image */}
+                  <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+                    {item.category && (
+                      <div className="flex shrink-0 flex-col px-5 pt-4 pb-40 lg:px-8 lg:pt-10">
+                        {getCategoryLines(item.category).map((cat: string, idx: number) => (
+                          <span
+                            key={idx}
+                            className="text-white text-[14px] font-[400] uppercase tracking-[0.1em] lg:text-[20px] xl:text-[20px]"
+                          >
+                            {cat}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="shrink-0 px-5 pb-2 lg:px-8 lg:pb-3">
+                      <h3 className="our-work-item-title text-[28px] font-[400] leading-[1.3] text-white sm:leading-[1.35] md:leading-[1.4] lg:text-[34px] lg:leading-[1.35] xl:text-[41px] xl:leading-[1.3]">
+                        {item.title}
+                      </h3>
                     </div>
-                  )}
-                  <div className="px-5 lg:px-8 pb-2 lg:pb-3">
-                    <h3 className="text-white text-[28px] lg:text-[34px] xl:text-[41px] font-[400] leading-[1.2]">
-                      {item.title}
-                    </h3>
+                    <div className="max-w-[460px] shrink-0 overflow-hidden px-5 pb-4 lg:px-8 lg:pb-16">
+                      <div
+                        className="our-work-description our-work-item-description line-clamp-4 text-[15px] font-[300] leading-[18px] text-white sm:leading-[22px] md:leading-[29px] lg:text-[18px] xl:text-[22px]"
+                        dangerouslySetInnerHTML={{
+                          __html: normalizeDescriptionHtml(item.description ?? ""),
+                        }}
+                      />
+                    </div>
+                    <div className="min-h-0 min-w-0 shrink-0 basis-0 flex-1" aria-hidden />
                   </div>
-                  <div className="max-w-[460px] px-5 lg:px-8 pb-4 lg:pb-16">
-                    <p className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[1.5] font-[400]">
-                      {item.description}
-                    </p>
-                  </div>
-                  <div className="relative w-full h-[220px] lg:h-[260px] xl:h-[300px] 2xl:h-[320px] min-[1440px]:h-[335px] min-[1920px]:h-[342px] overflow-hidden">
+                  <div className="relative h-[220px] w-full shrink-0 overflow-hidden lg:h-[260px] xl:h-[300px] 2xl:h-[320px] min-[1440px]:h-[335px] min-[1920px]:h-[342px]">
                     <Image
                       src={imageSrc}
                       alt={item.title}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       unoptimized={typeof item.image === "string"}
                     />
                   </div>
