@@ -408,52 +408,52 @@ export default function OurWork({
             </div>
           ) : null}
 
-          {/* Cards - Vertical scroll on mobile */}
-          <div className="flex flex-col gap-6 px-4 sm:px-5">
+          {/* Cards — same chrome as Our Work page (`app/our-work/page.tsx`) */}
+          <div className="mx-auto flex max-w-[1920px] flex-col gap-6 md:gap-8 lg:gap-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
             {workItems.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleCardSelect(item)}
-                className={`w-full bg-black border border-[#C1C1C1] overflow-hidden flex flex-col ${
+                className={`work-card flex h-full min-h-0 min-w-0 w-full flex-col overflow-hidden border border-[#C1C1C1] bg-black ${
                   isItemClickable(item) ? "cursor-pointer" : "cursor-default"
                 }`}
               >
-                {/* Category Tags */}
-                {item.category && (
-                  <div className="flex flex-col pt-10 px-4 pb-30">
-                    {getCategoryLines(item.category).map((cat, idx) => (
-                      <span
-                        key={idx}
-                        className="text-white text-[10px] sm:text-[12px] uppercase tracking-[0.1em] font-[300]"
-                      >
-                        {cat}
-                      </span>
-                    ))}
+                <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+                  {item.category && (
+                    <div className="flex shrink-0 flex-col px-5 pt-4 pb-40 lg:px-8 lg:pt-10">
+                      {getCategoryLines(item.category).map((cat, idx) => (
+                        <span
+                          key={idx}
+                          className="text-[14px] font-[400] uppercase tracking-[0.1em] text-white lg:text-[20px] xl:text-[20px]"
+                        >
+                          {cat}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="shrink-0 px-5 pb-2 lg:px-8 lg:pb-3">
+                    <h3 className="our-work-item-title text-[28px] font-[400] leading-[1.3] text-white sm:leading-[1.35] md:leading-[1.4] lg:text-[34px] lg:leading-[1.35] xl:text-[41px] xl:leading-[1.3]">
+                      {item.title}
+                    </h3>
                   </div>
-                )}
 
-                {/* Title */}
-                <div className="px-4 pb-2">
-                  <h3 className="text-white text-[20px] sm:text-[24px] font-[400] leading-[1.3] sm:leading-[1.35] md:leading-[1.4]">
-                    {item.title}
-                  </h3>
+                  <div className="max-w-[460px] shrink-0 overflow-hidden px-5 pb-4 lg:px-8 lg:pb-20">
+                    <div
+                      className="our-work-description our-work-item-description line-clamp-4 text-[15px] font-[300] leading-[18px] text-white sm:leading-[22px] md:leading-[29px] lg:text-[18px] xl:text-[22px]"
+                      dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(item.description) }}
+                    />
+                  </div>
+                  <div className="min-h-0 min-w-0 shrink-0 basis-0 flex-1" aria-hidden />
                 </div>
 
-                {/* Description */}
-                <div className="px-4 pb-10">
-                  <div
-                    className="text-white text-[13px] sm:text-[14px] leading-[18px] sm:leading-[22px] md:leading-[29px] font-[300] line-clamp-4"
-                    dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(item.description) }}
-                  />
-                </div>
-
-                {/* Image */}
-                <div className="relative w-full h-[200px] sm:h-[240px] overflow-hidden">
+                <div className="relative h-[220px] w-full shrink-0 overflow-hidden lg:h-[280px] xl:h-[320px] 2xl:h-[340px] min-[1440px]:h-[350px] min-[1920px]:h-[370px]">
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
                     className="object-cover"
+                    sizes="100vw"
                     unoptimized={typeof item.image === "string"}
                   />
                 </div>
@@ -474,7 +474,7 @@ export default function OurWork({
           {/* Single container for both title and cards that moves together */}
           <div
             ref={cardsContainerRef}
-            className={`flex h-[910px] items-center will-change-transform our-work-container our-work-responsive-container ${
+            className={`our-work-container our-work-responsive-container flex h-[910px] min-h-0 items-stretch will-change-transform ${
               isDragging ? "cursor-grabbing" : "cursor-grab"
             }`}
             onMouseDown={handleMouseDown}
@@ -486,7 +486,7 @@ export default function OurWork({
             onTouchEnd={handleTouchEnd}
           >
             {/* Left Side - Title and CTA */}
-            <div className="flex-shrink-0 w-[280px] lg:w-[400px] xl:w-[520px] flex flex-col justify-center items-start pl-8 lg:pl-16 xl:pl-20 pr-6 lg:pr-10 py-12 our-work-title-container">
+            <div className="our-work-title-container flex h-full min-h-0 w-[280px] flex-shrink-0 flex-col items-start justify-center self-stretch py-12 pl-8 pr-6 lg:w-[400px] lg:pl-16 lg:pr-10 xl:w-[520px] xl:pl-20">
               {title?.trim() ? (
                 <h2 className="text-white mb-12 lg:mb-16 xl:mb-20 our-work-title our-work-desktop-heading whitespace-pre-line">
                   {title.trim().split(/\n/).map((line, idx) => (
@@ -504,53 +504,53 @@ export default function OurWork({
               ) : null}
             </div>
 
-            {/* Cards */}
-            <div className="flex items-center gap-4 lg:gap-2 pr-8 lg:pr-16 xl:pr-20 our-work-cards-container">
+            {/* Cards: equal strip height; fixed image band; flex spacer under text like Our Work page grid */}
+            <div className="our-work-cards-container flex h-full min-h-0 min-w-0 flex-1 items-stretch gap-4 lg:gap-2 pr-8 lg:pr-16 xl:pr-20">
               {workItems.map((item, index) => (
                 <div
                   key={index}
                   data-work-card
                   data-index={index}
-                  className={`flex-shrink-0 w-[380px] lg:w-[480px] xl:w-[604px] max-h-full bg-black border border-[#C1C1C1] overflow-hidden flex flex-col our-work-card our-work-responsive-card ${
+                  className={`work-card our-work-card our-work-responsive-card flex !h-full min-h-0 min-w-0 w-[380px] max-h-full flex-shrink-0 flex-col overflow-hidden border border-[#C1C1C1] bg-black lg:w-[480px] xl:w-[604px] ${
                     isItemClickable(item) ? "cursor-pointer" : "cursor-default"
                   }`}
                 >
-                  {/* Category Tags - Top */}
-                  {item.category && (
-                    <div className="flex flex-col flex-1 justify-start pt-4 lg:pt-10 px-5 lg:px-8 pb-40  category-tags-container">
-                      {getCategoryLines(item.category).map((cat, idx) => (
-                        <span
-                          key={idx}
-                          className="text-white text-[14px] lg:text-[20px] xl:text-[20px] uppercase tracking-[0.1em] font-[400] category-text"
-                        >
-                          {cat}
-                        </span>
-                      ))}
+                  <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+                    {item.category && (
+                      <div className="flex shrink-0 flex-col px-5 pt-4 pb-40 lg:px-8 lg:pt-10">
+                        {getCategoryLines(item.category).map((cat, idx) => (
+                          <span
+                            key={idx}
+                            className="text-[14px] font-[400] uppercase tracking-[0.1em] text-white lg:text-[20px] xl:text-[20px]"
+                          >
+                            {cat}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="shrink-0 px-5 pb-2 lg:px-8 lg:pb-3">
+                      <h3 className="our-work-item-title text-[28px] font-[400] leading-[1.3] text-white sm:leading-[1.35] md:leading-[1.4] lg:text-[34px] lg:leading-[1.35] xl:text-[41px] xl:leading-[1.3]">
+                        {item.title}
+                      </h3>
                     </div>
-                  )}
 
-                  {/* Title */}
-                  <div className="px-5 lg:px-8 pb-2 lg:pb-3">
-                    <h3 className="text-white text-[28px] lg:text-[34px] xl:text-[41px] font-[400] leading-[1.3] sm:leading-[1.35] md:leading-[1.4] lg:leading-[1.35] xl:leading-[1.3] our-work-item-title">
-                      {item.title}
-                    </h3>
+                    <div className="max-w-[460px] shrink-0 overflow-hidden px-5 pb-4 lg:px-8 lg:pb-16">
+                      <div
+                        className="our-work-description our-work-item-description line-clamp-4 text-[15px] font-[300] leading-[18px] text-white sm:leading-[22px] md:leading-[29px] lg:text-[18px] xl:text-[22px]"
+                        dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(item.description) }}
+                      />
+                    </div>
+                    <div className="min-h-0 min-w-0 shrink-0 basis-0 flex-1" aria-hidden />
                   </div>
 
-                  {/* Description */}
-                  <div className="max-w-[460px] px-5 lg:px-8 pb-4 lg:pb-16 overflow-hidden">
-                    <div
-                      className="text-white text-[15px] lg:text-[18px] xl:text-[22px] leading-[18px] sm:leading-[22px] md:leading-[29px] font-[300] our-work-item-description our-work-description line-clamp-4"
-                      dangerouslySetInnerHTML={{ __html: normalizeDescriptionHtml(item.description) }}
-                    />
-                  </div>
-
-                  {/* Image - Bottom */}
-                  <div className="relative w-full flex-shrink-0 h-[220px] lg:h-[260px] xl:h-[300px] 2xl:h-[320px] min-[1440px]:h-[335px] min-[1920px]:h-[342px] overflow-hidden our-work-item-image">
+                  <div className="relative h-[220px] w-full shrink-0 overflow-hidden lg:h-[260px] xl:h-[300px] 2xl:h-[320px] min-[1440px]:h-[335px] min-[1920px]:h-[342px]">
                     <Image
                       src={item.image}
                       alt={item.title}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 1024px) 480px, 604px"
                       unoptimized={typeof item.image === "string"}
                     />
                   </div>
